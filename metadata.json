@@ -1,0 +1,5 @@
+
+{
+  "name": "Lucky Draw Registration App",
+  "description": "An application for users to register their information for a lucky draw event. Data is stored locally, and a winner is selected randomly. Features AI-generated announcements."
+}

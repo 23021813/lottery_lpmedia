@@ -48,7 +48,7 @@ export const readConfigFile = async (): Promise<ConfigData> => {
   try {
     // Always fetch from the actual config.json file with aggressive cache busting
     const cacheBuster = Date.now() + Math.random();
-    const response = await fetch(`/data/config.json?t=${cacheBuster}`, {
+    const response = await fetch(`./data/config.json?t=${cacheBuster}`, {
       cache: 'no-cache',
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -108,7 +108,7 @@ export const readCSVFile = async (): Promise<string> => {
   try {
     // Always fetch from the actual data.csv file with aggressive cache busting
     const cacheBuster = Date.now() + Math.random();
-    const response = await fetch(`/data/data.csv?t=${cacheBuster}`, {
+    const response = await fetch(`./data/data.csv?t=${cacheBuster}`, {
       cache: 'no-cache',
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',

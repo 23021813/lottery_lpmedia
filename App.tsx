@@ -108,7 +108,7 @@ export default function App() {
   return (
     <div 
       className="min-h-screen text-slate-800 transition-colors duration-500 bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: 'url(/bg.jpeg)' }}
+      style={{ backgroundImage: 'url(./bg.jpeg)' }}
     >
       <div className="min-h-screen bg-black/20 backdrop-blur-[1px]">
         <main className="container mx-auto p-4 md:p-8">

@@ -12,7 +12,9 @@ export default defineConfig(({ mode }) => {
           output: {
             manualChunks: undefined,
           }
-        }
+        },
+        target: 'esnext',
+        minify: 'esbuild'
       },
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),

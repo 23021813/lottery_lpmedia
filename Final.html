@@ -31,13 +31,21 @@
         display: flex;
         flex-direction: column;
         min-height: 100vh;
-        justify-content: center;
+        justify-content: flex-start;
         position: relative;
         width: 100%;
+        padding-top: 80px;
+      }
+      .game-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 40px;
       }
       .header {
         text-align: center;
         margin-bottom: 60px;
+        margin-top: 40px;
       }
       .header h1 {
         color: #ba7c38;
@@ -106,6 +114,16 @@
         background-color: #ba7c38;
         border-radius: 8px;
         color: #fff;
+        overflow: hidden;
+        position: relative;
+      }
+      .slot .number {
+        transition: transform 0.1s ease-out;
+        display: block;
+        transform-origin: center;
+      }
+      .slot.spinning .number {
+        animation: slideUp 0.1s ease-in-out infinite;
       }
       .slot:last-child {
         border-right: none;
@@ -311,6 +329,20 @@
         }
       }
 
+      @keyframes slideUp {
+        0% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        50% {
+          transform: translateY(-10px);
+          opacity: 0.7;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
       @keyframes bounce {
         0%,
         20%,
@@ -374,80 +406,82 @@
   </head>
   <body>
     <div class="game-root">
-      <div class="header">
-        <h1>LUCKY DRAW</h1>
-        <div
-          id="participantCount"
-          style="
-            color: #ba7c38;
-            font-size: 24px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            display:none
-          "
-        >
-          Đang tải dữ liệu...
+      <div class="game-container">
+        <div class="header">
+          <h1>LUCKY DRAW</h1>
+          <div
+            id="participantCount"
+            style="
+              color: #ba7c38;
+              font-size: 24px;
+              margin-bottom: 20px;
+              font-weight: bold;
+              display:none
+            "
+          >
+            Đang tải dữ liệu...
+          </div>
+          <select id="prizeSelect">
+            <option value="none" disabled selected>CHỌN GIẢI</option>
+            <option value="Giải Nhất">Giải Nhất</option>
+            <option value="Giải Nhì">Giải Nhì</option>
+            <option value="Giải Ba">Giải Ba</option>
+            <option value="Mã số">Mã số</option>
+          </select>
         </div>
-        <select id="prizeSelect">
-          <option value="none" disabled selected>CHỌN GIẢI</option>
-          <option value="Giải Nhất">Giải Nhất</option>
-          <option value="Giải Nhì">Giải Nhì</option>
-          <option value="Giải Ba">Giải Ba</option>
-          <option value="Mã số">Mã số</option>
-        </select>
-      </div>
-      <div class="slot-machine">
-        <div class="slot">0</div>
-        <div class="slot">0</div>
-        <div class="slot">0</div>
-        <div class="slot">0</div>
-      </div>
+        <div class="slot-machine">
+          <div class="slot"><span class="number">0</span></div>
+          <div class="slot"><span class="number">0</span></div>
+          <div class="slot"><span class="number">0</span></div>
+          <div class="slot"><span class="number">0</span></div>
+        </div>
 
-      <button class="button" id="spinButton" onclick="toggleSpin()" disabled>
-        Quay số
-      </button>
+        <button class="button" id="spinButton" onclick="toggleSpin()" disabled>
+          Quay số
+        </button>
 
-      <!-- Debug buttons - ẩn đi -->
-      <div style="margin-top: 20px; display: none; gap: 10px">
-        <button
-          onclick="clearSessionData()"
-          style="
-            padding: 10px 20px;
-            background: #ff4444;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-          "
-        >
-          Clear Data
-        </button>
-        <button
-          onclick="showSessionData()"
-          style="
-            padding: 10px 20px;
-            background: #4444ff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-          "
-        >
-          Show Data
-        </button>
-        <button
-          onclick="recreateWinnersDetails()"
-          style="
-            padding: 10px 20px;
-            background: #44ff44;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-          "
-        >
-          Recreate Winners
-        </button>
+        <!-- Debug buttons - ẩn đi -->
+        <div style="margin-top: 20px; display: none; gap: 10px">
+          <button
+            onclick="clearSessionData()"
+            style="
+              padding: 10px 20px;
+              background: #ff4444;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+            "
+          >
+            Clear Data
+          </button>
+          <button
+            onclick="showSessionData()"
+            style="
+              padding: 10px 20px;
+              background: #4444ff;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+            "
+          >
+            Show Data
+          </button>
+          <button
+            onclick="recreateWinnersDetails()"
+            style="
+              padding: 10px 20px;
+              background: #44ff44;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+            "
+          >
+            Recreate Winners
+          </button>
+        </div>
       </div>
       <div class="winners-list">
         <h2>DANH SÁCH GIẢI THƯỞNG</h2>
@@ -464,7 +498,7 @@
       // ===== CẤU HÌNH NGUỒN DỮ LIỆU =====
       // true  = Load từ file data/data.csv (cần chạy local server)
       // false = Dùng dữ liệu inline (có thể mở trực tiếp file HTML)
-      const USE_FILE = true;
+      const USE_FILE = false;
 
       // Load dữ liệu người tham gia từ file hoặc inline
       async function loadParticipants() {
@@ -815,10 +849,14 @@
         const slots = document.querySelectorAll(".slot");
         intervals = [];
 
+        // Thêm class spinning cho hiệu ứng
+        slots.forEach(slot => slot.classList.add('spinning'));
+
         slots.forEach((slot, index) => {
+          const numberElement = slot.querySelector('.number');
           const interval = setInterval(() => {
             // Mỗi slot hiển thị số random từ 0-9
-            slot.innerText = Math.floor(Math.random() * 10);
+            numberElement.innerText = Math.floor(Math.random() * 10);
           }, 50);
           intervals.push(interval);
         });
@@ -846,10 +884,13 @@
         slots.forEach((slot, index) => {
           setTimeout(() => {
             clearInterval(intervals[index]);
+            // Xóa class spinning khi dừng
+            slot.classList.remove('spinning');
+            const numberElement = slot.querySelector('.number');
             if (index < resultArray.length) {
-              slot.innerText = resultArray[index];
+              numberElement.innerText = resultArray[index];
             } else {
-              slot.innerText = "0";
+              numberElement.innerText = "0";
             }
             if (index === slots.length - 1) {
               setTimeout(() => {

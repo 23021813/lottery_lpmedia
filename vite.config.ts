@@ -6,16 +6,6 @@ export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
       base: '/lottery_lpmedia/',
-      build: {
-        assetsDir: 'assets',
-        rollupOptions: {
-          output: {
-            manualChunks: undefined,
-          }
-        },
-        target: 'esnext',
-        minify: 'esbuild'
-      },
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),

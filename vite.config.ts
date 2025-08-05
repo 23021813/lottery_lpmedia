@@ -6,6 +6,10 @@ export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
       base: '/',
+      server: {
+        host: true,
+        allowedHosts: 'all'
+      },
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
@@ -27,7 +31,7 @@ export default defineConfig(({ mode }) => {
                   body += chunk.toString();
                 });
                 req.on('end', () => {
-                  try {
+                try {
                     const data = JSON.parse(body);
                     const configPath = path.join(__dirname, 'data', 'config.json');
                     fs.writeFileSync(configPath, JSON.stringify(data, null, 2));

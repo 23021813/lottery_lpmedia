@@ -39,7 +39,7 @@ export default defineConfig(({ mode }) => {
                 // Copy file
                 fs.copyFileSync(srcFile, destFile);
                 
-                // Set write permissions (readable and writable for owner, readable for group and others)
+                //  Set write permissions (readable and writable for owner, readable for group and others)
                 try {
                   fs.chmodSync(destFile, 0o644);
                 } catch (chmodError) {

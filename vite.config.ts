@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
       base: '/',
       server: {
         host: true,
-        allowedHosts: ["funky-robin-noticeably.ngrok-free.app"]
+        allowedHosts: ["funky-robin-noticeably.ngrok-free.app","reg.3nestinvest.com"]
       },
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),

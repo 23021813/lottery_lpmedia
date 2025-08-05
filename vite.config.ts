@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { defineConfig, loadEnv } from 'vite';
+import formidable from 'formidable';
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
@@ -83,6 +84,60 @@ export default defineConfig(({ mode }) => {
                     console.error('CSV write error:', error);
                     res.writeHead(500, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ error: 'Failed to write CSV file', details: error.message }));
+                  }
+                });
+              } else {
+                next();
+              }
+            });
+
+            // Upload background API endpoint for development
+            server.middlewares.use('/api/upload-background', (req, res, next) => {
+              if (req.method === 'POST') {
+                const form = formidable({
+                  maxFileSize: 5 * 1024 * 1024, // 5MB
+                  filter: ({ mimetype }) => {
+                    return !!(mimetype && mimetype.startsWith('image/'));
+                  }
+                });
+
+                form.parse(req, (err, fields, files) => {
+                  if (err) {
+                    console.error('Upload error:', err);
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: false, error: err.message }));
+                    return;
+                  }
+
+                  try {
+                    const backgroundFile = Array.isArray(files.background) 
+                      ? files.background[0] 
+                      : files.background;
+
+                    if (!backgroundFile) {
+                      res.writeHead(400, { 'Content-Type': 'application/json' });
+                      res.end(JSON.stringify({ success: false, error: 'No file uploaded' }));
+                      return;
+                    }
+
+                    // Ensure public directory exists
+                    const publicDir = path.join(__dirname, 'public');
+                    if (!fs.existsSync(publicDir)) {
+                      fs.mkdirSync(publicDir, { recursive: true });
+                    }
+
+                    // Read file and save as bg.jpeg
+                    const fileData = fs.readFileSync(backgroundFile.filepath);
+                    const backgroundPath = path.join(publicDir, 'bg.jpeg');
+                    fs.writeFileSync(backgroundPath, fileData);
+
+                    console.log('Background image updated successfully');
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: true }));
+                  } catch (error) {
+                    console.error('Error uploading background:', error);
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: false, error: 'Failed to upload background', details: error.message }));
                   }
                 });
               } else {

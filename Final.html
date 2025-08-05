@@ -664,10 +664,8 @@
       }
 
       function getRandomNumber() {
-        if (participants.length === 0) return Math.floor(Math.random() * 10);
-        const randomParticipant =
-          participants[Math.floor(Math.random() * participants.length)];
-        return randomParticipant.id.toString().slice(-1); // Lấy chữ số cuối của ID
+        // Trả về số random từ 0-9 cho hiệu ứng quay
+        return Math.floor(Math.random() * 10);
       }
 
       function getValidNumber() {
@@ -819,15 +817,8 @@
 
         slots.forEach((slot, index) => {
           const interval = setInterval(() => {
-            if (participants.length > 0) {
-              // Hiển thị ID ngẫu nhiên từ danh sách người tham gia
-              const randomParticipant =
-                participants[Math.floor(Math.random() * participants.length)];
-              const idStr = randomParticipant.id.toString().padStart(4, "0");
-              slot.innerText = idStr[index] || "0";
-            } else {
-              slot.innerText = Math.floor(Math.random() * 10);
-            }
+            // Mỗi slot hiển thị số random từ 0-9
+            slot.innerText = Math.floor(Math.random() * 10);
           }, 50);
           intervals.push(interval);
         });

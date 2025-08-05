@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,800&display=swap"
+      rel="stylesheet"
+    />
+    <title>Quay Số Trúng Thưởng</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+        text-rendering: optimizeLegibility;
+      }
+      .game-root {
+        align-items: center;
+        background-clip: initial;
+        background-image: url(QUAYSO.jpg);
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        justify-content: center;
+        position: relative;
+        width: 100%;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 60px;
+      }
+      .header h1 {
+        color: #ba7c38;
+        cursor: default;
+        font-size: 80px;
+        font-family: "Inter", serif;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
+      #prizeSelect {
+        font-size: 60px;
+        text-align: center;
+        background: none;
+        border: 0;
+        cursor: pointer;
+        outline: 0;
+        color: #ba7c38;
+        font-family: "Inter", serif;
+        font-weight: 800;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      #prizeSelect option {
+        font-size: 20px;
+        cursor: pointer;
+      }
+      .slot-machine {
+        display: flex;
+        width: 450px;
+        margin-bottom: 30px;
+        position: relative;
+      }
+      .slot-machine::before {
+        width: 0;
+        height: 0;
+        border-top: 18px solid transparent;
+        border-bottom: 18px solid transparent;
+        border-right: 20px solid #ba7c38;
+        position: absolute;
+        top: 50%;
+        left: -18px;
+        margin-top: -18px;
+        content: "";
+      }
+      .slot-machine::after {
+        width: 0;
+        height: 0;
+        border-top: 18px solid transparent;
+        border-bottom: 18px solid transparent;
+        border-left: 20px solid #ba7c38;
+        position: absolute;
+        top: 50%;
+        right: -18px;
+        margin-top: -18px;
+        content: "";
+      }
+      .slot {
+        flex: 1;
+        text-align: center;
+        font-size: 120px;
+        padding: 20px 20px;
+        margin: 0 10px;
+        background-color: #ba7c38;
+        border-radius: 8px;
+        color: #fff;
+      }
+      .slot:last-child {
+        border-right: none;
+      }
+      .button {
+        align-items: center;
+        background-color: #ba7c38;
+        border: 4px solid #ba7c38;
+        border-radius: 30px;
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        font-size: 30px;
+        font-weight: 700;
+        height: 60px;
+        justify-content: center;
+        margin: 0 20px;
+        min-width: 280px;
+        opacity: 1;
+        text-transform: uppercase;
+      }
+      .button:disabled {
+        background-color: #ba7c38;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+      .winners-list {
+        margin: 40px 0;
+        text-align: left;
+        background: transparent;
+        width: 850px;
+        border-radius: 12px;
+        padding: 25px;
+        display: none;
+        border: 2px solid #ba7c38;
+        position: relative;
+        animation: slideInUp 0.6s ease-out;
+      }
+
+      .winners-list h2 {
+        text-align: center;
+        color: #ba7c38;
+        font-size: 28px;
+        margin-bottom: 20px;
+        font-family: "Inter", serif;
+        font-weight: 800;
+        position: relative;
+        padding-bottom: 15px;
+      }
+
+      .winners-list h2::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 2px;
+        background: #ba7c38;
+        border-radius: 1px;
+      }
+
+      #winners {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      #winners li {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border: 1px solid rgba(186, 124, 56, 0.3);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease-out forwards;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      #winners li::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: #ba7c38;
+        border-radius: 0 4px 4px 0;
+      }
+
+      #winners li:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.95);
+        border-color: rgba(186, 124, 56, 0.5);
+      }
+
+      #winners li:first-child {
+        margin-top: 0;
+      }
+
+      #winners li:last-child {
+        margin-bottom: 0;
+        background: rgba(255, 240, 240, 0.9);
+        border-color: #ff6666;
+        animation: pulseGlow 2s ease-in-out infinite;
+      }
+
+      #winners li:last-child::before {
+        background: #ff4444;
+      }
+
+      #winners li:last-child .winner-result {
+        font-weight: bold;
+        color: #ff4444;
+        animation: textGlow 1s ease-in-out infinite alternate;
+      }
+
+      .winner-header {
+        font-size: 20px;
+        font-weight: 700;
+        color: #ba7c38;
+        margin-bottom: 12px;
+        font-family: "Inter", serif;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .winner-details {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #333;
+        padding-left: 10px;
+      }
+
+      .winner-details div {
+        margin-bottom: 6px;
+        padding: 4px 8px;
+        background: rgba(186, 124, 56, 0.1);
+        border-radius: 4px;
+        border-left: 2px solid rgba(186, 124, 56, 0.4);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .winner-details div:hover {
+        background: rgba(186, 124, 56, 0.15);
+        transform: translateX(3px);
+      }
+
+      .winner-details strong {
+        color: #ba7c38;
+        font-weight: 600;
+        min-width: 70px;
+        display: inline-block;
+      }
+
+      .winner-id {
+        color: #ba7c38;
+        font-weight: 800;
+        font-size: 22px;
+      }
+
+      /* Animations */
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pulseGlow {
+        0%,
+        100% {
+          border-color: #ff6666;
+        }
+        50% {
+          border-color: #ff4444;
+        }
+      }
+
+      @keyframes textGlow {
+        0% {
+          color: #ff4444;
+        }
+        100% {
+          color: #ff6666;
+        }
+      }
+
+      @keyframes bounce {
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-5px);
+        }
+        60% {
+          transform: translateY(-3px);
+        }
+      }
+      @-webkit-keyframes my {
+        0% {
+          color: #b80000;
+        }
+        50% {
+          color: #fff;
+        }
+        100% {
+          color: #b80000;
+        }
+      }
+      @-moz-keyframes my {
+        0% {
+          color: #b80000;
+        }
+        50% {
+          color: #fff;
+        }
+        100% {
+          color: #b80000;
+        }
+      }
+      @-o-keyframes my {
+        0% {
+          color: #b80000;
+        }
+        50% {
+          color: #fff;
+        }
+        100% {
+          color: #b80000;
+        }
+      }
+      @keyframes my {
+        0% {
+          color: #b80000;
+        }
+        50% {
+          color: #fff;
+        }
+        100% {
+          color: #b80000;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-root">
+      <div class="header">
+        <h1>LUCKY DRAW</h1>
+        <div
+          id="participantCount"
+          style="
+            color: #ba7c38;
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+          "
+        >
+          Đang tải dữ liệu...
+        </div>
+        <select id="prizeSelect">
+          <option value="none" disabled selected>CHỌN GIẢI</option>
+          <option value="Giải Nhất">Giải Nhất</option>
+          <option value="Giải Nhì">Giải Nhì</option>
+          <option value="Giải Ba">Giải Ba</option>
+          <option value="Mã số">Mã số</option>
+        </select>
+      </div>
+      <div class="slot-machine">
+        <div class="slot">0</div>
+        <div class="slot">0</div>
+        <div class="slot">0</div>
+      </div>
+
+      <button class="button" id="spinButton" onclick="toggleSpin()" disabled>
+        Quay số
+      </button>
+
+      <!-- Debug buttons - ẩn đi -->
+      <div style="margin-top: 20px; display: none; gap: 10px">
+        <button
+          onclick="clearSessionData()"
+          style="
+            padding: 10px 20px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+          "
+        >
+          Clear Data
+        </button>
+        <button
+          onclick="showSessionData()"
+          style="
+            padding: 10px 20px;
+            background: #4444ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+          "
+        >
+          Show Data
+        </button>
+        <button
+          onclick="recreateWinnersDetails()"
+          style="
+            padding: 10px 20px;
+            background: #44ff44;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+          "
+        >
+          Recreate Winners
+        </button>
+      </div>
+      <div class="winners-list">
+        <h2>DANH SÁCH GIẢI THƯỞNG</h2>
+        <ul id="winners"></ul>
+      </div>
+    </div>
+    <script>
+      let spinning = false;
+      let intervals = [];
+      let isStopping = false;
+      let participants = []; // Danh sách người tham gia từ CSV
+      let usedNumbers = []; // Lưu các ID đã quay
+
+      // ===== CẤU HÌNH NGUỒN DỮ LIỆU =====
+      // true  = Load từ file data/data.csv (cần chạy local server)
+      // false = Dùng dữ liệu inline (có thể mở trực tiếp file HTML)
+      const USE_FILE = true;
+
+      // Load dữ liệu người tham gia từ file hoặc inline
+      async function loadParticipants() {
+        try {
+          let csvData;
+          
+          if (USE_FILE) {
+            // Load từ file CSV
+            console.log("Loading data from file...");
+            const response = await fetch('data/data.csv');
+            csvData = await response.text();
+          } else {
+            // Dữ liệu CSV được nhúng trực tiếp để tránh CORS
+            console.log("Using inline CSV data...");
+            csvData = `id,name,phone,nationalId,agency,prizeWon
+1,"John Smith","0901000001","123456789001","Đất xanh Bắc Trung Bộ",""
+2,"Jane Doe","0901000002","123456789002","Cenland Bắc Trung Bộ",""
+3,"Mike Johnson","0901000003","123456789003","Bhomes",""
+4,"Sarah Wilson","0901000004","123456789004","Tân Long",""
+5,"David Brown","0901000005","123456789005","Fivestar",""
+6,"Lisa Davis","0901000006","123456789006","Hoàng Huy NT",""
+7,"Robert Miller","0901000007","123456789007","Âu Lạc Land",""
+8,"Emily Taylor","0901000008","123456789008","City Homes",""
+9,"William Anderson","0901000009","123456789009","Xứ Nghệ homes",""
+10,"Jessica Thomas","0901000010","123456789010","SVLand",""
+11,"Christopher Jackson","0901000011","123456789011","RealLand",""
+12,"Amanda White","0901000012","123456789012","Aura Realty",""
+13,"Matthew Harris","0901000013","123456789013","Titan Luxury",""
+14,"Ashley Martin","0901000014","123456789014","MT group",""
+15,"Daniel Thompson","0901000015","123456789015","New Sky Land",""
+16,"Michelle Garcia","0901000016","123456789016","Fuji Land",""
+17,"James Martinez","0901000017","123456789017","Haka Holding",""
+18,"Nicole Robinson","0901000018","123456789018","Phú Lâm",""
+19,"Andrew Clark","0901000019","123456789019","GC Land",""
+20,"Samantha Rodriguez","0901000020","123456789020","Đất xanh Bắc Trung Bộ",""
+21,"Joshua Lewis","0901000021","123456789021","Cenland Bắc Trung Bộ",""
+22,"Rachel Lee","0901000022","123456789022","Bhomes",""
+23,"Brian Walker","0901000023","123456789023","Tân Long",""
+24,"Stephanie Hall","0901000024","123456789024","Fivestar",""
+25,"Kevin Allen","0901000025","123456789025","Hoàng Huy NT",""
+26,"Lauren Young","0901000026","123456789026","Âu Lạc Land",""
+27,"Ryan Hernandez","0901000027","123456789027","City Homes",""
+28,"Megan King","0901000028","123456789028","Xứ Nghệ homes",""
+29,"Brandon Wright","0901000029","123456789029","SVLand",""
+30,"Kayla Lopez","0901000030","123456789030","RealLand",""
+31,"Tyler Hill","0901000031","123456789031","Aura Realty",""
+32,"Brittany Scott","0901000032","123456789032","Titan Luxury",""
+33,"Austin Green","0901000033","123456789033","MT group",""
+34,"Danielle Adams","0901000034","123456789034","New Sky Land",""
+35,"Jacob Baker","0901000035","123456789035","Fuji Land",""
+36,"Alexis Gonzalez","0901000036","123456789036","Haka Holding",""
+37,"Nicholas Nelson","0901000037","123456789037","Phú Lâm",""
+38,"Courtney Carter","0901000038","123456789038","GC Land",""
+39,"Sean Mitchell","0901000039","123456789039","Đất xanh Bắc Trung Bộ",""
+40,"Vanessa Perez","0901000040","123456789040","Cenland Bắc Trung Bộ",""
+41,"Cody Roberts","0901000041","123456789041","Bhomes",""
+42,"Jacqueline Turner","0901000042","123456789042","Tân Long",""
+43,"Marcus Phillips","0901000043","123456789043","Fivestar",""
+44,"Crystal Campbell","0901000044","123456789044","Hoàng Huy NT",""
+45,"Nathan Parker","0901000045","123456789045","Âu Lạc Land",""
+46,"Sierra Evans","0901000046","123456789046","City Homes",""
+47,"Eric Edwards","0901000047","123456789047","Xứ Nghệ homes",""
+48,"Jasmine Collins","0901000048","123456789048","SVLand",""
+49,"Cameron Stewart","0901000049","123456789049","RealLand",""
+50,"Destiny Sanchez","0901000050","123456789050","Aura Realty",""
+51,"Cole Morris","0901000051","123456789051","Titan Luxury",""
+52,"Paige Rogers","0901000052","123456789052","MT group",""
+53,"Caleb Reed","0901000053","123456789053","New Sky Land",""
+54,"Jenna Cook","0901000054","123456789054","Fuji Land",""
+55,"Ian Morgan","0901000055","123456789055","Haka Holding",""
+56,"Mackenzie Bell","0901000056","123456789056","Phú Lâm",""
+57,"Trevor Murphy","0901000057","123456789057","GC Land",""
+58,"Haley Bailey","0901000058","123456789058","Đất xanh Bắc Trung Bộ",""
+59,"Gavin Rivera","0901000059","123456789059","Cenland Bắc Trung Bộ",""
+60,"Maya Cooper","0901000060","123456789060","Bhomes",""
+61,"Hunter Richardson","0901000061","123456789061","Tân Long",""
+62,"Kaitlyn Cox","0901000062","123456789062","Fivestar",""
+63,"Blake Howard","0901000063","123456789063","Hoàng Huy NT",""
+64,"Leah Ward","0901000064","123456789064","Âu Lạc Land",""
+65,"Connor Torres","0901000065","123456789065","City Homes",""
+66,"Gabrielle Peterson","0901000066","123456789066","Xứ Nghệ homes",""
+67,"Devon Gray","0901000067","123456789067","SVLand",""
+68,"Savannah Ramirez","0901000068","123456789068","RealLand",""
+69,"Chase James","0901000069","123456789069","Aura Realty",""
+70,"Brooke Watson","0901000070","123456789070","Titan Luxury",""
+71,"Landon Brooks","0901000071","123456789071","MT group",""
+72,"Taylor Kelly","0901000072","123456789072","New Sky Land",""
+73,"Peyton Sanders","0901000073","123456789073","Fuji Land",""
+74,"Katelyn Price","0901000074","123456789074","Haka Holding",""
+75,"Mason Bennett","0901000075","123456789075","Phú Lâm",""
+76,"Sydney Wood","0901000076","123456789076","GC Land",""
+77,"Logan Barnes","0901000077","123456789077","Đất xanh Bắc Trung Bộ",""
+78,"Jordyn Ross","0901000078","123456789078","Cenland Bắc Trung Bộ",""
+79,"Ethan Henderson","0901000079","123456789079","Bhomes",""
+80,"Mariah Coleman","0901000080","123456789080","Tân Long",""
+81,"Parker Jenkins","0901000081","123456789081","Fivestar",""
+82,"Jocelyn Perry","0901000082","123456789082","Hoàng Huy NT",""
+83,"Ashton Powell","0901000083","123456789083","Âu Lạc Land",""
+84,"Skylar Long","0901000084","123456789084","City Homes",""
+85,"Bryce Patterson","0901000085","123456789085","Xứ Nghệ homes",""
+86,"Autumn Hughes","0901000086","123456789086","SVLand",""
+87,"Tristan Flores","0901000087","123456789087","RealLand",""
+88,"Isabel Washington","0901000088","123456789088","Aura Realty",""
+89,"Zachary Butler","0901000089","123456789089","Titan Luxury",""
+90,"Layla Simmons","0901000090","123456789090","MT group",""
+91,"Dominic Foster","0901000091","123456789091","New Sky Land",""
+92,"Ariana Gonzales","0901000092","123456789092","Fuji Land",""
+93,"Jaden Bryant","0901000093","123456789093","Haka Holding",""
+94,"Kendall Alexander","0901000094","123456789094","Phú Lâm",""
+95,"Xavier Russell","0901000095","123456789095","GC Land",""
+96,"Kylie Griffin","0901000096","123456789096","Đất xanh Bắc Trung Bộ",""
+97,"Julian Diaz","0901000097","123456789097","Cenland Bắc Trung Bộ",""
+98,"Melody Hayes","0901000098","123456789098","Bhomes",""
+99,"Owen Myers","0901000099","123456789099","Tân Long",""
+100,"Natalie Ford","0901000100","123456789100","Fivestar",""`;
+          }
+
+          const lines = csvData.split("\n");
+
+          // Bỏ qua header và parse dữ liệu
+          for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (line) {
+              const columns = parseCSVLine(line);
+              if (columns.length >= 6) {
+                participants.push({
+                  id: parseInt(columns[0]),
+                  name: columns[1].replace(/"/g, ""),
+                  phone: columns[2].replace(/"/g, ""),
+                  nationalId: columns[3].replace(/"/g, ""),
+                  agency: columns[4].replace(/"/g, ""),
+                  prizeWon: columns[5].replace(/"/g, ""),
+                });
+              }
+            }
+          }
+
+          // Load danh sách đã trúng từ session storage
+          const savedWinners = sessionStorage.getItem("usedNumbers");
+          if (savedWinners) {
+            usedNumbers = JSON.parse(savedWinners);
+            console.log("Loaded usedNumbers:", usedNumbers);
+          }
+
+          console.log(`Đã load ${participants.length} người tham gia`);
+          updateParticipantCount();
+
+          // Load danh sách winners với thông tin chi tiết từ session storage
+          setTimeout(() => {
+            const savedWinnersDetails =
+              sessionStorage.getItem("winnersDetails");
+            if (savedWinnersDetails) {
+              console.log("Loading saved winners details...");
+              const winnersDetails = JSON.parse(savedWinnersDetails);
+              displaySavedWinners(winnersDetails);
+            } else {
+              // Nếu không có winnersDetails nhưng có usedNumbers, tái tạo
+              recreateWinnersDetails();
+            }
+          }, 100);
+        } catch (error) {
+          console.error("Lỗi khi load dữ liệu:", error);
+          alert("Không thể load dữ liệu người tham gia!");
+          document.getElementById("participantCount").innerText =
+            "Lỗi tải dữ liệu";
+        }
+      }
+
+      function updateParticipantCount() {
+        const availableCount = participants.filter(
+          (p) => !usedNumbers.includes(p.id) && !p.prizeWon
+        ).length;
+        document.getElementById(
+          "participantCount"
+        ).innerText = `Tổng số người tham gia: ${participants.length} | Còn lại: ${availableCount}`;
+      }
+
+      // Parse CSV line với xử lý dấu phẩy trong quotes
+      function parseCSVLine(line) {
+        const result = [];
+        let current = "";
+        let inQuotes = false;
+
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === "," && !inQuotes) {
+            result.push(current);
+            current = "";
+          } else {
+            current += char;
+          }
+        }
+        result.push(current);
+        return result;
+      }
+
+      function getRandomNumber() {
+        if (participants.length === 0) return Math.floor(Math.random() * 10);
+        const randomParticipant =
+          participants[Math.floor(Math.random() * participants.length)];
+        return randomParticipant.id.toString().slice(-1); // Lấy chữ số cuối của ID
+      }
+
+      function getValidNumber() {
+        if (participants.length === 0) {
+          alert("Chưa load được dữ liệu người tham gia!");
+          return null;
+        }
+
+        // Lọc những người chưa trúng giải
+        const availableParticipants = participants.filter(
+          (p) => !usedNumbers.includes(p.id) && !p.prizeWon
+        );
+
+        if (availableParticipants.length === 0) {
+          alert("Đã hết người tham gia chưa trúng giải!");
+          return null;
+        }
+
+        // Chọn ngẫu nhiên một người từ danh sách còn lại
+        const randomIndex = Math.floor(
+          Math.random() * availableParticipants.length
+        );
+        const selectedParticipant = availableParticipants[randomIndex];
+
+        return selectedParticipant.id;
+      }
+
+      // Hiển thị lại danh sách winners đã lưu
+      function displaySavedWinners(winnersDetails) {
+        console.log("Displaying saved winners:", winnersDetails);
+        const winnersList = document.getElementById("winners");
+        const winnersListElement = document.querySelector(".winners-list");
+
+        // Clear existing list first
+        winnersList.innerHTML = "";
+
+        // Sắp xếp theo thứ tự giải
+        const sortedWinners = sortWinnersByPrize([...winnersDetails]);
+
+        sortedWinners.forEach((winner, index) => {
+          const listItem = document.createElement("li");
+          // Bỏ animation delay để hiển thị ngay
+          // listItem.style.animationDelay = `${index * 0.1}s`;
+
+          listItem.innerHTML = `
+            <div class="winner-header">
+                <span class="winner-result">${winner.prize}: <span class="winner-id">${winner.id}</span></span>
+            </div>
+            <div class="winner-details">
+                <div><strong>👤 Họ & Tên:</strong> ${winner.name}</div>
+                <div><strong>📱 Điện thoại:</strong> ${winner.phone}</div>
+                <div><strong>🆔 CCCD:</strong> ${winner.nationalId}</div>
+                <div><strong>🏢 Đại lý:</strong> ${winner.agency}</div>
+            </div>
+          `;
+          winnersList.appendChild(listItem);
+        });
+
+        if (winnersDetails.length > 0) {
+          winnersListElement.style.setProperty("display", "block", "important");
+          winnersListElement.style.animation = "slideInUp 0.6s ease-out";
+          console.log(
+            "Winners list displayed with",
+            winnersDetails.length,
+            "items"
+          );
+        }
+      }
+
+      // Tái tạo winnersDetails từ usedNumbers nếu bị mất
+      function recreateWinnersDetails() {
+        if (
+          usedNumbers.length > 0 &&
+          !sessionStorage.getItem("winnersDetails")
+        ) {
+          console.log("Recreating winners details from usedNumbers...");
+          const winnersDetails = [];
+
+          usedNumbers.forEach((id, index) => {
+            const participant = participants.find((p) => p.id === id);
+            if (participant) {
+              winnersDetails.push({
+                id: id.toString().padStart(3, "0"),
+                prize:
+                  ["🥇 GIẢI NHẤT", "🥈 GIẢI NHÌ", "🥉 GIẢI BA", "🎫 MÃ SỐ"][
+                    index
+                  ] || `🎫 MÃ SỐ ${index + 1}`, // Fallback prize name
+                name: participant.name,
+                phone: participant.phone,
+                nationalId: participant.nationalId,
+                agency: participant.agency,
+              });
+            }
+          });
+
+          sessionStorage.setItem(
+            "winnersDetails",
+            JSON.stringify(winnersDetails)
+          );
+          displaySavedWinners(winnersDetails);
+        }
+      }
+
+      // Debug functions
+      function clearSessionData() {
+        sessionStorage.removeItem("usedNumbers");
+        sessionStorage.removeItem("winnersDetails");
+        location.reload();
+      }
+
+      function showSessionData() {
+        const usedNumbers = sessionStorage.getItem("usedNumbers");
+        const winnersDetails = sessionStorage.getItem("winnersDetails");
+        console.log("UsedNumbers:", usedNumbers);
+        console.log("WinnersDetails:", winnersDetails);
+        alert(`UsedNumbers: ${usedNumbers}\nWinnersDetails: ${winnersDetails}`);
+      }
+
+      // Load dữ liệu khi trang được tải
+      window.addEventListener("load", async () => {
+        await loadParticipants();
+      });
+
+      document
+        .getElementById("prizeSelect")
+        .addEventListener("change", function () {
+          document.getElementById("spinButton").disabled =
+            this.value === "none";
+        });
+
+      function toggleSpin() {
+        const button = document.getElementById("spinButton");
+        if (!spinning) {
+          spinning = true;
+          isStopping = false;
+          button.innerText = "Xem kết quả";
+          startSpinning();
+        } else if (!isStopping) {
+          isStopping = true;
+          button.disabled = true;
+          stopSpinningGradually();
+        }
+      }
+
+      function startSpinning() {
+        const slots = document.querySelectorAll(".slot");
+        intervals = [];
+
+        slots.forEach((slot, index) => {
+          const interval = setInterval(() => {
+            if (participants.length > 0) {
+              // Hiển thị ID ngẫu nhiên từ danh sách người tham gia
+              const randomParticipant =
+                participants[Math.floor(Math.random() * participants.length)];
+              const idStr = randomParticipant.id.toString().padStart(3, "0");
+              slot.innerText = idStr[index] || "0";
+            } else {
+              slot.innerText = Math.floor(Math.random() * 10);
+            }
+          }, 50);
+          intervals.push(interval);
+        });
+      }
+
+      function formatNumber(number) {
+        return number.toString().padStart(3, "0");
+      }
+
+      function stopSpinningGradually() {
+        const slots = document.querySelectorAll(".slot");
+        let stopDelay = 0;
+        const validNumber = getValidNumber();
+
+        if (validNumber === null) return; // Không có số hợp lệ
+
+        const result = formatNumber(validNumber);
+        const resultArray = result.split("");
+
+        // Thêm slot thứ 4 nếu cần (để hiển thị đủ 3 chữ số)
+        while (resultArray.length < 3) {
+          resultArray.unshift("0");
+        }
+
+        slots.forEach((slot, index) => {
+          setTimeout(() => {
+            clearInterval(intervals[index]);
+            if (index < resultArray.length) {
+              slot.innerText = resultArray[index];
+            } else {
+              slot.innerText = "0";
+            }
+            if (index === slots.length - 1) {
+              setTimeout(() => {
+                usedNumbers.push(validNumber); // Thêm vào danh sách đã dùng
+                // Lưu vào session storage
+                sessionStorage.setItem(
+                  "usedNumbers",
+                  JSON.stringify(usedNumbers)
+                );
+
+                addWinner(validNumber);
+                updateParticipantCount(); // Cập nhật số lượng người còn lại
+                spinning = false;
+                isStopping = false;
+                document.getElementById("spinButton").innerText = "Quay Ngay";
+                document.getElementById("spinButton").disabled = false;
+              }, 500);
+            }
+          }, stopDelay);
+          stopDelay += 1500;
+        });
+      }
+
+      // Mapping tên giải
+      const prizeMapping = {
+        "Giải Nhất": "🥇 GIẢI NHẤT",
+        "Giải Nhì": "🥈 GIẢI NHÌ",
+        "Giải Ba": "🥉 GIẢI BA",
+        "Mã số": "🎫 MÃ SỐ",
+      };
+
+      // Thứ tự ưu tiên giải thưởng
+      const prizeOrder = {
+        "🥇 GIẢI NHẤT": 1,
+        "🥈 GIẢI NHÌ": 2,
+        "🥉 GIẢI BA": 3,
+        "🎫 MÃ SỐ": 4,
+      };
+
+      // Sắp xếp danh sách winners theo thứ tự giải
+      function sortWinnersByPrize(winners) {
+        return winners.sort((a, b) => {
+          const orderA = prizeOrder[a.prize] || 999;
+          const orderB = prizeOrder[b.prize] || 999;
+          return orderA - orderB;
+        });
+      }
+
+      function addWinner(participantId) {
+        const prizeValue = document.getElementById("prizeSelect").value;
+        const prize = prizeMapping[prizeValue] || prizeValue;
+        const winnersList = document.getElementById("winners");
+
+        // Tìm thông tin người tham gia
+        const participant = participants.find((p) => p.id === participantId);
+
+        if (participant) {
+          const formattedId = participantId.toString().padStart(3, "0");
+
+          // Lưu thông tin winner vào session storage
+          const savedWinnersDetails = sessionStorage.getItem("winnersDetails");
+          let winnersDetails = savedWinnersDetails
+            ? JSON.parse(savedWinnersDetails)
+            : [];
+
+          const winnerData = {
+            id: formattedId,
+            prize: prize,
+            name: participant.name,
+            phone: participant.phone,
+            nationalId: participant.nationalId,
+            agency: participant.agency,
+          };
+
+          winnersDetails.push(winnerData);
+
+          console.log("Saving winner data:", winnerData);
+          console.log("All winners details:", winnersDetails);
+
+          sessionStorage.setItem(
+            "winnersDetails",
+            JSON.stringify(winnersDetails)
+          );
+
+          // Sắp xếp lại và hiển thị toàn bộ danh sách
+          const sortedWinners = sortWinnersByPrize(winnersDetails);
+
+          // Clear và hiển thị lại danh sách đã sắp xếp
+          winnersList.innerHTML = "";
+          sortedWinners.forEach((winner, index) => {
+            const sortedItem = document.createElement("li");
+
+            sortedItem.innerHTML = `
+              <div class="winner-header">
+                  <span class="winner-result">${winner.prize}: <span class="winner-id">${winner.id}</span></span>
+              </div>
+              <div class="winner-details">
+                    <div><strong>👤 Họ & Tên:</strong> ${winner.name}</div>
+                    <div><strong>📱 Điện thoại:</strong> ${winner.phone}</div>
+                    <div><strong>🆔 CCCD:</strong> ${winner.nationalId}</div>
+                    <div><strong>🏢 Đại lý:</strong> ${winner.agency}</div>
+              </div>
+            `;
+            winnersList.appendChild(sortedItem);
+          });
+
+          // Hiển thị danh sách trúng giải với animation
+          const winnersListElement = document.querySelector(".winners-list");
+
+          // Force hiển thị với timeout để đảm bảo DOM đã update
+          setTimeout(() => {
+            winnersListElement.style.setProperty(
+              "display",
+              "block",
+              "important"
+            );
+            winnersListElement.style.animation = "slideInUp 0.6s ease-out";
+            console.log("Winners list displayed");
+          }, 100);
+        }
+      }
+    </script>
+  </body>
+</html>

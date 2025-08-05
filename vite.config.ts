@@ -8,7 +8,11 @@ export default defineConfig(({ mode }) => {
       base: '/',
       server: {
         host: true,
-        allowedHosts: ["funky-robin-noticeably.ngrok-free.app","reg.3nestinvest.com"]
+        allowedHosts: ["funky-robin-noticeably.ngrok-free.app","reg.3nestinvest.com"],
+        hmr: false,  // Tắt Hot Module Replacement
+        watch: {
+          ignored: ['**/node_modules/**', '**/dist/**']  // Ignore các thư mục không cần watch
+        }
       },
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),

@@ -11,8 +11,9 @@ rm -rf dist
 echo "Building with Vite..."
 npm run build
 
-# Step 3: Copy public assets
-echo "Copying public assets..."
+# Step 3: Copy data folder and public assets
+echo "Copying data folder and assets..."
+cp -r data dist/
 cp -r public/* dist/
 
 echo "Build completed successfully!"

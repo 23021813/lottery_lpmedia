@@ -18,40 +18,24 @@ export default defineConfig(({ mode }) => {
       },
       plugins: [
         {
-          name: 'blob-api',
+          name: 'file-api',
           configureServer(server) {
-            // Import blobStorage dynamically for development
-            let blobStorage;
-            
-            const initBlobStorage = async () => {
-              if (!blobStorage) {
-                try {
-                  const module = await import('./services/blobStorage.js');
-                  blobStorage = module.default;
-                } catch (error) {
-                  console.error('Vercel Blob not available in development:', error);
-                  throw new Error('Vercel Blob is required. Please set BLOB_READ_WRITE_TOKEN environment variable.');
-                }
-              }
-              return blobStorage;
-            };
-
-            server.middlewares.use('/api/write-config', async (req, res, next) => {
+            server.middlewares.use('/api/write-config', (req, res, next) => {
               if (req.method === 'POST') {
                 let body = '';
                 req.on('data', chunk => {
                   body += chunk.toString();
                 });
-                req.on('end', async () => {
+                req.on('end', () => {
                   try {
                     const data = JSON.parse(body);
-                    const storage = await initBlobStorage();
-                    const result = await storage.saveConfig(data);
+                    const configPath = path.join(__dirname, 'data', 'config.json');
+                    fs.writeFileSync(configPath, JSON.stringify(data, null, 2));
                     res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify(result));
+                    res.end(JSON.stringify({ success: true }));
                   } catch (error) {
                     res.writeHead(500, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Failed to save config to Vercel Blob', details: error.message }));
+                    res.end(JSON.stringify({ error: 'Failed to write config file', details: error.message }));
                   }
                 });
               } else {
@@ -59,74 +43,40 @@ export default defineConfig(({ mode }) => {
               }
             });
 
-            server.middlewares.use('/api/write-csv', async (req, res, next) => {
+            server.middlewares.use('/api/write-csv', (req, res, next) => {
               if (req.method === 'POST') {
                 let body = '';
                 req.on('data', chunk => {
                   body += chunk.toString();
                 });
-                req.on('end', async () => {
+                req.on('end', () => {
                   try {
+                    console.log('CSV API called, body length:', body.length);
                     const { content } = JSON.parse(body);
-                    const storage = await initBlobStorage();
-                    const result = await storage.saveCsv(content);
+                    console.log('Content to write, length:', content.length, 'first 100 chars:', content.substring(0, 100));
+                    
+                    const csvPath = path.join(__dirname, 'data', 'data.csv');
+                    console.log('Writing to path:', csvPath);
+                    
+                    // Check if file exists and is writable
+                    try {
+                      fs.accessSync(csvPath, fs.constants.W_OK);
+                      console.log('File is writable');
+                    } catch (accessError) {
+                      console.log('File access check failed:', accessError.message);
+                    }
+                    
+                    fs.writeFileSync(csvPath, content);
+                    console.log('File written successfully');
+                    
                     res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify(result));
+                    res.end(JSON.stringify({ success: true }));
                   } catch (error) {
                     console.error('CSV write error:', error);
                     res.writeHead(500, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Failed to save CSV to Vercel Blob', details: error.message }));
+                    res.end(JSON.stringify({ error: 'Failed to write CSV file', details: error.message }));
                   }
                 });
-              } else {
-                next();
-              }
-            });
-
-            // Add read endpoints for development
-            server.middlewares.use('/api/read-config', async (req, res, next) => {
-              if (req.method === 'GET') {
-                try {
-                  const storage = await initBlobStorage();
-                  const config = await storage.getConfig();
-                  res.writeHead(200, { 'Content-Type': 'application/json' });
-                  res.end(JSON.stringify({ success: true, data: config }));
-                } catch (error) {
-                  res.writeHead(500, { 'Content-Type': 'application/json' });
-                  res.end(JSON.stringify({ error: 'Failed to read config from Vercel Blob', details: error.message }));
-                }
-              } else {
-                next();
-              }
-            });
-
-            server.middlewares.use('/api/read-csv', async (req, res, next) => {
-              if (req.method === 'GET') {
-                try {
-                  const storage = await initBlobStorage();
-                  const csvContent = await storage.getCsv();
-                  res.writeHead(200, { 'Content-Type': 'application/json' });
-                  res.end(JSON.stringify({ success: true, data: csvContent }));
-                } catch (error) {
-                  res.writeHead(500, { 'Content-Type': 'application/json' });
-                  res.end(JSON.stringify({ error: 'Failed to read CSV from Vercel Blob', details: error.message }));
-                }
-              } else {
-                next();
-              }
-            });
-
-            server.middlewares.use('/api/list-files', async (req, res, next) => {
-              if (req.method === 'GET') {
-                try {
-                  const storage = await initBlobStorage();
-                  const files = await storage.listFiles();
-                  res.writeHead(200, { 'Content-Type': 'application/json' });
-                  res.end(JSON.stringify({ success: true, data: files }));
-                } catch (error) {
-                  res.writeHead(500, { 'Content-Type': 'application/json' });
-                  res.end(JSON.stringify({ error: 'Failed to list files from Vercel Blob', details: error.message }));
-                }
               } else {
                 next();
               }

@@ -69,7 +69,7 @@
       }
       .slot-machine {
         display: flex;
-        width: 450px;
+        width: 600px;
         margin-bottom: 30px;
         position: relative;
       }
@@ -397,6 +397,7 @@
         </select>
       </div>
       <div class="slot-machine">
+        <div class="slot">0</div>
         <div class="slot">0</div>
         <div class="slot">0</div>
         <div class="slot">0</div>
@@ -749,7 +750,7 @@
             const participant = participants.find((p) => p.id === id);
             if (participant) {
               winnersDetails.push({
-                id: id.toString().padStart(3, "0"),
+                id: id.toString().padStart(4, "0"),
                 prize:
                   ["🥇 GIẢI NHẤT", "🥈 GIẢI NHÌ", "🥉 GIẢI BA", "🎫 MÃ SỐ"][
                     index
@@ -822,7 +823,7 @@
               // Hiển thị ID ngẫu nhiên từ danh sách người tham gia
               const randomParticipant =
                 participants[Math.floor(Math.random() * participants.length)];
-              const idStr = randomParticipant.id.toString().padStart(3, "0");
+              const idStr = randomParticipant.id.toString().padStart(4, "0");
               slot.innerText = idStr[index] || "0";
             } else {
               slot.innerText = Math.floor(Math.random() * 10);
@@ -833,7 +834,7 @@
       }
 
       function formatNumber(number) {
-        return number.toString().padStart(3, "0");
+        return number.toString().padStart(4, "0");
       }
 
       function stopSpinningGradually() {
@@ -846,8 +847,8 @@
         const result = formatNumber(validNumber);
         const resultArray = result.split("");
 
-        // Thêm slot thứ 4 nếu cần (để hiển thị đủ 3 chữ số)
-        while (resultArray.length < 3) {
+        // Đảm bảo có đủ 4 chữ số
+        while (resultArray.length < 4) {
           resultArray.unshift("0");
         }
 
@@ -922,7 +923,7 @@
         const participant = participants.find((p) => p.id === participantId);
 
         if (participant) {
-          const formattedId = participantId.toString().padStart(3, "0");
+          const formattedId = participantId.toString().padStart(4, "0");
 
           // Lưu thông tin winner vào session storage
           const savedWinnersDetails = sessionStorage.getItem("winnersDetails");

@@ -130,7 +130,7 @@ export const SubmissionList: React.FC<SubmissionListProps> = ({
                     className="bg-white/40 border-b border-slate-300/50 hover:bg-slate-200/40"
                   >
                     <td className="px-4 py-3 font-medium text-slate-900">
-                      #{sub.id}
+                      #{sub.id.toString().padStart(4, '0')}
                     </td>
                     <td className="px-4 py-3">{sub.name}</td>
                     <td className="px-4 py-3 hidden md:table-cell">

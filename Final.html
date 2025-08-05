@@ -468,11 +468,11 @@
       async function loadParticipants() {
         try {
           let csvData;
-          
+
           if (USE_FILE) {
             // Load từ file CSV
             console.log("Loading data from file...");
-            const response = await fetch('data/data.csv');
+            const response = await fetch("data/data.csv");
             csvData = await response.text();
           } else {
             // Dữ liệu CSV được nhúng trực tiếp để tránh CORS
@@ -716,8 +716,8 @@
             </div>
             <div class="winner-details">
                 <div><strong>👤 Họ & Tên:</strong> ${winner.name}</div>
-                <div><strong>📱 Điện thoại:</strong> ${winner.phone}</div>
-                <div><strong>🆔 CCCD:</strong> ${winner.nationalId}</div>
+                <div><strong>📱 Điện thoại:</strong> ${maskNumber(winner.phone)}</div>
+                <div><strong>🆔 CCCD:</strong> ${maskNumber(winner.nationalId)}</div>
                 <div><strong>🏢 Đại lý:</strong> ${winner.agency}</div>
             </div>
           `;
@@ -904,6 +904,12 @@
         });
       }
 
+      // Hàm để chỉ hiển thị 4 số cuối
+      function maskNumber(number) {
+        if (!number || number.length <= 4) return number;
+        return '***' + number.slice(-4);
+      }
+
       function addWinner(participantId) {
         const prizeValue = document.getElementById("prizeSelect").value;
         const prize = prizeMapping[prizeValue] || prizeValue;
@@ -954,8 +960,8 @@
               </div>
               <div class="winner-details">
                     <div><strong>👤 Họ & Tên:</strong> ${winner.name}</div>
-                    <div><strong>📱 Điện thoại:</strong> ${winner.phone}</div>
-                    <div><strong>🆔 CCCD:</strong> ${winner.nationalId}</div>
+                    <div><strong>📱 Điện thoại:</strong> ${maskNumber(winner.phone)}</div>
+                    <div><strong>🆔 CCCD:</strong> ${maskNumber(winner.nationalId)}</div>
                     <div><strong>🏢 Đại lý:</strong> ${winner.agency}</div>
               </div>
             `;

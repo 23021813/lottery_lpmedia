@@ -43,12 +43,11 @@ const DEFAULT_CONFIG: ConfigData = {
   lastUpdated: new Date().toISOString()
 };
 
-// Read config from actual file only
+// Read config from Vercel Blob via API only
 export const readConfigFile = async (): Promise<ConfigData> => {
   try {
-    // Always fetch from the actual config.json file with aggressive cache busting
-    const cacheBuster = Date.now() + Math.random();
-    const response = await fetch(`/data/config.json?t=${cacheBuster}`, {
+    // Fetch from Vercel Blob via API endpoint
+    const response = await fetch('/api/read-config', {
       cache: 'no-cache',
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -56,16 +55,19 @@ export const readConfigFile = async (): Promise<ConfigData> => {
         'Expires': '0'
       }
     });
+    
     if (response.ok) {
-      const data = await response.json();
-      return data;
+      const result = await response.json();
+      if (result.success && result.data) {
+        return result.data;
+      }
     }
     
-    // If file doesn't exist, return default config
-    console.warn('Config file not found, using default config');
+    // If API fails, return default config
+    console.warn('Config not found in Vercel Blob, using default config');
     return DEFAULT_CONFIG;
   } catch (error) {
-    console.error('Error reading config file:', error);
+    console.error('Error reading config from Vercel Blob:', error);
     return DEFAULT_CONFIG;
   }
 };
@@ -103,12 +105,11 @@ export const writeConfigFile = async (config: ConfigData): Promise<void> => {
   }
 };
 
-// Read CSV data from file only
+// Read CSV data from Vercel Blob via API only
 export const readCSVFile = async (): Promise<string> => {
   try {
-    // Always fetch from the actual data.csv file with aggressive cache busting
-    const cacheBuster = Date.now() + Math.random();
-    const response = await fetch(`/data/data.csv?t=${cacheBuster}`, {
+    // Fetch from Vercel Blob via API endpoint
+    const response = await fetch('/api/read-csv', {
       cache: 'no-cache',
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -116,16 +117,19 @@ export const readCSVFile = async (): Promise<string> => {
         'Expires': '0'
       }
     });
+    
     if (response.ok) {
-      const data = await response.text();
-      return data;
+      const result = await response.json();
+      if (result.success && result.data) {
+        return result.data;
+      }
     }
     
-    // If file doesn't exist, return default header
-    console.warn('CSV file not found, using default header');
+    // If API fails, return default header
+    console.warn('CSV not found in Vercel Blob, using default header');
     return 'id,name,phone,nationalId,agency,prizeWon\n';
   } catch (error) {
-    console.error('Error reading CSV file:', error);
+    console.error('Error reading CSV from Vercel Blob:', error);
     return 'id,name,phone,nationalId,agency,prizeWon\n';
   }
 };
@@ -196,8 +200,8 @@ export const downloadCSVFile = (): void => {
   });
 };
 
-// Force reload from files (no localStorage involved)
+// Force reload from Vercel Blob
 export const forceReloadFromFiles = (): void => {
-  // Simply refresh the page to reload from files
+  // Simply refresh the page to reload from Vercel Blob
   window.location.reload();
 };

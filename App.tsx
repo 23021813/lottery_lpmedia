@@ -101,6 +101,7 @@ export default function App() {
         <TimeSettings />
         <SubmissionList submissions={submissions} onSubmissionsUpdate={loadSubmissions} />
         <AgencyManager agencies={agencies} onAgenciesUpdate={handleAgenciesUpdate} />
+        <BlobMigrationManager />
       </div>
     );
   };

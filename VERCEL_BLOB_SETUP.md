@@ -44,9 +44,9 @@ BLOB_READ_WRITE_TOKEN=vercel_blob_rw_xxxxxxxxxx
 - `config.json` - Cấu hình ứng dụng
 - `data.csv` - Dữ liệu đăng ký
 
-### Fallback cho Development:
-- Nếu Vercel Blob không available, sẽ fallback về local file system
-- Phù hợp cho development local
+### Development Requirements:
+- Vercel Blob là bắt buộc cho cả development và production
+- Cần set BLOB_READ_WRITE_TOKEN trong .env.local cho development
 
 ## Ưu điểm
 ✅ **Giải quyết EROFS error** trên Vercel  
@@ -94,10 +94,10 @@ const loadCsv = async () => {
 };
 ```
 
-## Migration từ Local Files
-1. Deploy code mới với Vercel Blob
-2. Upload existing `data/config.json` và `data/data.csv` lên Blob store
-3. Hoặc để hệ thống tự tạo files mới với default values
+## Khởi tạo Data
+1. Deploy code với Vercel Blob
+2. Hệ thống sẽ tự động tạo files với default values khi cần
+3. Admin có thể cấu hình agencies và time settings qua giao diện
 
 ## Troubleshooting
 
@@ -112,4 +112,4 @@ const loadCsv = async () => {
 
 ### Development không hoạt động
 - Tạo file `.env.local` với BLOB_READ_WRITE_TOKEN
-- Hoặc để fallback về local file system
+- Vercel Blob là bắt buộc, không có fallback

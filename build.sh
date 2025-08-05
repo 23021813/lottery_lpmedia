@@ -11,15 +11,9 @@ rm -rf dist
 echo "Building with Vite..."
 npm run build
 
-# Step 3: Copy data folder and public assets
-echo "Copying data folder and assets..."
-cp -r data dist/
+# Step 3: Copy public assets
+echo "Copying public assets..."
 cp -r public/* dist/
-
-# Step 4: Set write permissions for data folder
-echo "Setting write permissions for data folder..."
-chmod -R 644 dist/data/*
-chmod 755 dist/data
 
 echo "Build completed successfully!"
 echo ""

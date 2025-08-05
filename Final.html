@@ -703,8 +703,8 @@
         // Clear existing list first
         winnersList.innerHTML = "";
 
-        // Sắp xếp theo thứ tự giải
-        const sortedWinners = sortWinnersByPrize([...winnersDetails]);
+        // Sắp xếp theo thời gian (mới nhất trên cùng)
+        const sortedWinners = sortWinnersByTime([...winnersDetails]);
 
         sortedWinners.forEach((winner, index) => {
           const listItem = document.createElement("li");
@@ -758,6 +758,7 @@
                 phone: participant.phone,
                 nationalId: participant.nationalId,
                 agency: participant.agency,
+                timestamp: Date.now() - (usedNumbers.length - index) * 1000, // Timestamp giả lập theo thứ tự
               });
             }
           });
@@ -896,12 +897,13 @@
         "🎫 MÃ SỐ": 4,
       };
 
-      // Sắp xếp danh sách winners theo thứ tự giải
-      function sortWinnersByPrize(winners) {
+      // Sắp xếp danh sách winners theo thời gian (mới nhất trên cùng)
+      function sortWinnersByTime(winners) {
         return winners.sort((a, b) => {
-          const orderA = prizeOrder[a.prize] || 999;
-          const orderB = prizeOrder[b.prize] || 999;
-          return orderA - orderB;
+          // Sắp xếp theo timestamp giảm dần (mới nhất trước)
+          const timeA = a.timestamp || 0;
+          const timeB = b.timestamp || 0;
+          return timeB - timeA;
         });
       }
 
@@ -935,6 +937,7 @@
             phone: participant.phone,
             nationalId: participant.nationalId,
             agency: participant.agency,
+            timestamp: Date.now(), // Thêm timestamp để sắp xếp theo thời gian
           };
 
           winnersDetails.push(winnerData);
@@ -947,8 +950,8 @@
             JSON.stringify(winnersDetails)
           );
 
-          // Sắp xếp lại và hiển thị toàn bộ danh sách
-          const sortedWinners = sortWinnersByPrize(winnersDetails);
+          // Sắp xếp lại và hiển thị toàn bộ danh sách (mới nhất trên cùng)
+          const sortedWinners = sortWinnersByTime(winnersDetails);
 
           // Clear và hiển thị lại danh sách đã sắp xếp
           winnersList.innerHTML = "";

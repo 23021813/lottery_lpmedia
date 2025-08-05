@@ -252,7 +252,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onNewSubmiss
                 <div className="bg-white/20 rounded-lg p-4 backdrop-blur-sm">
                   <p className="text-sm mb-2">Mã số dự thưởng của bạn là:</p>
                   <div className="text-4xl font-bold text-yellow-300 drop-shadow-lg">
-                    #{submissionResult.id}
+                    #{submissionResult.id.toString().padStart(4, "0")}
                   </div>
                   <p className="text-xs mt-2 opacity-90">Vui lòng lưu lại mã số này!</p>
                 </div>

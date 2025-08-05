@@ -38,7 +38,13 @@ export const saveTimeSettings = async (settings: TimeSettings): Promise<void> =>
 export const getTimeSettings = async (): Promise<TimeSettings | null> => {
     try {
         const config = await readConfigFile();
-        return config.timeSettings.regStart || config.timeSettings.regEnd ? config.timeSettings : null;
+        
+        // Check if timeSettings exists and has valid data
+        if (config.timeSettings && (config.timeSettings.regStart || config.timeSettings.regEnd)) {
+            return config.timeSettings;
+        }
+        
+        return null;
     } catch (error) {
         console.error('Failed to get time settings:', error);
         return null;

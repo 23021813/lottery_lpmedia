@@ -6,13 +6,13 @@ import { SubmissionList } from './components/SubmissionList';
 import { TimeSettings } from './components/TimeSettings';
 import { PasswordForm } from './components/PasswordForm';
 import { AgencyManager } from './components/AgencyManager';
+import { BlobStatusManager } from './components/BlobStatusManager';
 import { REAL_ESTATE_AGENCIES } from './constants';
 
 type View = 'register' | 'admin';
 
 export default function App() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const [welcomeMessage] = useState<string>('Chào mừng các bạn đến với sự kiện đặc biệt của chúng tôi! Hãy đăng ký ngay để có cơ hội nhận những phần quà hấp dẫn.');
   const [view, setView] = useState<View>('register');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [agencies, setAgencies] = useState<string[]>([]);
@@ -101,7 +101,7 @@ export default function App() {
         <TimeSettings />
         <SubmissionList submissions={submissions} onSubmissionsUpdate={loadSubmissions} />
         <AgencyManager agencies={agencies} onAgenciesUpdate={handleAgenciesUpdate} />
-        <BlobMigrationManager />
+        <BlobStatusManager />
       </div>
     );
   };

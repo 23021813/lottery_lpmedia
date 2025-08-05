@@ -1,4 +1,4 @@
-import { put, list, del } from '@vercel/blob';
+import { put, list, del } from "@vercel/blob";
 
 class BlobStorage {
   constructor() {
@@ -13,15 +13,15 @@ class BlobStorage {
   async saveConfig(config) {
     try {
       const configString = JSON.stringify(config, null, 2);
-      const blob = await put('config.json', configString, {
-        access: 'public',
-        contentType: 'application/json'
+      const blob = await put("config.json", configString, {
+        access: "public",
+        contentType: "application/json",
       });
-      
-      console.log('✅ Config saved to Vercel Blob:', blob.url);
+
+      console.log("✅ Config saved to Vercel Blob:", blob.url);
       return { success: true, url: blob.url };
     } catch (error) {
-      console.error('❌ Error saving config to Vercel Blob:', error);
+      console.error("❌ Error saving config to Vercel Blob:", error);
       throw error;
     }
   }
@@ -33,15 +33,15 @@ class BlobStorage {
    */
   async saveCsv(csvContent) {
     try {
-      const blob = await put('data.csv', csvContent, {
-        access: 'public',
-        contentType: 'text/csv'
+      const blob = await put("data.csv", csvContent, {
+        access: "public",
+        contentType: "text/csv",
       });
-      
-      console.log('✅ CSV saved to Vercel Blob:', blob.url);
+
+      console.log("✅ CSV saved to Vercel Blob:", blob.url);
       return { success: true, url: blob.url };
     } catch (error) {
-      console.error('❌ Error saving CSV to Vercel Blob:', error);
+      console.error("❌ Error saving CSV to Vercel Blob:", error);
       throw error;
     }
   }
@@ -52,32 +52,76 @@ class BlobStorage {
    */
   async getConfig() {
     try {
-      const { blobs } = await list({ prefix: 'config.json' });
-      
+      const { blobs } = await list({ prefix: "config.json" });
+
       if (blobs.length === 0) {
         // Trả về config mặc định nếu chưa có
         return {
-          title: "Lucky Draw Registration",
-          description: "Register for our lucky draw event",
-          maxParticipants: 100,
-          isActive: true
+          agencies: [
+            "Đất xanh Bắc Trung Bộ",
+            "Cenland Bắc Trung Bộ",
+            "Bhomes",
+            "Tân Long",
+            "Fivestar",
+            "Hoàng Huy NT",
+            "Âu Lạc Land",
+            "City Homes",
+            "Xứ Nghệ homes",
+            "SVLand",
+            "RealLand",
+            "Aura Realty",
+            "Titan Luxury",
+            "MT group",
+            "New Sky Land",
+            "Fuji Land",
+            "Haka Holding",
+            "Phú Lâm",
+            "GC Land",
+          ],
+          timeSettings: {
+            regStart: "",
+            regEnd: "",
+          },
+          lastUpdated: new Date().toISOString(),
         };
       }
 
       const configBlob = blobs[0];
       const response = await fetch(configBlob.url);
       const config = await response.json();
-      
-      console.log('✅ Config loaded from Vercel Blob');
+
+      console.log("✅ Config loaded from Vercel Blob");
       return config;
     } catch (error) {
-      console.error('❌ Error loading config from Vercel Blob:', error);
+      console.error("❌ Error loading config from Vercel Blob:", error);
       // Trả về config mặc định nếu có lỗi
       return {
-        title: "Lucky Draw Registration",
-        description: "Register for our lucky draw event",
-        maxParticipants: 100,
-        isActive: true
+        agencies: [
+          "Đất xanh Bắc Trung Bộ",
+          "Cenland Bắc Trung Bộ",
+          "Bhomes",
+          "Tân Long",
+          "Fivestar",
+          "Hoàng Huy NT",
+          "Âu Lạc Land",
+          "City Homes",
+          "Xứ Nghệ homes",
+          "SVLand",
+          "RealLand",
+          "Aura Realty",
+          "Titan Luxury",
+          "MT group",
+          "New Sky Land",
+          "Fuji Land",
+          "Haka Holding",
+          "Phú Lâm",
+          "GC Land",
+        ],
+        timeSettings: {
+          regStart: "",
+          regEnd: "",
+        },
+        lastUpdated: new Date().toISOString(),
       };
     }
   }
@@ -88,23 +132,23 @@ class BlobStorage {
    */
   async getCsv() {
     try {
-      const { blobs } = await list({ prefix: 'data.csv' });
-      
+      const { blobs } = await list({ prefix: "data.csv" });
+
       if (blobs.length === 0) {
         // Trả về CSV header mặc định nếu chưa có
-        return 'name,email,phone,registrationTime\n';
+        return "id,name,phone,nationalId,agency,prizeWon\n";
       }
 
       const csvBlob = blobs[0];
       const response = await fetch(csvBlob.url);
       const csvContent = await response.text();
-      
-      console.log('✅ CSV loaded from Vercel Blob');
+
+      console.log("✅ CSV loaded from Vercel Blob");
       return csvContent;
     } catch (error) {
-      console.error('❌ Error loading CSV from Vercel Blob:', error);
+      console.error("❌ Error loading CSV from Vercel Blob:", error);
       // Trả về CSV header mặc định nếu có lỗi
-      return 'name,email,phone,registrationTime\n';
+      return "id,name,phone,nationalId,agency,prizeWon\n";
     }
   }
 
@@ -117,7 +161,7 @@ class BlobStorage {
       const { blobs } = await list();
       return blobs;
     } catch (error) {
-      console.error('❌ Error listing blobs:', error);
+      console.error("❌ Error listing blobs:", error);
       return [];
     }
   }
@@ -130,13 +174,13 @@ class BlobStorage {
   async deleteFile(filename) {
     try {
       const { blobs } = await list({ prefix: filename });
-      
+
       if (blobs.length > 0) {
         await del(blobs[0].url);
         console.log(`✅ Deleted ${filename} from Vercel Blob`);
         return true;
       }
-      
+
       return false;
     } catch (error) {
       console.error(`❌ Error deleting ${filename} from Vercel Blob:`, error);

@@ -61,40 +61,51 @@ export default defineConfig(({ mode }) => {
         {
           name: 'file-api',
           configureServer(server) {
-            server.middlewares.use('/api/write-config', (req, res, next) => {
+            // Import blobStorage dynamically for development
+            let blobStorage;
+            
+            const initBlobStorage = async () => {
+              if (!blobStorage) {
+                try {
+                  const module = await import('./services/blobStorage.js');
+                  blobStorage = module.default;
+                } catch (error) {
+                  console.warn('Vercel Blob not available in development, falling back to local files');
+                  blobStorage = null;
+                }
+              }
+              return blobStorage;
+            };
+
+            server.middlewares.use('/api/write-config', async (req, res, next) => {
               if (req.method === 'POST') {
                 let body = '';
                 req.on('data', chunk => {
                   body += chunk.toString();
                 });
-                req.on('end', () => {
+                req.on('end', async () => {
                   try {
                     const data = JSON.parse(body);
-                    const dataDir = path.join(__dirname, 'data');
-                    const configPath = path.join(dataDir, 'config.json');
+                    const storage = await initBlobStorage();
                     
-                    // Ensure data directory exists with write permissions
-                    if (!fs.existsSync(dataDir)) {
-                      fs.mkdirSync(dataDir, { recursive: true });
-                      try {
-                        fs.chmodSync(dataDir, 0o755);
-                      } catch (chmodError) {
-                        console.warn('Could not set directory permissions:', chmodError.message);
+                    if (storage) {
+                      // Use Vercel Blob in development if available
+                      const result = await storage.saveConfig(data);
+                      res.writeHead(200, { 'Content-Type': 'application/json' });
+                      res.end(JSON.stringify(result));
+                    } else {
+                      // Fallback to local file system
+                      const dataDir = path.join(__dirname, 'data');
+                      const configPath = path.join(dataDir, 'config.json');
+                      
+                      if (!fs.existsSync(dataDir)) {
+                        fs.mkdirSync(dataDir, { recursive: true });
                       }
+                      
+                      fs.writeFileSync(configPath, JSON.stringify(data, null, 2));
+                      res.writeHead(200, { 'Content-Type': 'application/json' });
+                      res.end(JSON.stringify({ success: true }));
                     }
-                    
-                    // Write file
-                    fs.writeFileSync(configPath, JSON.stringify(data, null, 2));
-                    
-                    // Set file permissions
-                    try {
-                      fs.chmodSync(configPath, 0o644);
-                    } catch (chmodError) {
-                      console.warn('Could not set file permissions:', chmodError.message);
-                    }
-                    
-                    res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ success: true }));
                   } catch (error) {
                     res.writeHead(500, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ error: 'Failed to write config file', details: error.message }));
@@ -105,54 +116,35 @@ export default defineConfig(({ mode }) => {
               }
             });
 
-            server.middlewares.use('/api/write-csv', (req, res, next) => {
+            server.middlewares.use('/api/write-csv', async (req, res, next) => {
               if (req.method === 'POST') {
                 let body = '';
                 req.on('data', chunk => {
                   body += chunk.toString();
                 });
-                req.on('end', () => {
+                req.on('end', async () => {
                   try {
-                    console.log('CSV API called, body length:', body.length);
                     const { content } = JSON.parse(body);
-                    console.log('Content to write, length:', content.length, 'first 100 chars:', content.substring(0, 100));
+                    const storage = await initBlobStorage();
                     
-                    const dataDir = path.join(__dirname, 'data');
-                    const csvPath = path.join(dataDir, 'data.csv');
-                    console.log('Writing to path:', csvPath);
-                    
-                    // Ensure data directory exists with write permissions
-                    if (!fs.existsSync(dataDir)) {
-                      fs.mkdirSync(dataDir, { recursive: true });
-                      try {
-                        fs.chmodSync(dataDir, 0o755);
-                      } catch (chmodError) {
-                        console.warn('Could not set directory permissions:', chmodError.message);
+                    if (storage) {
+                      // Use Vercel Blob in development if available
+                      const result = await storage.saveCsv(content);
+                      res.writeHead(200, { 'Content-Type': 'application/json' });
+                      res.end(JSON.stringify(result));
+                    } else {
+                      // Fallback to local file system
+                      const dataDir = path.join(__dirname, 'data');
+                      const csvPath = path.join(dataDir, 'data.csv');
+                      
+                      if (!fs.existsSync(dataDir)) {
+                        fs.mkdirSync(dataDir, { recursive: true });
                       }
+                      
+                      fs.writeFileSync(csvPath, content);
+                      res.writeHead(200, { 'Content-Type': 'application/json' });
+                      res.end(JSON.stringify({ success: true }));
                     }
-                    
-                    // Check if file exists and is writable
-                    try {
-                      fs.accessSync(csvPath, fs.constants.W_OK);
-                      console.log('File is writable');
-                    } catch (accessError) {
-                      console.log('File access check failed:', accessError.message);
-                    }
-                    
-                    // Write file
-                    fs.writeFileSync(csvPath, content);
-                    
-                    // Set file permissions
-                    try {
-                      fs.chmodSync(csvPath, 0o644);
-                    } catch (chmodError) {
-                      console.warn('Could not set file permissions:', chmodError.message);
-                    }
-                    
-                    console.log('File written successfully');
-                    
-                    res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ success: true }));
                   } catch (error) {
                     console.error('CSV write error:', error);
                     res.writeHead(500, { 'Content-Type': 'application/json' });

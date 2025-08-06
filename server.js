@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
+import { verifyTurnstileToken } from './services/turnstileService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -83,6 +84,46 @@ app.post('/api/write-csv', (req, res) => {
   }
 });
 
+// API endpoint để verify submission với Turnstile
+app.post('/api/verify-submission', async (req, res) => {
+  try {
+    const { captchaToken, formData } = req.body;
+    
+    // Get client IP
+    const clientIP = req.headers['x-forwarded-for'] || 
+                     req.connection.remoteAddress || 
+                     req.socket.remoteAddress ||
+                     (req.connection.socket ? req.connection.socket.remoteAddress : null);
+
+    // Verify Turnstile token
+    const verification = await verifyTurnstileToken(captchaToken, clientIP);
+    
+    if (!verification.success) {
+      return res.status(400).json({
+        success: false,
+        error: verification.error || 'Captcha verification failed',
+        errorCodes: verification.errorCodes
+      });
+    }
+
+    // If verification successful, return success
+    // The actual form submission will be handled by the existing client-side logic
+    res.json({ 
+      success: true, 
+      message: 'Captcha verified successfully' 
+    });
+    
+    console.log('Turnstile verification successful for IP:', clientIP);
+  } catch (error) {
+    console.error('Error in submission verification:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Server error during verification',
+      details: error.message
+    });
+  }
+});
+
 // API endpoint để upload background image
 app.post('/api/upload-background', upload.single('background'), (req, res) => {
   try {
@@ -133,5 +174,6 @@ app.listen(PORT, () => {
   console.log(`API endpoints available:`);
   console.log(`- POST /api/write-config`);
   console.log(`- POST /api/write-csv`);
+  console.log(`- POST /api/verify-submission`);
   console.log(`- POST /api/upload-background`);
 });

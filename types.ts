@@ -13,4 +13,5 @@ export interface FormErrors {
   phone?: string;
   nationalId?: string;
   agency?: string;
+  captcha?: string;
 }

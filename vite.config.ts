@@ -18,7 +18,8 @@ export default defineConfig(({ mode }) => {
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.ADMIN_PASSWORD': JSON.stringify(env.ADMIN_PASSWORD)
+        'process.env.ADMIN_PASSWORD': JSON.stringify(env.ADMIN_PASSWORD),
+        'process.env.TURNSTILE_SECRET_KEY': JSON.stringify(env.TURNSTILE_SECRET_KEY)
       },
       resolve: {
         alias: {
@@ -84,6 +85,60 @@ export default defineConfig(({ mode }) => {
                     console.error('CSV write error:', error);
                     res.writeHead(500, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ error: 'Failed to write CSV file', details: error.message }));
+                  }
+                });
+              } else {
+                next();
+              }
+            });
+
+            // Verify submission API endpoint for development
+            server.middlewares.use('/api/verify-submission', async (req, res, next) => {
+              if (req.method === 'POST') {
+                let body = '';
+                req.on('data', chunk => {
+                  body += chunk.toString();
+                });
+                req.on('end', async () => {
+                  try {
+                    const { captchaToken, formData } = JSON.parse(body);
+                    
+                    // Get client IP
+                    const clientIP = req.headers['x-forwarded-for'] || 
+                                     req.connection?.remoteAddress || 
+                                     req.socket?.remoteAddress ||
+                                     '127.0.0.1';
+
+                    // Import and use turnstile service with env
+                    process.env.TURNSTILE_SECRET_KEY = env.TURNSTILE_SECRET_KEY;
+                    const { verifyTurnstileToken } = await import('./services/turnstileService.js');
+                    const verification = await verifyTurnstileToken(captchaToken, clientIP);
+                    
+                    if (!verification.success) {
+                      res.writeHead(400, { 'Content-Type': 'application/json' });
+                      res.end(JSON.stringify({
+                        success: false,
+                        error: verification.error || 'Captcha verification failed',
+                        errorCodes: verification.errorCodes
+                      }));
+                      return;
+                    }
+
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ 
+                      success: true, 
+                      message: 'Captcha verified successfully' 
+                    }));
+                    
+                    console.log('Turnstile verification successful for IP:', clientIP);
+                  } catch (error) {
+                    console.error('Error in submission verification:', error);
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({
+                      success: false,
+                      error: 'Server error during verification',
+                      details: error.message
+                    }));
                   }
                 });
               } else {

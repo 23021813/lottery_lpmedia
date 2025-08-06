@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { addSubmission, getTimeSettings, checkPhoneExists, checkNationalIdExists } from '../services/mockApi';
+import { verifyCaptcha } from '../services/captchaService';
 import type { FormErrors } from '../types';
+import { TURNSTILE_SITE_KEY } from '../constants';
 import { Card } from './ui/Card';
 import { Input } from './ui/Input';
 import { Select } from './ui/Select';
 import { Button } from './ui/Button';
+import { TurnstileComponent } from './ui/Turnstile';
 
 interface RegistrationFormProps {
   onNewSubmission: () => void;
@@ -16,6 +19,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onNewSubmiss
   const [phone, setPhone] = useState('');
   const [nationalId, setNationalId] = useState('');
   const [agency, setAgency] = useState('');
+  const [captchaToken, setCaptchaToken] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionResult, setSubmissionResult] = useState<{ id: number | null, message: string, isError: boolean }>({ id: null, message: '', isError: false });
@@ -72,6 +76,9 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onNewSubmiss
       case 'agency':
         if (!value) return 'Vui lòng chọn một đại lý.';
         break;
+      case 'captcha':
+        if (!captchaToken) return 'Vui lòng xác thực captcha.';
+        break;
     }
     return '';
   };
@@ -98,6 +105,33 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onNewSubmiss
     }
   };
 
+  // Handle captcha verification
+  const handleCaptchaVerify = (token: string) => {
+    setCaptchaToken(token);
+    setErrors(prev => ({
+      ...prev,
+      captcha: ''
+    }));
+  };
+
+  // Handle captcha error
+  const handleCaptchaError = () => {
+    setCaptchaToken('');
+    setErrors(prev => ({
+      ...prev,
+      captcha: 'Xác thực captcha thất bại. Vui lòng thử lại.'
+    }));
+  };
+
+  // Handle captcha expire
+  const handleCaptchaExpire = () => {
+    setCaptchaToken('');
+    setErrors(prev => ({
+      ...prev,
+      captcha: 'Captcha đã hết hạn. Vui lòng xác thực lại.'
+    }));
+  };
+
   const validateForm = async (): Promise<boolean> => {
     const newErrors: FormErrors = {};
     
@@ -113,6 +147,9 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onNewSubmiss
     const agencyError = await validateField('agency', agency);
     if (agencyError) newErrors.agency = agencyError;
     
+    const captchaError = await validateField('captcha', captchaToken);
+    if (captchaError) newErrors.captcha = captchaError;
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -127,12 +164,34 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onNewSubmiss
 
     setIsSubmitting(true);
     try {
+      // First verify captcha with server
+      const captchaVerification = await verifyCaptcha(captchaToken, {
+        name, phone, nationalId, agency
+      });
+
+      if (!captchaVerification.success) {
+        setSubmissionResult({ 
+          id: null, 
+          message: `Xác thực captcha thất bại: ${captchaVerification.error}`, 
+          isError: true 
+        });
+        // Reset captcha on verification failure
+        setCaptchaToken('');
+        setErrors(prev => ({
+          ...prev,
+          captcha: 'Vui lòng xác thực captcha lại.'
+        }));
+        return;
+      }
+
+      // If captcha verified, proceed with submission
       const newId = await addSubmission({ name, phone, nationalId, agency });
       setSubmissionResult({ id: newId, message: 'success', isError: false });
       setName('');
       setPhone('');
       setNationalId('');
       setAgency('');
+      setCaptchaToken('');
       setErrors({});
       setTouchedFields(new Set());
       onNewSubmission();
@@ -225,9 +284,27 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onNewSubmiss
                 {errors.agency}
               </p>}
             </div>
+            
+            {/* Cloudflare Turnstile Captcha */}
+            <div className="mt-6">
+              <label className="block text-sm font-medium text-slate-600 mb-3">Xác thực bảo mật</label>
+              <TurnstileComponent
+                siteKey={TURNSTILE_SITE_KEY}
+                onVerify={handleCaptchaVerify}
+                onError={handleCaptchaError}
+                onExpire={handleCaptchaExpire}
+                className="mb-2"
+              />
+              {errors.captcha && <p className="text-red-500 text-sm mt-1 flex items-center">
+                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                {errors.captcha}
+              </p>}
+            </div>
           </div>
           <div className="mt-8">
-              <Button type="submit" isLoading={isSubmitting} disabled={!isRegActive || isSubmitting}>
+              <Button type="submit" isLoading={isSubmitting} disabled={!isRegActive || isSubmitting || !captchaToken}>
                 {isSubmitting ? 'Đang xử lý...' : 'Đăng Ký Ngay'}
               </Button>
           </div>

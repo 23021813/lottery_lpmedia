@@ -3,7 +3,11 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
+import dotenv from 'dotenv';
 import { verifyTurnstileToken } from './services/turnstileService.js';
+
+// Load environment variables
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -89,16 +93,26 @@ app.post('/api/verify-submission', async (req, res) => {
   try {
     const { captchaToken, formData } = req.body;
     
+    console.log('=== TURNSTILE VERIFICATION DEBUG ===');
+    console.log('Received captcha token:', captchaToken);
+    console.log('Environment TURNSTILE_SECRET_KEY exists:', !!process.env.TURNSTILE_SECRET_KEY);
+    console.log('Secret key value:', process.env.TURNSTILE_SECRET_KEY);
+    
     // Get client IP
     const clientIP = req.headers['x-forwarded-for'] || 
                      req.connection.remoteAddress || 
                      req.socket.remoteAddress ||
                      (req.connection.socket ? req.connection.socket.remoteAddress : null);
+    
+    console.log('Client IP:', clientIP);
 
     // Verify Turnstile token
     const verification = await verifyTurnstileToken(captchaToken, clientIP);
     
+    console.log('Verification result:', verification);
+    
     if (!verification.success) {
+      console.log('Verification failed, returning error');
       return res.status(400).json({
         success: false,
         error: verification.error || 'Captcha verification failed',
@@ -107,13 +121,14 @@ app.post('/api/verify-submission', async (req, res) => {
     }
 
     // If verification successful, return success
-    // The actual form submission will be handled by the existing client-side logic
+    console.log('Verification successful, returning success');
     res.json({ 
       success: true, 
       message: 'Captcha verified successfully' 
     });
     
     console.log('Turnstile verification successful for IP:', clientIP);
+    console.log('=== END DEBUG ===');
   } catch (error) {
     console.error('Error in submission verification:', error);
     res.status(500).json({

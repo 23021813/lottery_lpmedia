@@ -28,6 +28,36 @@ export default defineConfig(({ mode }) => {
       },
       plugins: [
         {
+          name: 'copy-data-files',
+          writeBundle() {
+            // Copy data files to dist after build
+            const dataDir = path.join(__dirname, 'data');
+            const distDataDir = path.join(__dirname, 'dist', 'data');
+            
+            if (fs.existsSync(dataDir)) {
+              if (!fs.existsSync(distDataDir)) {
+                fs.mkdirSync(distDataDir, { recursive: true });
+              }
+              
+              // Copy config.json
+              const configPath = path.join(dataDir, 'config.json');
+              const distConfigPath = path.join(distDataDir, 'config.json');
+              if (fs.existsSync(configPath)) {
+                fs.copyFileSync(configPath, distConfigPath);
+                console.log('Copied config.json to dist/data/');
+              }
+              
+              // Copy data.csv
+              const csvPath = path.join(dataDir, 'data.csv');
+              const distCsvPath = path.join(distDataDir, 'data.csv');
+              if (fs.existsSync(csvPath)) {
+                fs.copyFileSync(csvPath, distCsvPath);
+                console.log('Copied data.csv to dist/data/');
+              }
+            }
+          }
+        },
+        {
           name: 'file-api',
           configureServer(server) {
             server.middlewares.use('/api/write-config', (req, res, next) => {

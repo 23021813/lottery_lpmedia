@@ -42,17 +42,29 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.post('/api/write-config', (req, res) => {
   try {
     const config = req.body;
-    const configPath = path.join(__dirname, 'data', 'config.json');
     
-    // Ensure data directory exists
+    // Write to both locations for consistency
+    const configPath = path.join(__dirname, 'data', 'config.json');
+    const distConfigPath = path.join(__dirname, 'dist', 'data', 'config.json');
+    
+    // Ensure data directories exist
     const dataDir = path.join(__dirname, 'data');
+    const distDataDir = path.join(__dirname, 'dist', 'data');
+    
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
     }
+    if (!fs.existsSync(distDataDir)) {
+      fs.mkdirSync(distDataDir, { recursive: true });
+    }
     
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+    // Write to both locations
+    const configContent = JSON.stringify(config, null, 2);
+    fs.writeFileSync(configPath, configContent);
+    fs.writeFileSync(distConfigPath, configContent);
+    
     res.json({ success: true });
-    console.log('Config file updated successfully');
+    console.log('Config file updated successfully in both data/ and dist/data/');
   } catch (error) {
     console.error('Error writing config file:', error);
     res.status(500).json({ 
@@ -67,17 +79,28 @@ app.post('/api/write-config', (req, res) => {
 app.post('/api/write-csv', (req, res) => {
   try {
     const { content } = req.body;
-    const csvPath = path.join(__dirname, 'data', 'data.csv');
     
-    // Ensure data directory exists
+    // Write to both locations for consistency
+    const csvPath = path.join(__dirname, 'data', 'data.csv');
+    const distCsvPath = path.join(__dirname, 'dist', 'data', 'data.csv');
+    
+    // Ensure data directories exist
     const dataDir = path.join(__dirname, 'data');
+    const distDataDir = path.join(__dirname, 'dist', 'data');
+    
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
     }
+    if (!fs.existsSync(distDataDir)) {
+      fs.mkdirSync(distDataDir, { recursive: true });
+    }
     
+    // Write to both locations
     fs.writeFileSync(csvPath, content);
+    fs.writeFileSync(distCsvPath, content);
+    
     res.json({ success: true });
-    console.log('CSV file updated successfully');
+    console.log('CSV file updated successfully in both data/ and dist/data/');
   } catch (error) {
     console.error('Error writing CSV file:', error);
     res.status(500).json({ 

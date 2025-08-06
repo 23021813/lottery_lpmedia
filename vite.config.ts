@@ -146,6 +146,84 @@ export default defineConfig(({ mode }) => {
               }
             });
 
+            // Upload logo API endpoint for development
+            server.middlewares.use('/api/upload-logo', (req, res, next) => {
+              if (req.method === 'POST') {
+                const form = formidable({
+                  maxFileSize: 2 * 1024 * 1024, // 2MB for logo
+                  filter: ({ mimetype }) => {
+                    return !!(mimetype && mimetype.startsWith('image/'));
+                  }
+                });
+
+                form.parse(req, (err, fields, files) => {
+                  if (err) {
+                    console.error('Logo upload error:', err);
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: false, error: err.message }));
+                    return;
+                  }
+
+                  try {
+                    const logoFile = Array.isArray(files.logo) 
+                      ? files.logo[0] 
+                      : files.logo;
+
+                    if (!logoFile) {
+                      res.writeHead(400, { 'Content-Type': 'application/json' });
+                      res.end(JSON.stringify({ success: false, error: 'No file uploaded' }));
+                      return;
+                    }
+
+                    // Ensure public directory exists
+                    const publicDir = path.join(__dirname, 'public');
+                    if (!fs.existsSync(publicDir)) {
+                      fs.mkdirSync(publicDir, { recursive: true });
+                    }
+
+                    // Read file and save as logo.png
+                    const fileData = fs.readFileSync(logoFile.filepath);
+                    const logoPath = path.join(publicDir, 'logo.png');
+                    fs.writeFileSync(logoPath, fileData);
+
+                    console.log('Logo image updated successfully');
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: true }));
+                  } catch (error) {
+                    console.error('Error uploading logo:', error);
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: false, error: 'Failed to upload logo', details: error.message }));
+                  }
+                });
+              } else {
+                next();
+              }
+            });
+
+            // Remove logo API endpoint for development
+            server.middlewares.use('/api/remove-logo', (req, res, next) => {
+              if (req.method === 'POST') {
+                try {
+                  const logoPath = path.join(__dirname, 'public', 'logo.png');
+
+                  // Remove logo from public directory
+                  if (fs.existsSync(logoPath)) {
+                    fs.unlinkSync(logoPath);
+                  }
+
+                  console.log('Logo removed successfully');
+                  res.writeHead(200, { 'Content-Type': 'application/json' });
+                  res.end(JSON.stringify({ success: true }));
+                } catch (error) {
+                  console.error('Error removing logo:', error);
+                  res.writeHead(500, { 'Content-Type': 'application/json' });
+                  res.end(JSON.stringify({ success: false, error: 'Failed to remove logo', details: error.message }));
+                }
+              } else {
+                next();
+              }
+            });
+
             // Upload background API endpoint for development
             server.middlewares.use('/api/upload-background', (req, res, next) => {
               if (req.method === 'POST') {

@@ -47,6 +47,7 @@
 - ✅ **Prize Management**: Quản lý giải thưởng
 
 ### 🎨 Tùy Chỉnh Giao Diện
+- ✅ **Logo Upload**: **[MỚI]** Upload logo hiển thị trên form đăng ký
 - ✅ **Background Upload**: Upload ảnh background tùy chỉnh
 - ✅ **Responsive Design**: Tối ưu cho mobile và desktop
 - ✅ **Modern UI**: Giao diện hiện đại với Tailwind CSS
@@ -206,6 +207,8 @@ Base URL: `http://localhost:3000`
 | `POST` | `/api/write-config` | Lưu cấu hình app | `{config: object}` |
 | `POST` | `/api/write-csv` | Lưu dữ liệu CSV | `{content: string}` |
 | `POST` | `/api/verify-submission` | Verify Turnstile token | `{captchaToken: string, formData: object}` |
+| `POST` | `/api/upload-logo` | **[MỚI]** Upload logo image | `FormData` |
+| `POST` | `/api/remove-logo` | **[MỚI]** Remove logo image | `{}` |
 | `POST` | `/api/upload-background` | Upload background image | `FormData` |
 
 ### Response Format
@@ -250,26 +253,52 @@ Base URL: `http://localhost:3000`
 - Lưu kết quả trúng thưởng
 - Export danh sách trúng thưởng
 
-#### 🎨 Quản Lý Background
-- Upload ảnh background mới
-- Preview trước khi apply
-- Hỗ trợ JPG, PNG, WEBP
-- Tối đa 5MB
+#### 🎨 Quản Lý Logo & Background
+- **Logo Upload**: Upload logo hiển thị trên form đăng ký
+- **Background Upload**: Upload ảnh background mới
+- **Preview**: Xem trước khi apply
+- **Multi-format**: Hỗ trợ JPG, PNG, WEBP, SVG
+- **Size limits**: Logo 2MB, Background 5MB
 
 ## 🎨 Tùy Chỉnh Giao Diện
 
-### Background Customization
+### Logo & Background Customization
+
+#### Logo Upload
+1. **Truy cập Admin Panel**
+2. **Vào "Quản Lý Logo"**
+3. **Chọn file logo** (JPG/PNG/WEBP/SVG, max 2MB)
+4. **Upload** → Logo hiển thị ngay trong form đăng ký
+
+#### Background Upload
 1. **Truy cập Admin Panel**
 2. **Vào "Quản Lý Background"**
 3. **Chọn file ảnh** (JPG/PNG/WEBP, max 5MB)
 4. **Upload** → Background áp dụng ngay
 
 ### Supported Formats
+
+#### Logo
+- **PNG**: Khuyến nghị cho logo (hỗ trợ transparency)
+- **SVG**: Vector format, scale tốt
+- **JPEG/JPG**: Cho logo không cần transparency
+- **WEBP**: Kích thước nhỏ, chất lượng cao
+
+#### Background
 - **JPEG/JPG**: Tối ưu cho photos
 - **PNG**: Hỗ trợ transparency
 - **WEBP**: Kích thước nhỏ, chất lượng cao
 
 ### Technical Details
+
+#### Logo
+- **Storage**: `public/logo.png`
+- **Display**: Hiển thị trong form đăng ký, phía trên title
+- **Max size**: 2MB, auto-scale max 120px height
+- **Styling**: Centered, responsive design
+- **Fallback**: Không hiển thị gì nếu không có logo
+
+#### Background
 - **Storage**: `public/bg.jpeg`
 - **Auto-resize**: Tự động scale theo viewport
 - **Fallback**: Default gradient nếu không có ảnh

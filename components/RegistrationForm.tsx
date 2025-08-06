@@ -8,6 +8,7 @@ import { Input } from './ui/Input';
 import { Select } from './ui/Select';
 import { Button } from './ui/Button';
 import { TurnstileComponent } from './ui/Turnstile';
+import { Logo } from './ui/Logo';
 
 interface RegistrationFormProps {
   onNewSubmission: () => void;
@@ -205,7 +206,8 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onNewSubmiss
 
   return (
     <Card>
-      <h3 className="text-2xl font-bold mb-6 text-center text-slate-800">Thông Tin Đăng Ký</h3>
+      <Logo />
+      <h3 className="text-2xl font-bold mb-6 text-center text-slate-800">THÔNG TIN ĐĂNG KÝ</h3>
       <form onSubmit={handleSubmit} noValidate>
         <fieldset disabled={!isRegActive || isSubmitting}>
           <div className="space-y-5">

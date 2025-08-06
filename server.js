@@ -124,6 +124,74 @@ app.post('/api/verify-submission', async (req, res) => {
   }
 });
 
+// API endpoint để upload logo image
+app.post('/api/upload-logo', upload.single('logo'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'No file uploaded' 
+      });
+    }
+
+    // Ensure public directory exists
+    const publicDir = path.join(__dirname, 'public');
+    if (!fs.existsSync(publicDir)) {
+      fs.mkdirSync(publicDir, { recursive: true });
+    }
+
+    // Save the file as logo.png in public directory
+    const logoPath = path.join(publicDir, 'logo.png');
+    fs.writeFileSync(logoPath, req.file.buffer);
+
+    // Also copy to dist/public for production
+    const distPublicDir = path.join(__dirname, 'dist', 'public');
+    if (!fs.existsSync(distPublicDir)) {
+      fs.mkdirSync(distPublicDir, { recursive: true });
+    }
+    const distLogoPath = path.join(distPublicDir, 'logo.png');
+    fs.writeFileSync(distLogoPath, req.file.buffer);
+
+    res.json({ success: true });
+    console.log('Logo image updated successfully in both public and dist/public directories');
+  } catch (error) {
+    console.error('Error uploading logo:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to upload logo', 
+      details: error.message 
+    });
+  }
+});
+
+// API endpoint để remove logo
+app.post('/api/remove-logo', (req, res) => {
+  try {
+    const logoPath = path.join(__dirname, 'public', 'logo.png');
+    const distLogoPath = path.join(__dirname, 'dist', 'public', 'logo.png');
+
+    // Remove logo from public directory
+    if (fs.existsSync(logoPath)) {
+      fs.unlinkSync(logoPath);
+    }
+
+    // Remove logo from dist/public directory
+    if (fs.existsSync(distLogoPath)) {
+      fs.unlinkSync(distLogoPath);
+    }
+
+    res.json({ success: true });
+    console.log('Logo removed successfully from both directories');
+  } catch (error) {
+    console.error('Error removing logo:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to remove logo', 
+      details: error.message 
+    });
+  }
+});
+
 // API endpoint để upload background image
 app.post('/api/upload-background', upload.single('background'), (req, res) => {
   try {
@@ -175,5 +243,7 @@ app.listen(PORT, () => {
   console.log(`- POST /api/write-config`);
   console.log(`- POST /api/write-csv`);
   console.log(`- POST /api/verify-submission`);
+  console.log(`- POST /api/upload-logo`);
+  console.log(`- POST /api/remove-logo`);
   console.log(`- POST /api/upload-background`);
 });

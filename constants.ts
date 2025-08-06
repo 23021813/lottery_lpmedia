@@ -22,4 +22,4 @@ export const REAL_ESTATE_AGENCIES: string[] = [
 ];
 
 // Cloudflare Turnstile configuration
-export const TURNSTILE_SITE_KEY = process.env.REACT_APP_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key
+export const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'; // Test key

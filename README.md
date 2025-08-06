@@ -77,7 +77,7 @@ cp .env.example .env
 Chỉnh sửa file `.env`:
 ```env
 # Cloudflare Turnstile Keys
-REACT_APP_TURNSTILE_SITE_KEY=your_site_key_here
+VITE_TURNSTILE_SITE_KEY=your_site_key_here
 TURNSTILE_SECRET_KEY=your_secret_key_here
 
 # Admin Configuration
@@ -106,7 +106,7 @@ npm start
 
 | Variable | Mô Tả | Bắt Buộc | Mặc Định |
 |----------|-------|----------|----------|
-| `REACT_APP_TURNSTILE_SITE_KEY` | Cloudflare Turnstile Site Key | ✅ | `1x00000000000000000000AA` (test) |
+| `VITE_TURNSTILE_SITE_KEY` | Cloudflare Turnstile Site Key | ✅ | `1x00000000000000000000AA` (test) |
 | `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile Secret Key | ✅ | `1x0000000000000000000000000000000AA` (test) |
 | `ADMIN_PASSWORD` | Mật khẩu admin panel | ✅ | `admin123` |
 | `GEMINI_API_KEY` | Google Gemini API Key | ❌ | - |
@@ -114,7 +114,7 @@ npm start
 ### Test Keys (Development)
 Để test trong môi trường development:
 ```env
-REACT_APP_TURNSTILE_SITE_KEY=1x00000000000000000000AA
+VITE_TURNSTILE_SITE_KEY=1x00000000000000000000AA
 TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
 ```
 

@@ -20,7 +20,7 @@ export const TurnstileComponent: React.FC<TurnstileProps> = ({
     <div className={`flex justify-center ${className}`}>
       <Turnstile
         siteKey={siteKey}
-        onVerify={onVerify}
+        onSuccess={onVerify}
         onError={onError}
         onExpire={onExpire}
         options={{

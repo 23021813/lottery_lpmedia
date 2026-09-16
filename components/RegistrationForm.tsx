@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { addSubmission, getTimeSettings, checkPhoneExists, checkNationalIdExists } from '../services/mockApi';
 import { verifyCaptcha } from '../services/captchaService';
 import type { FormErrors } from '../types';
-import { TURNSTILE_SITE_KEY } from '../constants';
+import { TURNSTILE_SITE_KEY, getTurnstileSiteKey } from '../constants';
 import { Card } from './ui/Card';
 import { Input } from './ui/Input';
 import { Select } from './ui/Select';
@@ -425,7 +425,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onNewSubmiss
             <div className="mt-5">
               <label className="block text-sm font-semibold text-[#e8ded1] mb-2.5">Xác thực bảo mật</label>
               <TurnstileComponent
-                siteKey={TURNSTILE_SITE_KEY}
+                siteKey={getTurnstileSiteKey()}
                 onVerify={handleCaptchaVerify}
                 onError={handleCaptchaError}
                 onExpire={handleCaptchaExpire}

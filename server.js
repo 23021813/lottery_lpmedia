@@ -35,8 +35,10 @@ const upload = multer({
   }
 });
 
-// Serve static files from dist directory
+// Serve static files from dist directory, with fallback to public and root
 app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
 
 // API endpoint để write config file
 app.post('/api/write-config', (req, res) => {

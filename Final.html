@@ -980,6 +980,83 @@
         spinSingleCard(idx);
       }
 
+      // ==========================================
+      // 🏆 MODAL VINH DANH NGƯỜI TRÚNG CHO MC
+      // ==========================================
+      let winnerModalResolver = null;
+
+      function showWinnerAnnouncementModal(winner, isLastWinner) {
+        return new Promise((resolve) => {
+          winnerModalResolver = resolve;
+          const modal = document.getElementById("winnerAnnouncementModal");
+          const rankEl = document.getElementById("winnerModalRank");
+          const codeEl = document.getElementById("winnerModalCode");
+          const nameEl = document.getElementById("winnerModalName");
+          const agencyEl = document.getElementById("winnerModalAgency");
+          const cccdEl = document.getElementById("winnerModalCccd");
+          const phoneEl = document.getElementById("winnerModalPhone");
+          const nextBtn = document.getElementById("winnerModalNextBtn");
+
+          const rankNum = (
+            winner.rankIndex ||
+            (winner.cardIndex !== undefined ? winner.cardIndex + 1 : 1)
+          )
+            .toString()
+            .padStart(2, "0");
+
+          if (rankEl) rankEl.innerText = `GIẢI #${rankNum}`;
+          if (codeEl) codeEl.innerText = `#${winner.id.toString().padStart(4, "0")}`;
+          if (nameEl) nameEl.innerText = (winner.name || "").toUpperCase();
+          if (agencyEl) agencyEl.innerText = winner.agency || "";
+          if (cccdEl)
+            cccdEl.innerText = `CCCD: ****${(winner.nationalId || "").slice(-4)}`;
+          if (phoneEl)
+            phoneEl.innerText = `SĐT: ****${(winner.phone || "").slice(-4)}`;
+
+          if (nextBtn) {
+            if (isLastWinner) {
+              nextBtn.innerText = "HOÀN TẤT";
+              nextBtn.classList.add("btn-finish");
+            } else {
+              nextBtn.innerText = "TIẾP TỤC";
+              nextBtn.classList.remove("btn-finish");
+            }
+          }
+
+          if (modal) {
+            modal.classList.add("show");
+          }
+        });
+      }
+
+      function handleWinnerModalConfirm() {
+        const modal = document.getElementById("winnerAnnouncementModal");
+        if (modal) {
+          modal.classList.remove("show");
+        }
+        if (winnerModalResolver) {
+          const resolve = winnerModalResolver;
+          winnerModalResolver = null;
+          resolve();
+        }
+      }
+
+      // Bắt sự kiện phím Space / Enter để MC điều khiển nhanh
+      window.addEventListener("keydown", (e) => {
+        const modal = document.getElementById("winnerAnnouncementModal");
+        if (modal && modal.classList.contains("show")) {
+          if (
+            e.code === "Space" ||
+            e.code === "Enter" ||
+            e.key === " " ||
+            e.key === "Enter"
+          ) {
+            e.preventDefault();
+            handleWinnerModalConfirm();
+          }
+        }
+      });
+
       // Quay riêng lẻ 1 thẻ
       async function spinSingleCard(idx) {
         if (!participants || participants.length === 0) {
@@ -1069,6 +1146,10 @@
 
         spinningCards.delete(idx);
         updateProgressBar(currentWinners.length, 16);
+
+        // HIỂN THỊ POPUP VINH DANH CHO MC ĐỌC
+        const isLastCard = currentWinners.length === 16;
+        await showWinnerAnnouncementModal(winnerRecord, isLastCard);
 
         if (currentWinners.length === 16) {
           startConfetti();
@@ -1178,19 +1259,24 @@
 
           // Lưu kết quả
           usedNumbers.push(winner.id);
-          currentWinners.push({
+          const winnerRecord = {
             ...winner,
             cardIndex: cardIdx,
             rankIndex: cardIdx + 1,
-          });
+          };
+          currentWinners.push(winnerRecord);
 
           sessionStorage.setItem("usedNumbers", JSON.stringify(usedNumbers));
           sessionStorage.setItem("winners16Data", JSON.stringify(currentWinners));
 
           updateProgressBar(currentWinners.length, 16);
 
-          if (step < countToPick - 1) {
-            await new Promise((resolve) => setTimeout(resolve, 200));
+          // HIỂN THỊ POPUP VINH DANH CHO MC ĐỌC VÀ CHỜ BẤM "TIẾP TỤC" (HOẶC PHÍM SPACE/ENTER)
+          const isLast = (step === countToPick - 1) || (currentWinners.length === 16);
+          await showWinnerAnnouncementModal(winnerRecord, isLast);
+
+          if (!isLast) {
+            await new Promise((resolve) => setTimeout(resolve, 300));
           }
         }
 

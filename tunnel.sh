@@ -5,14 +5,15 @@
 # ==============================================================================
 
 PORT=3000
-LOG_FILE="tunnel.log"
-PID_FILE="tunnel.pid"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOG_FILE="$SCRIPT_DIR/tunnel.log"
+PID_FILE="$SCRIPT_DIR/tunnel.pid"
 
 # Hàm lấy link Tunnel từ log file
 get_tunnel_url() {
     if [ -f "$LOG_FILE" ]; then
         # Tìm link https://*.trycloudflare.com mới nhất trong log
-        URL=$(grep -o 'https://[a-zA-Z0-9.-]*\.trycloudflare\.com' "$LOG_FILE" | tail -n 1)
+        URL=$(grep -oE 'https://[a-zA-Z0-9.-]+\.trycloudflare\.com' "$LOG_FILE" | tail -n 1)
         echo "$URL"
     else
         echo ""
@@ -22,39 +23,48 @@ get_tunnel_url() {
 # Hàm Start Tunnel
 start_tunnel() {
     # Kiểm tra xem tunnel đã chạy chưa
-    RUNNING_PID=$(pgrep -f "cloudflared tunnel.*$PORT")
-    if [ -n "$RUNNING_PID" ]; then
-        echo "⚠️  Cloudflare Tunnel đang chạy rồi! (PID: $RUNNING_PID)"
+    RUNNING_PID=$(pgrep -f "cloudflared tunnel")
+    if [ -n "$RUNNING_PID" ] && [ -f "$LOG_FILE" ]; then
         CURRENT_URL=$(get_tunnel_url)
         if [ -n "$CURRENT_URL" ]; then
-            echo "🔗 Link truy cập hiện tại:"
-            echo "   👉 $CURRENT_URL"
-            echo "   👉 $CURRENT_URL/Final.html (Màn hình quay số)"
-        else
-            echo "   (Đang đợi link, hãy kiểm tra lại bằng: ./tunnel.sh url)"
+            echo "⚠️  Cloudflare Tunnel đang chạy rồi! (PID: $RUNNING_PID)"
+            echo "=================================================================="
+            echo "👉 Link Trang Chủ:      $CURRENT_URL"
+            echo "👉 Màn Hình Quay Thưởng: $CURRENT_URL/Final.html"
+            echo "=================================================================="
+            return
         fi
-        return
+    fi
+
+    # Nếu đang có tiến trình cũ nhưng không có log hoặc mất URL, dừng trước
+    if [ -n "$RUNNING_PID" ]; then
+        echo "🔄 Dọn dẹp tiến trình cũ (PID: $RUNNING_PID)..."
+        pkill -9 -f "cloudflared tunnel" > /dev/null 2>&1
+        sleep 1
     fi
 
     # Kiểm tra đã cài cloudflared chưa
     if ! command -v cloudflared &> /dev/null; then
         echo "❌ Chưa tìm thấy lệnh 'cloudflared' trên hệ thống!"
         echo "   Vui lòng cài đặt nhanh bằng lệnh:"
-        echo "   curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && sudo dpkg -i cloudflared.deb"
+        echo "   curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && dpkg -i cloudflared.deb"
         exit 1
     fi
 
     echo "🚀 Đang khởi động Cloudflare Tunnel trỏ vào port $PORT..."
-    > "$LOG_FILE"  # Xóa log cũ
-    nohup cloudflared tunnel --url "http://127.0.0.1:$PORT" > "$LOG_FILE" 2>&1 &
+    rm -f "$LOG_FILE" "$PID_FILE"
+    touch "$LOG_FILE"
+
+    # Khởi động với cờ --logfile chuẩn của cloudflared
+    nohup cloudflared tunnel --url "http://127.0.0.1:$PORT" --no-autoupdate --logfile "$LOG_FILE" > /dev/null 2>&1 &
     NEW_PID=$!
     echo "$NEW_PID" > "$PID_FILE"
 
-    echo "⏳ Đang kết nối tới mạng Cloudflare (khoảng 2-3 giây)..."
+    echo "⏳ Đang kết nối tới Cloudflare Network (đang lấy link HTTPS)..."
     sleep 3
 
     # Đọc link URL
-    MAX_RETRY=10
+    MAX_RETRY=12
     COUNT=0
     TUNNEL_URL=""
 

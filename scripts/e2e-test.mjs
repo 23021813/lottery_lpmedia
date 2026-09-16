@@ -336,6 +336,10 @@ async function runRigorousE2ETests() {
     assert(finalHtml.includes('slot-grid-16'), "Final.html có hệ thống Grid 16 ô giải hiển thị sẵn");
     assert(finalHtml.includes('Math.random() * 2000') && finalHtml.includes('3000'), "Thuật toán có thời gian quay ngẫu nhiên từ 3s đến 5s cho mỗi ô");
     assert(finalHtml.includes('answer.toUpperCase() !== "C"'), "Thuật toán Final.html có logic lọc bắt buộc đáp án C");
+    assert(finalHtml.includes('winnerAnnouncementModal'), "Final.html có modal vinh danh #winnerAnnouncementModal cực đại cho MC");
+    assert(finalHtml.includes('winnerModalNextBtn'), "Final.html có nút điều hướng #winnerModalNextBtn (TIẾP TỤC / HOÀN TẤT)");
+    assert(finalHtml.includes('showWinnerAnnouncementModal'), "Final.html có hàm async showWinnerAnnouncementModal");
+    assert(finalHtml.includes('handleWinnerModalConfirm'), "Final.html có hàm handleWinnerModalConfirm");
 
     // Tạo danh sách hỗn hợp gồm thí sinh đáp án A, B, C, D
     const testPool = [

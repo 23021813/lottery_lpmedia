@@ -184,16 +184,19 @@ app.post('/api/upload-logo', upload.single('logo'), (req, res) => {
     const logoPath = path.join(publicDir, 'logo.png');
     fs.writeFileSync(logoPath, req.file.buffer);
 
-    // Also copy to dist/public for production
-    const distPublicDir = path.join(__dirname, 'dist', 'public');
-    if (!fs.existsSync(distPublicDir)) {
-      fs.mkdirSync(distPublicDir, { recursive: true });
+    // Also copy to dist root and dist/public for production
+    const distDir = path.join(__dirname, 'dist');
+    if (fs.existsSync(distDir)) {
+      fs.writeFileSync(path.join(distDir, 'logo.png'), req.file.buffer);
+      const distPublicDir = path.join(distDir, 'public');
+      if (!fs.existsSync(distPublicDir)) {
+        fs.mkdirSync(distPublicDir, { recursive: true });
+      }
+      fs.writeFileSync(path.join(distPublicDir, 'logo.png'), req.file.buffer);
     }
-    const distLogoPath = path.join(distPublicDir, 'logo.png');
-    fs.writeFileSync(distLogoPath, req.file.buffer);
 
     res.json({ success: true });
-    console.log('Logo image updated successfully in both public and dist/public directories');
+    console.log('Logo image updated successfully in both public/ and dist/ directories');
   } catch (error) {
     console.error('Error uploading logo:', error);
     res.status(500).json({ 
@@ -208,16 +211,20 @@ app.post('/api/upload-logo', upload.single('logo'), (req, res) => {
 app.post('/api/remove-logo', (req, res) => {
   try {
     const logoPath = path.join(__dirname, 'public', 'logo.png');
-    const distLogoPath = path.join(__dirname, 'dist', 'public', 'logo.png');
+    const distLogoPath = path.join(__dirname, 'dist', 'logo.png');
+    const distPublicLogoPath = path.join(__dirname, 'dist', 'public', 'logo.png');
 
     // Remove logo from public directory
     if (fs.existsSync(logoPath)) {
       fs.unlinkSync(logoPath);
     }
 
-    // Remove logo from dist/public directory
+    // Remove logo from dist directory
     if (fs.existsSync(distLogoPath)) {
       fs.unlinkSync(distLogoPath);
+    }
+    if (fs.existsSync(distPublicLogoPath)) {
+      fs.unlinkSync(distPublicLogoPath);
     }
 
     res.json({ success: true });
@@ -252,16 +259,19 @@ app.post('/api/upload-background', upload.single('background'), (req, res) => {
     const backgroundPath = path.join(publicDir, 'bg.jpeg');
     fs.writeFileSync(backgroundPath, req.file.buffer);
 
-    // Also copy to dist/public for production
-    const distPublicDir = path.join(__dirname, 'dist', 'public');
-    if (!fs.existsSync(distPublicDir)) {
-      fs.mkdirSync(distPublicDir, { recursive: true });
+    // Also copy to dist root and dist/public for production
+    const distDir = path.join(__dirname, 'dist');
+    if (fs.existsSync(distDir)) {
+      fs.writeFileSync(path.join(distDir, 'bg.jpeg'), req.file.buffer);
+      const distPublicDir = path.join(distDir, 'public');
+      if (!fs.existsSync(distPublicDir)) {
+        fs.mkdirSync(distPublicDir, { recursive: true });
+      }
+      fs.writeFileSync(path.join(distPublicDir, 'bg.jpeg'), req.file.buffer);
     }
-    const distBackgroundPath = path.join(distPublicDir, 'bg.jpeg');
-    fs.writeFileSync(distBackgroundPath, req.file.buffer);
 
     res.json({ success: true });
-    console.log('Background image updated successfully in both public and dist/public directories');
+    console.log('Background image updated successfully in both public/ and dist/ directories');
   } catch (error) {
     console.error('Error uploading background:', error);
     res.status(500).json({ 

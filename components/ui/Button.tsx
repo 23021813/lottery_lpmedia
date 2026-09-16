@@ -6,12 +6,12 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary';
 }
 
-export const Button: React.FC<ButtonProps> = ({ children, className, isLoading = false, variant = 'primary', ...props }) => {
-  const baseClasses = 'w-full font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-transform transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center';
+export const Button: React.FC<ButtonProps> = ({ children, className = '', isLoading = false, variant = 'primary', ...props }) => {
+  const baseClasses = 'w-full font-bold py-3.5 px-6 rounded-full focus:outline-none transition-all duration-200 transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm uppercase tracking-wider';
   
   const variantClasses = {
-    primary: 'bg-purple-600 hover:bg-purple-700 text-white focus:ring-purple-500 focus:ring-offset-[#F5F3E9]',
-    secondary: 'bg-slate-200 hover:bg-slate-300 text-slate-800 focus:ring-slate-500 focus:ring-offset-[#F5F3E9]',
+    primary: 'bg-[#ba7c38] hover:bg-[#9f6527] text-white shadow-lg shadow-black/40 focus:ring-2 focus:ring-[#ba7c38] focus:ring-offset-2 focus:ring-offset-[#140f0b]',
+    secondary: 'bg-[#1c140e] hover:bg-[#281c13] text-[#ba7c38] border border-[#ba7c38] focus:ring-2 focus:ring-[#ba7c38]',
   };
 
   return (

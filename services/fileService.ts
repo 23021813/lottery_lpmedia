@@ -123,10 +123,10 @@ export const readCSVFile = async (): Promise<string> => {
     
     // If file doesn't exist, return default header
     console.warn('CSV file not found, using default header');
-    return 'id,name,phone,nationalId,agency,prizeWon\n';
+    return 'id,name,phone,nationalId,agency,answer,prizeWon\n';
   } catch (error) {
     console.error('Error reading CSV file:', error);
-    return 'id,name,phone,nationalId,agency,prizeWon\n';
+    return 'id,name,phone,nationalId,agency,answer,prizeWon\n';
   }
 };
 

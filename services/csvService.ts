@@ -6,13 +6,23 @@ const parseCSV = (csvText: string): Submission[] => {
   const lines = csvText.trim().split('\n');
   if (lines.length <= 1) return []; // No data or only header
   
+  const headerLine = lines[0].toLowerCase();
+  const hasAnswerCol = headerLine.includes('answer');
+
   const submissions: Submission[] = [];
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
     if (!line) continue;
     
     const parts = line.split(',').map(field => field.replace(/^"|"$/g, '').trim());
-    const [id, name, phone, nationalId, agency, prizeWon] = parts;
+    let id: string, name: string, phone: string, nationalId: string, agency: string, answer: string | undefined, prizeWon: string | undefined;
+
+    if (parts.length >= 7 || hasAnswerCol) {
+      [id, name, phone, nationalId, agency, answer, prizeWon] = parts;
+    } else {
+      [id, name, phone, nationalId, agency, prizeWon] = parts;
+      answer = undefined;
+    }
     
     if (id && name && phone && nationalId && agency) {
       submissions.push({
@@ -21,6 +31,7 @@ const parseCSV = (csvText: string): Submission[] => {
         phone,
         nationalId,
         agency,
+        answer: answer || undefined,
         prizeWon: prizeWon || undefined
       });
     }
@@ -30,8 +41,8 @@ const parseCSV = (csvText: string): Submission[] => {
 
 // Function to convert submissions to CSV format
 const toCSV = (submissions: Submission[]): string => {
-  const header = 'id,name,phone,nationalId,agency,prizeWon';
-  const rows = submissions.map(s => `${s.id},"${s.name}","${s.phone}","${s.nationalId}","${s.agency}","${s.prizeWon || ''}"`);
+  const header = 'id,name,phone,nationalId,agency,answer,prizeWon';
+  const rows = submissions.map(s => `${s.id},"${s.name}","${s.phone}","${s.nationalId}","${s.agency}","${s.answer || ''}","${s.prizeWon || ''}"`);
   return [header, ...rows].join('\n');
 };
 
@@ -102,7 +113,7 @@ export const checkNationalIdExists = async (nationalId: string): Promise<boolean
 
 // Function to reset CSV data
 export const resetCSVData = async (): Promise<void> => {
-  const initialData = 'id,name,phone,nationalId,agency,prizeWon\n';
+  const initialData = 'id,name,phone,nationalId,agency,answer,prizeWon\n';
   await writeCSVFile(initialData);
 };
 

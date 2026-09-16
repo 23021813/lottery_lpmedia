@@ -5,6 +5,7 @@ export interface Submission {
   phone: string;
   nationalId: string;
   agency: string;
+  answer?: string; // Đáp án câu hỏi trắc nghiệm (A, B, C, D)
   prizeWon?: string; // Giải thưởng đã trúng (nếu có)
 }
 
@@ -13,5 +14,6 @@ export interface FormErrors {
   phone?: string;
   nationalId?: string;
   agency?: string;
+  answer?: string;
   captcha?: string;
 }

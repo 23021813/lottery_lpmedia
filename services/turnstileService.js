@@ -21,13 +21,13 @@ export async function verifyTurnstileToken(token, remoteip = null) {
   // Special handling for test environment
   const isTestKey = secretKey === '1x0000000000000000000000000000000AA';
   if (isTestKey) {
-    // In test mode, only accept the specific test token
-    if (token === '1x00000000000000000000AA') {
+    // Trong môi trường test với secret key test của Cloudflare, chấp nhận token được sinh ra
+    if (token && typeof token === 'string' && token.trim().length > 0) {
       console.log('Test mode: Valid test token accepted');
       return { success: true };
     } else {
-      console.log('Test mode: Invalid token rejected');
-      return { success: false, error: 'Invalid test token' };
+      console.log('Test mode: No token provided');
+      return { success: false, error: 'Vui lòng xác thực captcha' };
     }
   }
 

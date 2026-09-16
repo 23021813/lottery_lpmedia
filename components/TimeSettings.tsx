@@ -41,11 +41,11 @@ export const TimeSettings: React.FC = () => {
     };
     
     return (
-        <Card>
-            <h3 className="text-xl font-bold mb-4 text-slate-800">Cài Đặt Thời Gian</h3>
+        <Card className="h-full flex flex-col justify-between">
+            <h3 className="text-xl font-bold mb-4 text-[#ba7c38]">Cài Đặt Thời Gian</h3>
             <div className="space-y-4">
                 <div>
-                    <label htmlFor="start-time" className="block text-sm font-medium text-slate-600 mb-1">Thời gian bắt đầu</label>
+                    <label htmlFor="start-time" className="block text-sm font-medium text-[#e8ded1] mb-1">Thời gian bắt đầu</label>
                     <Input 
                         id="start-time"
                         type="datetime-local"
@@ -54,7 +54,7 @@ export const TimeSettings: React.FC = () => {
                     />
                 </div>
                 <div>
-                     <label htmlFor="end-time" className="block text-sm font-medium text-slate-600 mb-1">Thời gian kết thúc</label>
+                     <label htmlFor="end-time" className="block text-sm font-medium text-[#e8ded1] mb-1">Thời gian kết thúc</label>
                     <Input 
                         id="end-time"
                         type="datetime-local"
@@ -69,7 +69,7 @@ export const TimeSettings: React.FC = () => {
                 </Button>
             </div>
             {saveMessage && (
-                <p className="text-center text-sm text-green-600 mt-2">{saveMessage}</p>
+                <p className="text-center text-sm text-emerald-400 font-semibold mt-2">{saveMessage}</p>
             )}
         </Card>
     );

@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
     return {
       base: '/',
       server: {
+        port: 3333,
         host: true,
         allowedHosts: ["funky-robin-noticeably.ngrok-free.app","reg.3nestinvest.com"],
         hmr: false,  // Tắt Hot Module Replacement
@@ -54,6 +55,14 @@ export default defineConfig(({ mode }) => {
                 fs.copyFileSync(csvPath, distCsvPath);
                 console.log('Copied data.csv to dist/data/');
               }
+            }
+
+            // Copy Final.html
+            const finalHtmlPath = path.join(__dirname, 'Final.html');
+            const distFinalHtmlPath = path.join(__dirname, 'dist', 'Final.html');
+            if (fs.existsSync(finalHtmlPath)) {
+              fs.copyFileSync(finalHtmlPath, distFinalHtmlPath);
+              console.log('Copied Final.html to dist/');
             }
           }
         },

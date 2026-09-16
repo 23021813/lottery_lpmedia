@@ -93,79 +93,82 @@ export const LogoManager: React.FC = () => {
   };
 
   return (
-    <Card className="mt-8">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xl font-bold text-slate-800">Quản Lý Logo</h3>
-        <div className="flex gap-2">
-          <Button 
-            onClick={handleCurrentLogo}
-            variant="secondary"
-            className="!w-auto px-3 py-1.5 text-sm"
-          >
-            Xem Logo Hiện Tại
-          </Button>
-          <Button 
-            onClick={handleRemoveLogo}
-            variant="secondary"
-            className="!w-auto px-3 py-1.5 text-sm bg-red-50 text-red-700 hover:bg-red-100"
-          >
-            Xóa Logo
-          </Button>
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-          <p className="text-sm text-green-800 mb-2">
-            <strong>Hướng dẫn:</strong>
-          </p>
-          <ul className="text-sm text-green-700 space-y-1">
-            <li>• File logo sẽ được lưu vào: <code className="bg-green-100 px-1 rounded">public/logo.png</code></li>
-            <li>• Định dạng hỗ trợ: JPG, PNG, WEBP, SVG</li>
-            <li>• Kích thước tối đa: 2MB</li>
-            <li>• Logo sẽ hiển thị ở đầu form đăng ký</li>
-            <li>• Khuyến nghị: Logo trong suốt (PNG) với tỷ lệ 16:9 hoặc vuông</li>
-          </ul>
+    <Card className="h-full flex flex-col justify-between">
+      <div>
+        <div className="flex flex-wrap justify-between items-center gap-2 mb-4 pb-3 border-b border-[#ba7c38]/25">
+          <h3 className="text-xl font-bold text-[#ba7c38]">Quản Lý Logo</h3>
+          <div className="flex gap-2">
+            <button 
+              type="button"
+              onClick={handleCurrentLogo}
+              className="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#1c140e] hover:bg-[#281b12] text-[#ffdca3] border border-[#ba7c38]/40 transition-colors cursor-pointer"
+            >
+              👁️ Xem Logo Hiện Tại
+            </button>
+            <button 
+              type="button"
+              onClick={handleRemoveLogo}
+              className="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-lg bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-700/50 transition-colors cursor-pointer"
+            >
+              🗑️ Xóa Logo
+            </button>
+          </div>
         </div>
 
-        <div className="flex flex-col space-y-3">
-          <label htmlFor="logo-upload" className="block text-sm font-medium text-slate-700">
-            Chọn logo mới:
-          </label>
-          <input
-            id="logo-upload"
-            type="file"
-            accept="image/*"
-            onChange={handleFileUpload}
-            disabled={isUploading}
-            className="block w-full text-sm text-slate-500
-              file:mr-4 file:py-2 file:px-4
-              file:rounded-lg file:border-0
-              file:text-sm file:font-medium
-              file:bg-green-50 file:text-green-700
-              hover:file:bg-green-100
-              disabled:opacity-50 disabled:cursor-not-allowed"
-          />
-          
-          {isUploading && (
-            <div className="flex items-center text-green-600">
-              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Đang upload...
-            </div>
-          )}
-
-          {uploadMessage && (
-            <p className={`text-sm p-3 rounded-lg ${
-              uploadMessage.includes('thành công') 
-                ? 'bg-green-100 text-green-800 border border-green-200' 
-                : 'bg-red-100 text-red-800 border border-red-200'
-            }`}>
-              {uploadMessage}
+        <div className="space-y-4">
+          <div className="p-4 bg-[#1c140e] rounded-xl border border-[#ba7c38]/35 shadow-inner">
+            <p className="text-xs font-bold text-[#ffdca3] mb-2 uppercase tracking-wider">
+              📌 Hướng dẫn cập nhật:
             </p>
-          )}
+            <ul className="text-xs text-[#e8ded1] space-y-1.5">
+              <li>• File logo lưu tại: <code className="bg-[#140f0b] text-[#ffdca3] border border-[#ba7c38]/30 px-1.5 py-0.5 rounded font-mono">public/logo.png</code></li>
+              <li>• Định dạng hỗ trợ: JPG, PNG, WEBP, SVG</li>
+              <li>• Dung lượng tối đa: 2MB</li>
+              <li>• Hiển thị ở đầu form đăng ký và màn hình quay số</li>
+              <li className="text-[#a89f91]">• Khuyến nghị: Logo nền trong suốt (PNG) tỷ lệ chuẩn</li>
+            </ul>
+          </div>
+
+          <div className="flex flex-col space-y-2 pt-1">
+            <label htmlFor="logo-upload" className="block text-xs font-bold uppercase tracking-wider text-[#e8ded1]">
+              Chọn file logo mới:
+            </label>
+            <input
+              id="logo-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleFileUpload}
+              disabled={isUploading}
+              className="block w-full text-xs text-[#c4b5a2]
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-lg file:border-0
+                file:text-xs file:font-bold
+                file:bg-[#ba7c38] file:text-white
+                hover:file:bg-[#9f6527]
+                bg-[#1c140e] border border-[#ba7c38]/35 rounded-lg p-2
+                disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            />
+            
+            {isUploading && (
+              <div className="flex items-center text-[#ffdca3] text-xs font-medium pt-1">
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-[#ba7c38]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Đang tải lên máy chủ...
+              </div>
+            )}
+
+            {uploadMessage && (
+              <p className={`text-xs p-3 rounded-lg font-medium ${
+                uploadMessage.includes('thành công') 
+                  ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-500/40' 
+                  : 'bg-rose-950/80 text-rose-300 border border-rose-500/40'
+              }`}>
+                {uploadMessage}
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </Card>

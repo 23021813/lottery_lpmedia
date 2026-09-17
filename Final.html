@@ -43,31 +43,47 @@
         z-index: 2;
       }
 
-      /* ===== HEADER ===== */
+      /* ===== THANH TOP BAR SÂN KHẤU (STAGE TOP BAR) & HEADER ===== */
+      .stage-top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 1360px;
+        margin-bottom: 14px;
+      }
+
+      .stage-brand-group {
+        text-align: left;
+      }
+
+      .stage-brand-group h1,
+      .header h1 {
+        color: #ba7c38;
+        font-size: 42px;
+        font-weight: 900;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+        text-shadow: 0 3px 12px rgba(0, 0, 0, 0.7);
+        line-height: 1.1;
+      }
+
+      .stage-brand-group .event-subtitle,
+      .header .event-subtitle {
+        color: #ffdca3;
+        font-size: 16px;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+      }
+
       .header {
         text-align: center;
         margin-bottom: 20px;
         width: 100%;
         max-width: 1360px;
-      }
-
-      .header h1 {
-        color: #ba7c38;
-        font-size: 56px;
-        font-weight: 900;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        margin-bottom: 6px;
-        text-shadow: 0 3px 12px rgba(0, 0, 0, 0.7);
-      }
-
-      .header .event-subtitle {
-        color: #ba7c38;
-        font-size: 22px;
-        font-weight: 800;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        margin-bottom: 4px;
       }
 
       /* ===== THANH NÚT ĐIỀU KHIỂN (KHÔNG DÙNG ICON) ===== */
@@ -657,6 +673,187 @@
         font-weight: 500;
         margin-top: 10px;
         letter-spacing: 0.5px;
+      }
+
+      /* ===== TỐI ƯU MÀN CHIẾU SÂN KHẤU 3m x 1,5m (1152 x 576 px, TỶ LỆ 2:1) ===== */
+      @media screen and (max-height: 650px), screen and (max-width: 1200px) and (max-height: 700px) {
+        html, body {
+          height: 100vh;
+          max-height: 576px;
+          overflow: hidden !important;
+          margin: 0;
+          padding: 0;
+        }
+
+        .game-root {
+          height: 100vh;
+          max-height: 576px;
+          min-height: 0;
+          padding: 6px 14px 8px 14px;
+          overflow: hidden;
+          justify-content: flex-start;
+        }
+
+        /* 1. Top Bar tinh gọn ngang */
+        .stage-top-bar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+          max-width: 1360px;
+          margin-bottom: 6px;
+          padding: 0 4px;
+        }
+
+        .stage-brand-group {
+          display: flex;
+          align-items: baseline;
+          gap: 14px;
+          text-align: left;
+        }
+
+        .stage-brand-group h1 {
+          font-size: 26px;
+          margin-bottom: 0;
+          letter-spacing: 2px;
+          line-height: 1.1;
+        }
+
+        .stage-brand-group .event-subtitle {
+          font-size: 13px;
+          margin-bottom: 0;
+          letter-spacing: 1px;
+          opacity: 0.9;
+        }
+
+        .action-btn-group {
+          margin: 0;
+          gap: 10px;
+        }
+
+        .button {
+          height: 38px;
+          min-width: 130px;
+          font-size: 14px;
+          padding: 0 20px;
+          border-radius: 20px;
+          letter-spacing: 1px;
+        }
+
+        /* 2. Progress Bar siêu mỏng */
+        .prize-progress-container {
+          width: 100%;
+          max-width: 1360px;
+          margin: 0 auto 6px auto;
+          padding: 3px 10px;
+          border-radius: 8px;
+        }
+
+        .progress-bar-bg {
+          height: 6px;
+        }
+
+        /* 3. Lưới 16 thẻ: 8 CỘT x 2 HÀNG */
+        .lottery-grid-container {
+          width: 100%;
+          max-width: 1360px;
+          margin: 0 auto;
+          padding: 8px 10px;
+          border-radius: 14px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        .slot-grid-16 {
+          grid-template-columns: repeat(8, 1fr) !important;
+          gap: 8px !important;
+        }
+
+        /* 4. Thẻ giải thưởng compact */
+        .slot-card-16 {
+          padding: 8px 6px;
+          border-radius: 9px;
+        }
+
+        .card-rank {
+          font-size: 10px;
+          letter-spacing: 0.5px;
+          margin-bottom: 2px;
+        }
+
+        .card-badge {
+          font-size: 8px;
+          padding: 1px 4px;
+        }
+
+        .card-code {
+          font-size: 24px;
+          letter-spacing: 1px;
+          margin-bottom: 3px;
+        }
+
+        .card-name {
+          font-size: 12px;
+          margin-bottom: 2px;
+        }
+
+        .card-agency {
+          font-size: 10px;
+          margin-bottom: 4px;
+        }
+
+        .card-secure {
+          font-size: 9px;
+          padding: 2px 4px;
+        }
+
+        /* 5. Modal vinh danh vừa khít 576px */
+        .winner-announcement-box {
+          max-height: 520px !important;
+          max-width: 640px !important;
+          padding: 18px 24px !important;
+        }
+
+        .winner-congrats-tag {
+          font-size: 13px;
+          margin-bottom: 4px;
+        }
+
+        .winner-rank-large {
+          font-size: 18px;
+          margin-bottom: 4px;
+        }
+
+        .winner-code-large {
+          font-size: 68px;
+          margin: 4px 0 8px 0;
+          line-height: 1.05;
+        }
+
+        .winner-name-large {
+          font-size: 34px;
+          margin-bottom: 6px;
+          line-height: 1.15;
+        }
+
+        .winner-agency-large {
+          font-size: 20px;
+          margin-bottom: 12px;
+        }
+
+        .winner-secure-large {
+          font-size: 16px;
+          padding: 6px 18px;
+        }
+
+        .winner-btn-action {
+          height: 48px;
+          font-size: 18px;
+          min-width: 200px;
+          padding: 0 36px;
+        }
       }
     </style>
   </head>

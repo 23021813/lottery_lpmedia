@@ -7,20 +7,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const finalHtmlPath = path.join(__dirname, '..', 'Final.html');
 
-console.log("=== KIỂM THỬ TDD: TỐI ƯU MÀN CHIẾU 1152x576 (FINAL.HTML) ===");
+console.log("=== KIỂM THỬ TDD: TỐI ƯU MÀN CHIẾU 1152x576 (4 HÀNG & BỎ BORDER PROGRESS BAR) ===");
 
 const html = fs.readFileSync(finalHtmlPath, 'utf8');
 
-// 1. Kiểm tra Media Query cho màn chiếu sân khấu
+// 1. Kiểm tra Media Query cho màn chiếu sân khấu 1152x576
 assert(
   html.includes('@media') && (html.includes('max-height: 650px') || html.includes('max-height: 600px') || html.includes('1152px')),
   "Thiếu CSS Media Query tối ưu cho màn chiếu thấp 1152x576"
 );
 
-// 2. Kiểm tra quy tắc 8 cột x 2 hàng
+// 2. Kiểm tra cấu hình 4 cột x 4 hàng (repeat(4, 1fr))
 assert(
-  html.includes('repeat(8, 1fr)'),
-  "Thiếu cấu hình CSS Grid 8 cột 'repeat(8, 1fr)' cho màn chiếu 2:1"
+  html.includes('repeat(4, 1fr)'),
+  "Thiếu cấu hình CSS Grid 4 cột x 4 hàng 'repeat(4, 1fr)'"
 );
 
 // 3. Kiểm tra khóa cứng không cuộn trang (Zero-scroll)
@@ -29,16 +29,16 @@ assert(
   "Thiếu quy tắc khóa chiều cao và ẩn cuộn trang (overflow: hidden)"
 );
 
-// 4. Kiểm tra cấu trúc Top Stage Bar tinh gọn (gộp Header và Nút điều khiển ngang)
+// 4. Kiểm tra cấu trúc thẻ bố trí dạng 2 cột ngang (card-main-content & card-details)
 assert(
-  html.includes('stage-top-bar'),
-  "Thiếu cấu trúc thanh Topbar tinh gọn 'stage-top-bar' cho màn chiếu"
+  html.includes('card-main-content') && html.includes('card-details'),
+  "Thiếu cấu trúc chia 2 cột ngang (card-main-content & card-details) để tận dụng chiều rộng gấp đôi"
 );
 
-// 5. Kiểm tra CSS tối ưu Modal cho màn chiếu
+// 5. Kiểm tra loại bỏ border xung quanh progress bar
 assert(
-  html.includes('winner-announcement-box') && (html.includes('max-height: 520px') || html.includes('max-height: 510px')),
-  "Thiếu giới hạn max-height an toàn cho Winner Modal trên màn chiếu"
+  html.includes('border: none') || html.includes('border: 0'),
+  "Chưa loại bỏ border bao quanh progress bar"
 );
 
-console.log("✓ TẤT CẢ CÁC BÀI TEST TỐI ƯU MÀN CHIẾU 1152x576 ĐỀU PASS!");
+console.log("✓ TẤT CẢ CÁC BÀI TEST TỐI ƯU MÀN CHIẾU 1152x576 (4 HÀNG) ĐỀU PASS!");

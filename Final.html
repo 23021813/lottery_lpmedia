@@ -677,28 +677,28 @@
     ></canvas>
 
     <div class="game-root">
-      <!-- HEADER CHÍNH -->
-      <div class="header">
-        <h1>LUCKY DRAW</h1>
-        <div class="event-subtitle">16 GIẢI THƯỞNG MAY MẮN</div>
-      </div>
-
-      <!-- BỘ NÚT ĐIỀU KHIỂN (KHÔNG DÙNG ICON) -->
-      <div class="action-btn-group">
-        <button
-          class="button"
-          id="spinButton"
-          onclick="spin16WinnersSequential()"
-        >
-          QUAY SỐ
-        </button>
-        <button
-          class="button button-secondary"
-          id="resetBtn"
-          onclick="clearSessionData()"
-        >
-          LÀM MỚI
-        </button>
+      <!-- THANH TOP BAR SÂN KHẤU (STAGE TOP BAR - GỘP HEADER & ĐIỀU KHIỂN) -->
+      <div class="stage-top-bar" id="stageTopBar">
+        <div class="stage-brand-group">
+          <h1>LUCKY DRAW</h1>
+          <div class="event-subtitle">16 GIẢI THƯỞNG MAY MẮN</div>
+        </div>
+        <div class="action-btn-group">
+          <button
+            class="button"
+            id="spinButton"
+            onclick="spin16WinnersSequential()"
+          >
+            QUAY SỐ
+          </button>
+          <button
+            class="button button-secondary"
+            id="resetBtn"
+            onclick="clearSessionData()"
+          >
+            LÀM MỚI
+          </button>
+        </div>
       </div>
 
       <!-- THANH PROGRESS BAR TRỰC QUAN PHÍA TRÊN GRID -->

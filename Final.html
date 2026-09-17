@@ -397,18 +397,18 @@
       }
 
       .card-code {
-        font-size: 28px;
+        font-size: 26px;
         font-weight: 900;
-        letter-spacing: 2px;
+        letter-spacing: 1.5px;
         margin-bottom: 6px;
         font-family: "Be Vietnam Pro", sans-serif;
         line-height: 1.1;
         font-variant-numeric: tabular-nums;
         font-feature-settings: "tnum";
-        width: 96px;
-        min-width: 96px;
-        max-width: 96px;
-        flex: 0 0 96px;
+        width: 90px;
+        min-width: 90px;
+        max-width: 90px;
+        flex: 0 0 90px;
         text-align: center;
         display: inline-block;
       }
@@ -683,15 +683,24 @@
         letter-spacing: 1px;
       }
 
+      .winner-actions-group {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 24px;
+        flex-wrap: wrap;
+      }
+
       .winner-btn-action {
         background: linear-gradient(135deg, #ba7c38 0%, #e09b4c 50%, #ba7c38 100%);
         color: #ffffff;
         border: 2px solid #ffdca3;
         border-radius: 35px;
-        padding: 0 48px;
-        height: 60px;
-        min-width: 240px;
-        font-size: 22px;
+        padding: 0 42px;
+        height: 56px;
+        min-width: 200px;
+        font-size: 20px;
         font-weight: 900;
         letter-spacing: 2px;
         text-transform: uppercase;
@@ -699,12 +708,44 @@
         box-shadow: 0 6px 25px rgba(186, 124, 56, 0.5);
         transition: all 0.25s ease;
         font-family: "Be Vietnam Pro", sans-serif;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .winner-btn-action:hover {
         background: linear-gradient(135deg, #a66a2c 0%, #ba7c38 100%);
-        transform: translateY(-3px) scale(1.02);
+        transform: translateY(-2px);
         box-shadow: 0 8px 30px rgba(186, 124, 56, 0.7);
+      }
+
+      .winner-btn-absent {
+        background: rgba(180, 45, 45, 0.25);
+        color: #ffb8b8;
+        border: 2px solid rgba(235, 87, 87, 0.75);
+        border-radius: 35px;
+        padding: 0 32px;
+        height: 56px;
+        min-width: 190px;
+        font-size: 19px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(220, 53, 69, 0.3);
+        transition: all 0.25s ease;
+        font-family: "Be Vietnam Pro", sans-serif;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .winner-btn-absent:hover {
+        background: rgba(220, 53, 69, 0.5);
+        border-color: #ff6b6b;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(220, 53, 69, 0.6);
       }
 
       .winner-btn-action.btn-finish {
@@ -864,14 +905,14 @@
         }
 
         .card-code {
-          font-size: 28px;
-          letter-spacing: 1.5px;
+          font-size: 26px;
+          letter-spacing: 1px;
           margin-bottom: 0;
           line-height: 1;
-          flex: 0 0 96px;
-          width: 96px;
-          min-width: 96px;
-          max-width: 96px;
+          flex: 0 0 90px;
+          width: 90px;
+          min-width: 90px;
+          max-width: 90px;
           color: #ffdca3;
           font-variant-numeric: tabular-nums;
           font-feature-settings: "tnum";
@@ -954,11 +995,18 @@
           padding: 6px 18px;
         }
 
-        .winner-btn-action {
-          height: 48px;
-          font-size: 18px;
-          min-width: 200px;
-          padding: 0 36px;
+        .winner-actions-group {
+          margin-top: 14px;
+          gap: 12px;
+        }
+
+        .winner-btn-action,
+        .winner-btn-absent {
+          height: 44px;
+          font-size: 15px;
+          min-width: 150px;
+          padding: 0 24px;
+          letter-spacing: 1px;
         }
       }
     </style>
@@ -1050,7 +1098,14 @@
           <span style="opacity: 0.5;">•</span>
           <span id="winnerModalPhone">SĐT: 098***0000</span>
         </div>
-        <div style="margin-top: 28px;">
+        <div class="winner-actions-group">
+          <button
+            class="winner-btn-absent"
+            id="winnerModalAbsentBtn"
+            onclick="handleWinnerAbsent()"
+          >
+            VẮNG MẶT
+          </button>
           <button
             class="winner-btn-action"
             id="winnerModalNextBtn"
@@ -1058,7 +1113,9 @@
           >
             TIẾP TỤC
           </button>
-          <div class="winner-key-hint">Nhấn phím [Space] hoặc [Enter] để tiếp tục</div>
+        </div>
+        <div class="winner-key-hint">
+          [Space / Enter]: Có mặt (Tiếp tục) &nbsp;•&nbsp; [V / Delete]: Vắng mặt (Quay lại ô này)
         </div>
       </div>
     </div>
@@ -1069,6 +1126,7 @@
       // ==========================================
       let participants = []; // Danh sách người tham gia chọn đáp án C
       let usedNumbers = []; // Danh sách ID đã trúng giải
+      let absentWinners = []; // Danh sách ID bị hủy do vắng mặt tại sự kiện
       let currentWinners = []; // 16 người trúng giải của đợt quay hiện tại
       let isSpinning16 = false;
       let spinningCards = new Set(); // Các card đang quay riêng lẻ
@@ -1167,6 +1225,12 @@
           const savedWinners = sessionStorage.getItem("usedNumbers");
           if (savedWinners) {
             usedNumbers = JSON.parse(savedWinners);
+          }
+
+          // Khôi phục absentWinners từ session storage
+          const savedAbsent = sessionStorage.getItem("absentWinners");
+          if (savedAbsent) {
+            absentWinners = JSON.parse(savedAbsent);
           }
 
           // Khôi phục 16 giải nếu đã từng quay trong session
@@ -1344,11 +1408,23 @@
         if (winnerModalResolver) {
           const resolve = winnerModalResolver;
           winnerModalResolver = null;
-          resolve();
+          resolve({ action: "confirm" });
         }
       }
 
-      // Bắt sự kiện phím Space / Enter để MC điều khiển nhanh
+      function handleWinnerAbsent() {
+        const modal = document.getElementById("winnerAnnouncementModal");
+        if (modal) {
+          modal.classList.remove("show");
+        }
+        if (winnerModalResolver) {
+          const resolve = winnerModalResolver;
+          winnerModalResolver = null;
+          resolve({ action: "absent" });
+        }
+      }
+
+      // Bắt sự kiện phím Space / Enter (Có mặt) & V / Delete (Vắng mặt)
       window.addEventListener("keydown", (e) => {
         const modal = document.getElementById("winnerAnnouncementModal");
         if (modal && modal.classList.contains("show")) {
@@ -1360,6 +1436,16 @@
           ) {
             e.preventDefault();
             handleWinnerModalConfirm();
+          } else if (
+            e.code === "KeyV" ||
+            e.key === "v" ||
+            e.key === "V" ||
+            e.code === "Delete" ||
+            e.code === "Backspace" ||
+            e.key === "Delete"
+          ) {
+            e.preventDefault();
+            handleWinnerAbsent();
           }
         }
       });
@@ -1371,9 +1457,9 @@
           return;
         }
 
-        // Lọc người hợp lệ chưa trúng giải
+        // Lọc người hợp lệ chưa trúng giải và chưa bị vắng mặt
         const available = participants.filter(
-          (p) => !usedNumbers.includes(p.id) && !p.prizeWon
+          (p) => !usedNumbers.includes(p.id) && !absentWinners.includes(p.id) && !p.prizeWon
         );
 
         if (available.length === 0) {
@@ -1454,9 +1540,34 @@
         spinningCards.delete(idx);
         updateProgressBar(currentWinners.length, 16);
 
-        // HIỂN THỊ POPUP VINH DANH CHO MC ĐỌC
+        // HIỂN THỊ POPUP VINH DANH CHO MC ĐỌC VÀ CHỜ PHẢN HỒI (CÓ MẶT HOẶC VẮNG MẶT)
         const isLastCard = currentWinners.length === 16;
-        await showWinnerAnnouncementModal(winnerRecord, isLastCard);
+        const modalResult = await showWinnerAnnouncementModal(winnerRecord, isLastCard);
+
+        if (modalResult && modalResult.action === "absent") {
+          // Xử lý khi người trúng vắng mặt:
+          // 1. Loại khỏi usedNumbers và đưa vào absentWinners
+          usedNumbers = usedNumbers.filter((id) => id !== randWinner.id);
+          if (!absentWinners.includes(randWinner.id)) {
+            absentWinners.push(randWinner.id);
+          }
+          // 2. Xóa khỏi currentWinners
+          const winnerIdxInCurrent = currentWinners.findIndex((w) => w.cardIndex === idx);
+          if (winnerIdxInCurrent !== -1) {
+            currentWinners.splice(winnerIdxInCurrent, 1);
+          }
+          // 3. Cập nhật sessionStorage & tiến trình
+          sessionStorage.setItem("absentWinners", JSON.stringify(absentWinners));
+          sessionStorage.setItem("usedNumbers", JSON.stringify(usedNumbers));
+          sessionStorage.setItem("winners16Data", JSON.stringify(currentWinners));
+          updateProgressBar(currentWinners.length, 16);
+
+          // 4. Tự động kích hoạt quay lại ngay ô đó!
+          setTimeout(() => {
+            spinSingleCard(idx);
+          }, 300);
+          return;
+        }
 
         if (currentWinners.length === 16) {
           startConfetti();
@@ -1512,78 +1623,116 @@
           .getElementById("prizeProgressContainer")
           .scrollIntoView({ behavior: "smooth", block: "start" });
 
-        // Quay tuần tự từng ô còn thiếu
-        for (let step = 0; step < countToPick; step++) {
-          const cardIdx = pendingCardIndices[step];
-          const winner = selectedWinners[step];
-          const rankNum = (cardIdx + 1).toString().padStart(2, "0");
+        // Quay tuần tự từng ô còn thiếu cho đến khi được MC xác nhận Có mặt
+        for (let i = 0; i < pendingCardIndices.length; i++) {
+          const cardIdx = pendingCardIndices[i];
+          let cardConfirmed = false;
 
-          const card = document.getElementById(`slot-card-${cardIdx}`);
-          const badge = document.getElementById(`card-badge-${cardIdx}`);
-          const codeEl = document.getElementById(`card-code-${cardIdx}`);
-          const nameEl = document.getElementById(`card-name-${cardIdx}`);
-          const agencyEl = document.getElementById(`card-agency-${cardIdx}`);
-          const cccdEl = document.getElementById(`card-cccd-${cardIdx}`);
-          const phoneEl = document.getElementById(`card-phone-${cardIdx}`);
+          while (!cardConfirmed) {
+            const available = participants.filter(
+              (p) => !usedNumbers.includes(p.id) && !absentWinners.includes(p.id) && !p.prizeWon
+            );
 
-          if (card) card.className = "slot-card-16 is-spinning";
-          if (badge) {
-            badge.className = "card-badge badge-spinning";
-            badge.innerText = "QUAY...";
-          }
-          if (nameEl) nameEl.innerText = "Đang chọn số...";
-          if (agencyEl) agencyEl.innerText = "Đang quay số ngẫu nhiên";
+            if (available.length === 0) {
+              alert("Đã hết người tham gia hợp lệ (Đáp án C) chưa trúng giải!");
+              isSpinning16 = false;
+              if (spinBtn) spinBtn.disabled = false;
+              if (resetBtn) resetBtn.disabled = false;
+              return;
+            }
 
-          // Random thời gian quay từ 3 đến 5 giây
-          const spinDuration = Math.floor(Math.random() * 2000) + 3000;
+            const winner = available[Math.floor(Math.random() * available.length)];
+            const rankNum = (cardIdx + 1).toString().padStart(2, "0");
 
-          const shuffleInterval = setInterval(() => {
-            const randNum = Math.floor(1000 + Math.random() * 9000);
-            if (codeEl) codeEl.innerText = `#${randNum}`;
-          }, 40);
+            const card = document.getElementById(`slot-card-${cardIdx}`);
+            const badge = document.getElementById(`card-badge-${cardIdx}`);
+            const codeEl = document.getElementById(`card-code-${cardIdx}`);
+            const nameEl = document.getElementById(`card-name-${cardIdx}`);
+            const agencyEl = document.getElementById(`card-agency-${cardIdx}`);
+            const cccdEl = document.getElementById(`card-cccd-${cardIdx}`);
+            const phoneEl = document.getElementById(`card-phone-${cardIdx}`);
 
-          await new Promise((resolve) => setTimeout(resolve, spinDuration));
-          clearInterval(shuffleInterval);
+            if (card) card.className = "slot-card-16 is-spinning";
+            if (badge) {
+              badge.className = "card-badge badge-spinning";
+              badge.innerText = "QUAY...";
+            }
+            if (nameEl) nameEl.innerText = "Đang chọn số...";
+            if (agencyEl) agencyEl.innerText = "Đang quay số ngẫu nhiên";
 
-          // Chốt kết quả
-          const finalCode = `#${winner.id.toString().padStart(4, "0")}`;
-          if (codeEl) codeEl.innerText = finalCode;
-          if (nameEl) nameEl.innerText = winner.name;
-          if (agencyEl) agencyEl.innerText = winner.agency;
-          if (cccdEl)
-            cccdEl.innerText = `CCCD: ****${(winner.nationalId || "").slice(-4)}`;
-          if (phoneEl)
-            phoneEl.innerText = `SĐT: ****${(winner.phone || "").slice(-4)}`;
+            // Random thời gian quay từ 3 đến 5 giây
+            const spinDuration = Math.floor(Math.random() * 2000) + 3000;
 
-          if (badge) {
-            badge.className = "card-badge badge-won";
-            badge.innerText = "TRÚNG";
-          }
-          if (card) {
-            card.className = "slot-card-16 is-completed";
-            card.title = `Nhấn để quay lại Giải #${rankNum}`;
-          }
+            const shuffleInterval = setInterval(() => {
+              const randNum = Math.floor(1000 + Math.random() * 9000);
+              if (codeEl) codeEl.innerText = `#${randNum}`;
+            }, 40);
 
-          // Lưu kết quả
-          usedNumbers.push(winner.id);
-          const winnerRecord = {
-            ...winner,
-            cardIndex: cardIdx,
-            rankIndex: cardIdx + 1,
-          };
-          currentWinners.push(winnerRecord);
+            await new Promise((resolve) => setTimeout(resolve, spinDuration));
+            clearInterval(shuffleInterval);
 
-          sessionStorage.setItem("usedNumbers", JSON.stringify(usedNumbers));
-          sessionStorage.setItem("winners16Data", JSON.stringify(currentWinners));
+            // Chốt kết quả
+            const finalCode = `#${winner.id.toString().padStart(4, "0")}`;
+            if (codeEl) codeEl.innerText = finalCode;
+            if (nameEl) nameEl.innerText = winner.name;
+            if (agencyEl) agencyEl.innerText = winner.agency;
+            if (cccdEl)
+              cccdEl.innerText = `CCCD: ****${(winner.nationalId || "").slice(-4)}`;
+            if (phoneEl)
+              phoneEl.innerText = `SĐT: ****${(winner.phone || "").slice(-4)}`;
 
-          updateProgressBar(currentWinners.length, 16);
+            if (badge) {
+              badge.className = "card-badge badge-won";
+              badge.innerText = "TRÚNG";
+            }
+            if (card) {
+              card.className = "slot-card-16 is-completed";
+              card.title = `Nhấn để quay lại Giải #${rankNum}`;
+            }
 
-          // HIỂN THỊ POPUP VINH DANH CHO MC ĐỌC VÀ CHỜ BẤM "TIẾP TỤC" (HOẶC PHÍM SPACE/ENTER)
-          const isLast = (step === countToPick - 1) || (currentWinners.length === 16);
-          await showWinnerAnnouncementModal(winnerRecord, isLast);
+            // Lưu kết quả
+            usedNumbers.push(winner.id);
+            const winnerRecord = {
+              ...winner,
+              cardIndex: cardIdx,
+              rankIndex: cardIdx + 1,
+            };
+            currentWinners.push(winnerRecord);
 
-          if (!isLast) {
-            await new Promise((resolve) => setTimeout(resolve, 300));
+            sessionStorage.setItem("usedNumbers", JSON.stringify(usedNumbers));
+            sessionStorage.setItem("winners16Data", JSON.stringify(currentWinners));
+
+            updateProgressBar(currentWinners.length, 16);
+
+            // HIỂN THỊ POPUP VINH DANH CHO MC ĐỌC VÀ CHỜ BẤM "TIẾP TỤC" HOẶC "VẮNG MẶT"
+            const isLast = (i === pendingCardIndices.length - 1) || (currentWinners.length === 16);
+            const modalResult = await showWinnerAnnouncementModal(winnerRecord, isLast);
+
+            if (modalResult && modalResult.action === "absent") {
+              // NGƯỜI NÀY VẮNG MẶT: Hủy kết quả, đưa vào absentWinners và quay lại ô này!
+              usedNumbers = usedNumbers.filter((id) => id !== winner.id);
+              if (!absentWinners.includes(winner.id)) {
+                absentWinners.push(winner.id);
+              }
+              const winnerIdxInCurrent = currentWinners.findIndex((w) => w.cardIndex === cardIdx);
+              if (winnerIdxInCurrent !== -1) {
+                currentWinners.splice(winnerIdxInCurrent, 1);
+              }
+
+              sessionStorage.setItem("absentWinners", JSON.stringify(absentWinners));
+              sessionStorage.setItem("usedNumbers", JSON.stringify(usedNumbers));
+              sessionStorage.setItem("winners16Data", JSON.stringify(currentWinners));
+              updateProgressBar(currentWinners.length, 16);
+
+              // Tạm dừng 250ms trước khi tự động quay lại chính ô này
+              await new Promise((resolve) => setTimeout(resolve, 250));
+            } else {
+              // NGƯỜI NÀY CÓ MẶT: Xác nhận thành công ô này, tiếp tục sang ô kế tiếp!
+              cardConfirmed = true;
+              if (!isLast) {
+                await new Promise((resolve) => setTimeout(resolve, 300));
+              }
+            }
           }
         }
 
@@ -1645,8 +1794,10 @@
 
         sessionStorage.removeItem("usedNumbers");
         sessionStorage.removeItem("winners16Data");
+        sessionStorage.removeItem("absentWinners");
         usedNumbers = [];
         currentWinners = [];
+        absentWinners = [];
         spinningCards.clear();
 
         init16Cards();

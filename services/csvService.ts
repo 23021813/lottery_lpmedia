@@ -24,13 +24,13 @@ const parseCSV = (csvText: string): Submission[] => {
       answer = undefined;
     }
     
-    if (id && name && phone && nationalId && agency) {
+    if (id && name) {
       submissions.push({
         id: parseInt(id),
         name,
-        phone,
-        nationalId,
-        agency,
+        phone: phone || '',
+        nationalId: nationalId || '',
+        agency: agency || '',
         answer: answer || undefined,
         prizeWon: prizeWon || undefined
       });

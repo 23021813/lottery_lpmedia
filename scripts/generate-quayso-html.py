@@ -50,50 +50,12 @@ def generate_quayso_html():
         /* ===== THANH TOP BAR SÂN KHẤU & LOGO ===== */
         .stage-top-bar {{
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             width: 100%;
             max-width: 1280px;
             margin-bottom: 24px;
             padding: 0 8px;
-        }}
-
-        .stage-brand-group {{
-            display: flex;
-            align-items: center;
-            text-align: left;
-        }}
-
-        .header-logo-container {{
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }}
-
-        .header-logo {{
-            height: 48px;
-            width: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
-            transition: transform 0.25s ease;
-        }}
-
-        .header-logo:hover {{
-            transform: scale(1.03);
-        }}
-
-        .logo-obc {{
-            height: 45px;
-        }}
-
-        .logo-ak {{
-            height: 48px;
-        }}
-
-        .header-logo-divider {{
-            width: 1.5px;
-            height: 32px;
-            background: linear-gradient(180deg, transparent, rgba(226, 180, 72, 0.8), transparent);
         }}
 
         .action-btn-group {{
@@ -636,13 +598,6 @@ def generate_quayso_html():
     <div class="game-root">
         <!-- THANH TOP BAR SÂN KHẤU -->
         <div class="stage-top-bar">
-            <div class="stage-brand-group">
-                <div class="header-logo-container">
-                    <img src="logo-obc.png" alt="OBC Holdings" class="header-logo logo-obc" />
-                    <div class="header-logo-divider"></div>
-                    <img src="logo-ak.png" alt="AK Tower" class="header-logo logo-ak" />
-                </div>
-            </div>
             <div class="action-btn-group">
                 <button class="btn-top-icon" onclick="clearWinnersHistory()" title="Làm mới phiên quay" aria-label="Làm mới">
                     <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">

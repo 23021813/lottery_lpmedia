@@ -1,3 +1,5 @@
+import { REAL_ESTATE_AGENCIES } from '../constants';
+
 // File service for reading/writing JSON data
 // Note: In browser environment, we simulate file operations using localStorage
 // In a real server environment, these would be actual file operations
@@ -15,27 +17,7 @@ interface ConfigData {
 
 // Default config
 const DEFAULT_CONFIG: ConfigData = {
-  agencies: [
-    "Đất xanh Bắc Trung Bộ",
-    "Cenland Bắc Trung Bộ", 
-    "Bhomes",
-    "Tân Long",
-    "Fivestar",
-    "Hoàng Huy NT",
-    "Âu Lạc Land",
-    "City Homes",
-    "Xứ Nghệ homes",
-    "SVLand",
-    "RealLand",
-    "Aura Realty",
-    "Titan Luxury",
-    "MT group",
-    "New Sky Land",
-    "Fuji Land",
-    "Haka Holding",
-    "Phú Lâm",
-    "GC Land"
-  ],
+  agencies: REAL_ESTATE_AGENCIES,
   timeSettings: {
     regStart: "",
     regEnd: ""

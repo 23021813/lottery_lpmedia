@@ -714,7 +714,7 @@ def generate_quayso_html():
 
     function hasValidCCCD(p) {{
       const cccd = (p.nationalId || '').toString().trim();
-      return cccd.length > 4;
+      return cccd.length > 0;
     }}
 
     function formatCCCD(nationalId) {{

@@ -194,28 +194,8 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onNewSubmiss
 
     setIsSubmitting(true);
     try {
-      // First verify captcha with server
-      const captchaVerification = await verifyCaptcha(captchaToken, {
-        name, phone, nationalId, agency
-      });
-
-      if (!captchaVerification.success) {
-        setSubmissionResult({ 
-          id: null, 
-          message: `Xác thực captcha thất bại: ${captchaVerification.error}`, 
-          isError: true 
-        });
-        // Reset captcha on verification failure
-        setCaptchaToken('');
-        setErrors(prev => ({
-          ...prev,
-          captcha: 'Vui lòng xác thực captcha lại.'
-        }));
-        return;
-      }
-
-      // If captcha verified, proceed with submission
-      const newId = await addSubmission({ name, phone, nationalId, agency, answer });
+      // Submit registration directly with captchaToken to server
+      const newId = await addSubmission({ name, phone, nationalId, agency, answer, captchaToken });
       const record = { id: newId, name, phone, nationalId, agency, answer };
       try {
         localStorage.setItem('lucky_draw_registered_user', JSON.stringify(record));
@@ -237,6 +217,12 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onNewSubmiss
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Đã xảy ra lỗi không xác định.";
       setSubmissionResult({ id: null, message: `Đăng ký thất bại: ${errorMessage}`, isError: true });
+      // Reset captcha on failure
+      setCaptchaToken('');
+      setErrors(prev => ({
+        ...prev,
+        captcha: 'Vui lòng xác thực captcha lại.'
+      }));
     } finally {
       setIsSubmitting(false);
     }

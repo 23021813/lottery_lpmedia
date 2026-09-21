@@ -1202,135 +1202,15 @@
       // 🎨 KHỞI TẠO 16 Ô THẺ TRÊN GRID BAN ĐẦU
       // ==========================================
             // ==========================================
-      // 🎯 THUẬT TOÁN PHÂN BỔ HẠN NGẠCH ĐỘNG (HAMILTON METHOD)
-      // Tự động phân bổ giải theo tỷ lệ thành viên của từng công ty/sàn
-      // Loại bỏ toàn bộ khách mời/VIP/đối tác/ngân hàng ra khỏi danh sách quay
+      // 🎯 QUAY SỐ NGẪU NHIÊN THUẦN TÚY (RANDOM DRAW)
+      // Tất cả người tham gia đều có cơ hội trúng giải bình đẳng
       // ==========================================
-      const BANK_KEYWORDS = [
-        "AGRIBANK", "ACB", "PVCOMBANK", "MB ", "MB THUẬN AN", "MB TÂN THUẬN", 
-        "VIETCOMBANK", "PUBLIC BANK", "OCB"
-      ];
-
-      const PARTNER_KEYWORDS = [
-        "NAGECCO", "HONA-G", "P&K", "SAE CONSTRUCTION", "NAM LỘC TIẾN", 
-        "OBC HOLDINGS", "GIA NGHĨA HOME"
-      ];
-
-      function isGuest(p) {
-        const note = (p.note || "").toString().trim().toUpperCase();
-        const agency = (p.agency || "").toString().trim().toUpperCase();
-
-        if (note.includes("VIP") || !agency) {
-          return true;
-        }
-        for (const b of BANK_KEYWORDS) {
-          if (agency.includes(b)) return true;
-        }
-        for (const pt of PARTNER_KEYWORDS) {
-          if (agency.includes(pt)) return true;
-        }
-        return false;
-      }
-
-      function normalizeCompany(p) {
-        const agency = (p.agency || "").toString().trim().toUpperCase();
-
-        if (agency.includes("REDLAND")) return "REDLAND";
-        if (agency.includes("A&T")) return "A&T SERVICES";
-        if (agency.includes("KPH") || agency.includes("KIM PEAK")) return "KPH";
-        if (agency.includes("EASTERN")) return "EASTERN HOLDINGS";
-        if (agency.includes("NAM VIỆT")) return "NAM VIỆT GROUP";
-        if (agency.includes("EMG")) return "EMG";
-        if (agency.includes("UNI INVEST")) return "UNI INVEST";
-        if (agency.includes("WINTON")) return "WINTON HOMES";
-        if (agency.includes("MASTER REALTY")) return "MASTER REALTY";
-        if (agency.includes("RED GROUP")) return "RED GROUP";
-        if (agency.includes("ART PROPERTY")) return "ART PROPERTY";
-        if (agency.includes("VISIONARY")) return "VISIONARY HOMES";
-        if (agency.includes("HS HOLDING")) return "HS HOLDING";
-        if (agency.includes("SKY REAL")) return "SKY REAL";
-        if (agency.includes("VIỆT TRUNG")) return "VIỆT TRUNG TV";
-        if (agency.includes("HAYHOMES")) return "HAYHOMES";
-        if (agency.includes("NC LAND")) return "NC LAND";
-        if (agency.includes("KHỞI MINH")) return "BDS KHỞI MINH";
-        if (agency.includes("FIRELAND")) return "FIRELAND";
-        if (agency.includes("BVM")) return "BVM HOLDINGS";
-        if (agency.includes("AEON")) return "AEON LAND";
-        if (agency.includes("TRG")) return "TRG";
-        if (agency.includes("QTP")) return "QTP";
-        if (agency.includes("ANB")) return "ANB";
-        if (agency.includes("KNR")) return "KNR";
-
-        return agency || "KHÁC";
-      }
-
-      function computeQuotas(participantList, totalPrizes = 16) {
-        const eligible = participantList.filter((p) => !isGuest(p));
-        const total = eligible.length;
-        if (total === 0) return { eligible: [], total: 0, groupCounts: {}, exactQuotas: {}, groupPrizes: {} };
-
-        const groupCounts = {};
-        for (const p of eligible) {
-          const comp = normalizeCompany(p);
-          groupCounts[comp] = (groupCounts[comp] || 0) + 1;
-        }
-
-        const exactQuotas = {};
-        const remainders = [];
-        const groupPrizes = {};
-        let allocatedCount = 0;
-
-        for (const [comp, cnt] of Object.entries(groupCounts)) {
-          const exact = (cnt / total) * totalPrizes;
-          const base = Math.floor(exact);
-          exactQuotas[comp] = exact;
-          groupPrizes[comp] = base;
-          allocatedCount += base;
-          remainders.push({ group: comp, remainder: exact - base, count: cnt });
-        }
-
-        remainders.sort((a, b) => b.remainder - a.remainder);
-        let slotsLeft = totalPrizes - allocatedCount;
-
-        for (let i = 0; i < slotsLeft && i < remainders.length; i++) {
-          groupPrizes[remainders[i].group] += 1;
-        }
-
-        return { eligible, total, groupCounts, exactQuotas, groupPrizes };
-      }
-
-      function drawNextWinner(availableList, currentWinnersList, totalPrizes = 16) {
-        const { groupPrizes } = computeQuotas(participants, totalPrizes);
-        const currentWins = {};
-        for (const w of currentWinnersList) {
-          const comp = normalizeCompany(w);
-          currentWins[comp] = (currentWins[comp] || 0) + 1;
-        }
-
-        // Lọc ứng viên thuộc công ty chưa đạt hạn ngạch
-        const eligibleCandidates = availableList.filter((p) => {
-          const comp = normalizeCompany(p);
-          const quota = groupPrizes[comp] || 0;
-          const wins = currentWins[comp] || 0;
-          return wins < quota;
-        });
-
-        if (eligibleCandidates.length > 0) {
-          const weightedCandidates = [];
-          for (const p of eligibleCandidates) {
-            const comp = normalizeCompany(p);
-            const quota = groupPrizes[comp] || 0;
-            const wins = currentWins[comp] || 0;
-            const weight = Math.max(1, quota - wins);
-            for (let w = 0; w < weight; w++) {
-              weightedCandidates.push(p);
-            }
-          }
-          return weightedCandidates[Math.floor(Math.random() * weightedCandidates.length)];
-        }
-
-        // Fallback ngẫu nhiên nếu các nhóm đã đầy
-        return availableList[Math.floor(Math.random() * availableList.length)];
+      function drawNextWinner(availableList) {
+        if (!availableList || availableList.length === 0) return null;
+        const array = new Uint32Array(1);
+        window.crypto.getRandomValues(array);
+        const randomIndex = array[0] % availableList.length;
+        return availableList[randomIndex];
       }
 
       function init16Cards() {
@@ -1373,7 +1253,13 @@
       // ==========================================
       async function loadParticipants() {
         try {
-          const response = await fetch("data/data.csv");
+          const response = await fetch(`data/data.csv?t=${Date.now()}`, {
+            cache: "no-cache",
+            headers: {
+              "Cache-Control": "no-cache, no-store, must-revalidate",
+              "Pragma": "no-cache"
+            }
+          });
           if (!response.ok) throw new Error("HTTP " + response.status);
           const csvData = await response.text();
           const lines = csvData.split("\n");
@@ -1419,16 +1305,13 @@
                 prizeWon,
               };
 
-              // Bỏ qua khách mời / VIP / ngân hàng khỏi danh sách quay thưởng
-              if (!isGuest(participantObj)) {
-                participants.push(participantObj);
-              }
+              participants.push(participantObj);
             }
           }
           console.log(`Đã tải ${participants.length} người tham gia từ data/data.csv`);
         } catch (err) {
           console.warn("Không thể tải data/data.csv qua HTTP (có thể do mở file://), sử dụng dữ liệu inline dự phòng:", err);
-          participants = JSON.parse(JSON.stringify(INLINE_PARTICIPANTS)).filter(p => !isGuest(p));
+          participants = JSON.parse(JSON.stringify(INLINE_PARTICIPANTS));
           console.log(`Đã tải ${participants.length} người tham gia từ dữ liệu inline dự phòng`);
         }
 
@@ -1656,6 +1539,9 @@
 
       // Quay riêng lẻ 1 thẻ
       async function spinSingleCard(idx) {
+        // Tự động tải lại dữ liệu mới nhất (Realtime) trước khi quay
+        await loadParticipants();
+
         if (!participants || participants.length === 0) {
           alert("Chưa có danh sách người tham gia!");
           return;
@@ -1671,9 +1557,8 @@
           return;
         }
 
-        // Chọn người trúng thông minh theo hạn ngạch tỷ lệ sàn
-        const activeWinners = currentWinners.filter((w) => w.cardIndex !== idx);
-        const randWinner = drawNextWinner(available, activeWinners, 16);
+        // Chọn người trúng ngẫu nhiên thuần túy
+        const randWinner = drawNextWinner(available);
 
         spinningCards.add(idx);
         const card = document.getElementById(`slot-card-${idx}`);
@@ -1783,6 +1668,9 @@
       async function spin16WinnersSequential() {
         if (isSpinning16 || spinningCards.size > 0) return;
 
+        // Tự động tải lại dữ liệu mới nhất (Realtime) trước khi quay
+        await loadParticipants();
+
         if (!participants || participants.length === 0) {
           alert("Chưa có danh sách người tham gia chọn đáp án C!");
           return;
@@ -1843,8 +1731,8 @@
               return;
             }
 
-            // Chọn người trúng thông minh theo hạn ngạch tỷ lệ sàn
-            const winner = drawNextWinner(available, currentWinners, 16);
+            // Chọn người trúng ngẫu nhiên thuần túy
+            const winner = drawNextWinner(available);
             const rankNum = (cardIdx + 1).toString().padStart(2, "0");
 
             const card = document.getElementById(`slot-card-${cardIdx}`);

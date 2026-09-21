@@ -77,6 +77,113 @@ app.post('/api/write-config', (req, res) => {
   }
 });
 
+// Async Sequential Queue for atomic CSV write operations
+let csvQueue = Promise.resolve();
+const enqueueCsvTask = (task) => {
+  const next = csvQueue.then(task, task);
+  csvQueue = next.catch(() => {});
+  return next;
+};
+
+// API endpoint để submit registration an toàn với hàng đợi (Queue) chống race condition và bắt buộc Captcha
+app.post('/api/submit-registration', async (req, res) => {
+  try {
+    const { name, phone, nationalId, agency, answer, captchaToken } = req.body;
+    if (!name || !phone || !nationalId) {
+      return res.status(400).json({ success: false, error: 'Thiếu thông tin bắt buộc (họ tên, SĐT, CCCD).' });
+    }
+
+    if (!captchaToken) {
+      return res.status(400).json({ success: false, error: 'Vui lòng xác thực captcha.' });
+    }
+
+    // Get client IP
+    const clientIP = req.headers['x-forwarded-for'] || 
+                     req.connection?.remoteAddress || 
+                     req.socket?.remoteAddress || null;
+
+    const verification = await verifyTurnstileToken(captchaToken, clientIP);
+    if (!verification.success) {
+      return res.status(400).json({ 
+        success: false, 
+        error: verification.error || 'Xác thực captcha thất bại. Vui lòng thử lại.' 
+      });
+    }
+
+    enqueueCsvTask(async () => {
+      try {
+        const csvPath = path.join(__dirname, 'data', 'data.csv');
+        const distCsvPath = path.join(__dirname, 'dist', 'data', 'data.csv');
+
+      const dataDir = path.join(__dirname, 'data');
+      const distDataDir = path.join(__dirname, 'dist', 'data');
+      if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+      if (!fs.existsSync(distDataDir)) fs.mkdirSync(distDataDir, { recursive: true });
+
+      let content = '';
+      if (fs.existsSync(csvPath)) {
+        content = fs.readFileSync(csvPath, 'utf8');
+      } else {
+        content = 'id,name,phone,nationalId,agency,answer,prizeWon\n';
+      }
+
+      const lines = content.trim().split('\n');
+      let maxId = 0;
+      let isDuplicate = false;
+      let duplicateReason = '';
+
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        const parts = line.split(',').map(f => f.replace(/^"|"$/g, '').trim());
+        const curId = parseInt(parts[0], 10);
+        if (!isNaN(curId) && curId > maxId) {
+          maxId = curId;
+        }
+        const curPhone = parts[2] || '';
+        const curNationalId = parts[3] || '';
+        if (curPhone === String(phone).trim()) {
+          isDuplicate = true;
+          duplicateReason = 'Số điện thoại này đã được đăng ký.';
+          break;
+        }
+        if (curNationalId === String(nationalId).trim()) {
+          isDuplicate = true;
+          duplicateReason = 'Số CCCD này đã được đăng ký.';
+          break;
+        }
+      }
+
+      if (isDuplicate) {
+        return res.status(400).json({ success: false, error: duplicateReason });
+      }
+
+      const newId = maxId + 1;
+      const cleanName = (name || '').trim().replace(/"/g, '""');
+      const cleanPhone = String(phone).trim();
+      const cleanNationalId = String(nationalId).trim();
+      const cleanAgency = (agency || '').trim().replace(/"/g, '""');
+      const cleanAnswer = (answer || '').trim().replace(/"/g, '""');
+      const newRow = `${newId},"${cleanName}","${cleanPhone}","${cleanNationalId}","${cleanAgency}","${cleanAnswer}",""`;
+
+      const newContent = content.endsWith('\n') ? content + newRow + '\n' : content + '\n' + newRow + '\n';
+      fs.writeFileSync(csvPath, newContent);
+      if (fs.existsSync(distDataDir)) {
+        fs.writeFileSync(distCsvPath, newContent);
+      }
+
+      res.json({ success: true, id: newId });
+    } catch (err) {
+      console.error('Error in csv write task:', err);
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+  } catch (err) {
+    console.error('Error in submit-registration:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // API endpoint để write CSV file
 app.post('/api/write-csv', (req, res) => {
   try {

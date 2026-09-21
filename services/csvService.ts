@@ -67,36 +67,27 @@ export const getSubmissions = async (): Promise<Submission[]> => {
   }
 };
 
-// Function to add a new submission
-export const addSubmission = async (data: Omit<Submission, 'id'>): Promise<number> => {
-  return new Promise(async (resolve, reject) => {
-    setTimeout(async () => {
-      try {
-        const submissions = await getSubmissions();
-        
-        // Check for duplicate phone or nationalId
-        if (submissions.some(s => s.phone === data.phone)) {
-            return reject(new Error('Số điện thoại này đã được đăng ký.'));
-        }
-        if (submissions.some(s => s.nationalId === data.nationalId)) {
-            return reject(new Error('Số CCCD này đã được đăng ký.'));
-        }
+// Function to add a new submission safely via Server-side Queue with Captcha
+export const addSubmission = async (data: Omit<Submission, 'id'> & { captchaToken?: string }): Promise<number> => {
+  try {
+    const response = await fetch('/api/submit-registration', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
 
-        const lastId = submissions.length > 0 ? Math.max(...submissions.map(s => s.id)) : 0;
-        const newId = lastId + 1;
-        const newSubmission: Submission = { ...data, id: newId };
-        
-        const updatedSubmissions = [...submissions, newSubmission];
-        const csvContent = toCSV(updatedSubmissions);
-        
-        await saveCSVData(csvContent);
-        
-        resolve(newId);
-      } catch (error) {
-        reject(new Error("Không thể lưu thông tin. Vui lòng thử lại."));
-      }
-    }, 500);
-  });
+    const result = await response.json().catch(() => ({}));
+    if (response.ok && result.success && typeof result.id === 'number') {
+      return result.id;
+    } else {
+      throw new Error(result.error || 'Không thể lưu thông tin. Vui lòng thử lại.');
+    }
+  } catch (error: any) {
+    console.error('Error adding submission:', error);
+    throw new Error(error.message || 'Không thể lưu thông tin. Vui lòng thử lại.');
+  }
 };
 
 // Function to check if phone number already exists

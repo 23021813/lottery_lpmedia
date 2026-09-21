@@ -55,6 +55,14 @@ export default defineConfig(({ mode }) => {
                 fs.copyFileSync(csvPath, distCsvPath);
                 console.log('Copied data.csv to dist/data/');
               }
+
+              // Copy data_import.csv
+              const importCsvPath = path.join(dataDir, 'data_import.csv');
+              const distImportCsvPath = path.join(distDataDir, 'data_import.csv');
+              if (fs.existsSync(importCsvPath)) {
+                fs.copyFileSync(importCsvPath, distImportCsvPath);
+                console.log('Copied data_import.csv to dist/data/');
+              }
             }
 
             // Copy Final.html
@@ -63,6 +71,14 @@ export default defineConfig(({ mode }) => {
             if (fs.existsSync(finalHtmlPath)) {
               fs.copyFileSync(finalHtmlPath, distFinalHtmlPath);
               console.log('Copied Final.html to dist/');
+            }
+
+            // Copy quayso.html
+            const quaysoHtmlPath = path.join(__dirname, 'quayso.html');
+            const distQuaysoHtmlPath = path.join(__dirname, 'dist', 'quayso.html');
+            if (fs.existsSync(quaysoHtmlPath)) {
+              fs.copyFileSync(quaysoHtmlPath, distQuaysoHtmlPath);
+              console.log('Copied quayso.html to dist/');
             }
           }
         },
@@ -86,6 +102,139 @@ export default defineConfig(({ mode }) => {
                     res.writeHead(500, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ error: 'Failed to write config file', details: error.message }));
                   }
+                });
+              } else {
+                next();
+              }
+            });
+
+            // Async Sequential Queue for atomic CSV write operations
+            let csvQueue = Promise.resolve();
+            const enqueueCsvTask = (task: () => Promise<any>) => {
+              const next = csvQueue.then(task, task);
+              csvQueue = next.catch(() => {});
+              return next;
+            };
+
+            // API endpoint để submit registration an toàn với hàng đợi (Queue) chống race condition và bắt buộc Captcha
+            server.middlewares.use('/api/submit-registration', (req, res, next) => {
+              if (req.method === 'POST') {
+                let body = '';
+                req.on('data', chunk => {
+                  body += chunk.toString();
+                });
+                req.on('end', async () => {
+                  try {
+                    const { name, phone, nationalId, agency, answer, captchaToken } = JSON.parse(body);
+                    if (!name || !phone || !nationalId) {
+                      res.writeHead(400, { 'Content-Type': 'application/json' });
+                      res.end(JSON.stringify({ success: false, error: 'Thiếu thông tin bắt buộc (họ tên, SĐT, CCCD).' }));
+                      return;
+                    }
+
+                    if (!captchaToken) {
+                      res.writeHead(400, { 'Content-Type': 'application/json' });
+                      res.end(JSON.stringify({ success: false, error: 'Vui lòng xác thực captcha.' }));
+                      return;
+                    }
+
+                    // Get client IP
+                    const clientIP = req.headers['x-forwarded-for'] || 
+                                     (req as any).connection?.remoteAddress || 
+                                     (req as any).socket?.remoteAddress || null;
+
+                    process.env.TURNSTILE_SECRET_KEY = env.TURNSTILE_SECRET_KEY;
+                    const { verifyTurnstileToken } = await import('./services/turnstileService.js');
+                    const verification = await verifyTurnstileToken(captchaToken, clientIP);
+
+                    if (!verification.success) {
+                      res.writeHead(400, { 'Content-Type': 'application/json' });
+                      res.end(JSON.stringify({ 
+                        success: false, 
+                        error: verification.error || 'Xác thực captcha thất bại. Vui lòng thử lại.' 
+                      }));
+                      return;
+                    }
+
+                    enqueueCsvTask(async () => {
+                      try {
+
+                      const csvPath = path.join(__dirname, 'data', 'data.csv');
+                      const distCsvPath = path.join(__dirname, 'dist', 'data', 'data.csv');
+
+                      // Ensure data directories exist
+                      const dataDir = path.join(__dirname, 'data');
+                      const distDataDir = path.join(__dirname, 'dist', 'data');
+                      if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+                      if (!fs.existsSync(distDataDir)) fs.mkdirSync(distDataDir, { recursive: true });
+
+                      let content = '';
+                      if (fs.existsSync(csvPath)) {
+                        content = fs.readFileSync(csvPath, 'utf8');
+                      } else {
+                        content = 'id,name,phone,nationalId,agency,answer,prizeWon\n';
+                      }
+
+                      const lines = content.trim().split('\n');
+                      let maxId = 0;
+                      let isDuplicate = false;
+                      let duplicateReason = '';
+
+                      for (let i = 1; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        const parts = line.split(',').map(f => f.replace(/^"|"$/g, '').trim());
+                        const curId = parseInt(parts[0], 10);
+                        if (!isNaN(curId) && curId > maxId) {
+                          maxId = curId;
+                        }
+                        const curPhone = parts[2] || '';
+                        const curNationalId = parts[3] || '';
+                        if (curPhone === String(phone).trim()) {
+                          isDuplicate = true;
+                          duplicateReason = 'Số điện thoại này đã được đăng ký.';
+                          break;
+                        }
+                        if (curNationalId === String(nationalId).trim()) {
+                          isDuplicate = true;
+                          duplicateReason = 'Số CCCD này đã được đăng ký.';
+                          break;
+                        }
+                      }
+
+                      if (isDuplicate) {
+                        res.writeHead(400, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ success: false, error: duplicateReason }));
+                        return;
+                      }
+
+                      const newId = maxId + 1;
+                      const cleanName = (name || '').trim().replace(/"/g, '""');
+                      const cleanPhone = String(phone).trim();
+                      const cleanNationalId = String(nationalId).trim();
+                      const cleanAgency = (agency || '').trim().replace(/"/g, '""');
+                      const cleanAnswer = (answer || '').trim().replace(/"/g, '""');
+                      const newRow = `${newId},"${cleanName}","${cleanPhone}","${cleanNationalId}","${cleanAgency}","${cleanAnswer}",""`;
+
+                      const newContent = content.endsWith('\n') ? content + newRow + '\n' : content + '\n' + newRow + '\n';
+                      fs.writeFileSync(csvPath, newContent);
+                      if (fs.existsSync(distDataDir)) {
+                        fs.writeFileSync(distCsvPath, newContent);
+                      }
+
+                      res.writeHead(200, { 'Content-Type': 'application/json' });
+                      res.end(JSON.stringify({ success: true, id: newId }));
+                    } catch (err: any) {
+                      console.error('Error in csv write task:', err);
+                      res.writeHead(500, { 'Content-Type': 'application/json' });
+                      res.end(JSON.stringify({ success: false, error: err.message }));
+                    }
+                  });
+                } catch (err: any) {
+                  console.error('Error in submit-registration:', err);
+                  res.writeHead(500, { 'Content-Type': 'application/json' });
+                  res.end(JSON.stringify({ success: false, error: err.message }));
+                }
                 });
               } else {
                 next();

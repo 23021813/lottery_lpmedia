@@ -3,1180 +3,1556 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>MSB - Quay Số Trúng Thưởng</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap"
       rel="stylesheet"
     />
-    <title>Quay Số Trúng Thưởng - Vinh Heritage</title>
     <style>
+      /* ============================================================
+         MSB BRAND COLORS (CHỈ DÙNG CAM - ĐỎ MSB) & LIQUID GLASS 3D
+         ============================================================ */
+      :root {
+        /* Bảng màu thương hiệu MSB */
+        --color-msb-orange: #f37021; /* Cam tươi rực rỡ MSB (Chủ đạo) */
+        --color-msb-primary: #ef4123; /* Đỏ cam nhận diện MSB */
+        --color-msb-red: #ed1c24; /* Đỏ cờ MSB */
+        --color-msb-dark: #9e0b0f; /* Đỏ sẫm chiều sâu */
+        --color-white-pure: #ffffff; /* Trắng pha lê phản quang */
+
+        /* Nền vũ trụ sâu thẳm */
+        --color-bg-space: #060309;
+
+        /* Kính lỏng siêu trong suốt & bóng pha lê (iOS / visionOS Liquid Glass) */
+        --liquid-glass-bg: rgba(255, 255, 255, 0.03);
+        --liquid-glass-bg-hover: rgba(255, 255, 255, 0.06);
+        --liquid-glass-blur: blur(45px) saturate(220%) contrast(112%);
+
+        /* Đa tầng bóng đổ khúc xạ giọt nước nổi khối 3D */
+        --water-drop-shadow: 
+          inset 2px 2px 4px 0 rgba(255, 255, 255, 0.8),
+          inset -2px -2px 4px 0 rgba(0, 0, 0, 0.7),
+          inset 0 20px 40px -10px rgba(255, 255, 255, 0.18),
+          inset 0 -20px 40px -10px rgba(158, 11, 15, 0.4),
+          0 35px 80px -10px rgba(0, 0, 0, 0.92),
+          0 15px 35px rgba(0, 0, 0, 0.65),
+          0 0 85px -5px rgba(243, 112, 33, 0.65);
+
+        --font-sans: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+      }
+
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
 
+      html,
       body {
-        font-family: "Be Vietnam Pro", Arial, sans-serif;
-        background-color: #0d0905;
-        background-image: url("background.jpg");
-        background-repeat: no-repeat;
+        width: 100%;
+        height: 100%;
+        min-height: 100dvh;
+        overflow: hidden;
+        background-color: var(--color-bg-space);
+        /* Hình nền thiên hà vòng cung hành tinh cao cấp */
+        background-image: url("msb-planet-arc-bg.jpg");
         background-size: cover;
         background-position: center;
+        background-repeat: no-repeat;
         background-attachment: fixed;
-        color: #fff;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        overflow-x: hidden;
-      }
-
-      .game-root {
-        width: 100%;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 30px 15px 60px 15px;
-        position: relative;
-        z-index: 2;
-      }
-
-      /* ===== THANH TOP BAR SÂN KHẤU (STAGE TOP BAR) & HEADER ===== */
-      .stage-top-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        max-width: 1360px;
-        margin-bottom: 14px;
-      }
-
-      .stage-brand-group {
-        text-align: left;
-      }
-
-      .stage-brand-group h1,
-      .header h1 {
-        color: #ba7c38;
-        font-size: 42px;
-        font-weight: 900;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        margin-bottom: 4px;
-        text-shadow: 0 3px 12px rgba(0, 0, 0, 0.7);
-        line-height: 1.1;
-      }
-
-      .stage-brand-group .event-subtitle,
-      .header .event-subtitle {
-        color: #ffdca3;
-        font-size: 16px;
-        font-weight: 800;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        margin-bottom: 2px;
-      }
-
-      .header {
-        text-align: center;
-        margin-bottom: 20px;
-        width: 100%;
-        max-width: 1360px;
-      }
-
-      /* ===== THANH NÚT ĐIỀU KHIỂN (KHÔNG DÙNG ICON) ===== */
-      .action-btn-group {
-        display: flex;
-        gap: 16px;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        margin: 10px 0 25px 0;
-      }
-
-      .button {
-        align-items: center;
-        background-color: #ba7c38;
-        border: 2px solid #ba7c38;
-        border-radius: 30px;
-        color: #fff;
-        cursor: pointer;
-        display: flex;
-        font-size: 18px;
-        font-weight: 800;
-        height: 52px;
-        justify-content: center;
-        min-width: 220px;
-        padding: 0 36px;
-        opacity: 1;
-        text-transform: uppercase;
-        font-family: "Be Vietnam Pro", sans-serif;
-        letter-spacing: 1.5px;
-        transition: all 0.25s ease;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-      }
-
-      .button:hover:not(:disabled) {
-        background-color: #9f6527;
-        border-color: #9f6527;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-      }
-
-      .button:disabled {
-        background-color: rgba(186, 124, 56, 0.35);
-        border-color: rgba(186, 124, 56, 0.35);
-        cursor: not-allowed;
-        opacity: 0.6;
-        box-shadow: none;
-      }
-
-      .button.button-secondary {
-        background-color: rgba(20, 15, 11, 0.85);
-        color: #ba7c38;
-        border-color: #ba7c38;
-      }
-
-      .button.button-secondary:hover:not(:disabled) {
-        background-color: #ba7c38;
-        color: #fff;
-      }
-
-      /* ===== THANH PROGRESS BAR TRỰC QUAN (KHÔNG BORDER) ===== */
-      .prize-progress-container {
-        width: 95%;
-        max-width: 1360px;
-        margin: 0 auto 12px auto;
-        background: transparent;
-        border: none;
-        box-shadow: none;
-        padding: 0 4px;
-      }
-
-      .progress-info-row {
-        display: none;
-      }
-
-      .progress-bar-bg {
-        width: 100%;
-        height: 6px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 3px;
-        overflow: hidden;
-        border: none;
-      }
-
-      .progress-bar-fill {
-        width: 0%;
-        height: 100%;
-        background: linear-gradient(to right, #ba7c38, #ffdca3);
-        border-radius: 6px;
-        transition: width 0.4s ease;
-      }
-
-      /* ===== HỆ LƯỚI QUAY SỐ 16 GIẢI (16-CARD GRID) ===== */
-      .lottery-grid-container {
-        width: 95%;
-        max-width: 1360px;
-        margin: 0 auto 40px auto;
-        background: rgba(18, 14, 10, 0.82);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 2px solid rgba(186, 124, 56, 0.35);
-        border-radius: 18px;
-        padding: 24px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-      }
-
-      .slot-grid-16 {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-      }
-
-      @media (max-width: 1100px) {
-        .slot-grid-16 {
-          grid-template-columns: repeat(3, 1fr);
-        }
-      }
-
-      @media (max-width: 768px) {
-        .slot-grid-16 {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        .header h1 {
-          font-size: 38px;
-        }
-        .header .event-subtitle {
-          font-size: 18px;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .slot-grid-16 {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      /* Thẻ giải trong Grid */
-      .slot-card-16 {
-        border-radius: 12px;
-        padding: 16px 14px;
-        display: flex;
-        flex-direction: column;
-        text-align: left;
-        position: relative;
-        overflow: hidden;
-        box-sizing: border-box;
-        transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        cursor: pointer;
+        font-family: var(--font-sans);
+        color: #ffffff;
         user-select: none;
       }
 
-      .slot-card-16 > * {
-        position: relative;
-        z-index: 2;
-      }
-
-      .slot-card-16:hover {
-        transform: translateY(-2px);
-      }
-
-      /* Trạng thái 1: Chưa quay (Pending) - LÀM MỜ RÕ RỆT ĐỂ PHÂN BIỆT */
-      .slot-card-16.is-pending {
-        opacity: 0.32;
-        filter: grayscale(60%);
-        background: rgba(18, 14, 10, 0.65);
-        border: 2px dashed rgba(186, 124, 56, 0.25);
-        box-shadow: none;
-      }
-
-      .slot-card-16.is-pending:hover {
-        opacity: 0.6;
-        filter: none;
-        border-color: rgba(186, 124, 56, 0.5);
-      }
-
-      .slot-card-16.is-pending .card-code {
-        color: rgba(255, 255, 255, 0.25);
-      }
-
-      .slot-card-16.is-pending .card-name {
-        color: rgba(255, 255, 255, 0.35);
-      }
-
-      .slot-card-16.is-pending .card-agency {
-        color: rgba(255, 255, 255, 0.25);
-      }
-
-      /* Animation đường ánh sáng quang viền chạy quanh border */
-      @keyframes borderLightTrace {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      /* Trạng thái 2: Đang quay (Spinning) - HIỆU ỨNG ÁNH SÁNG CHẠY VIỀN & CỐ ĐỊNH VỊ TRÍ */
-      .slot-card-16.is-spinning {
-        opacity: 1;
-        filter: none;
-        border: 2px solid transparent;
-        background: rgba(30, 22, 15, 0.98);
-        box-shadow: 0 0 16px rgba(186, 124, 56, 0.45), 0 8px 24px rgba(0, 0, 0, 0.7);
-        cursor: wait;
-        transform: none; /* Khóa vị trí tuyệt đối, chống co giật translateY khi quay */
-      }
-
-      .slot-card-16.is-spinning::before {
+      /* Lớp phủ chuyển sắc nhẹ làm dịu nền */
+      body::before {
         content: "";
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: conic-gradient(
-          from 0deg at 50% 50%,
-          transparent 0deg,
-          transparent 270deg,
-          rgba(186, 124, 56, 0.3) 295deg,
-          #ba7c38 325deg,
-          #ffffff 352deg,
-          #ffdca3 360deg
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(
+          circle at 50% 45%,
+          rgba(6, 3, 9, 0.3) 0%,
+          rgba(6, 3, 9, 0.7) 100%
         );
-        animation: borderLightTrace 1.6s linear infinite;
-        z-index: 1;
+        z-index: 2;
         pointer-events: none;
       }
 
-      .slot-card-16.is-spinning::after {
-        content: "";
-        position: absolute;
-        inset: 2px;
-        background: rgba(26, 19, 14, 0.98);
-        border-radius: 10px;
-        z-index: 1;
-        pointer-events: none;
-      }
-
-      .slot-card-16.is-spinning .card-code {
-        color: #ffdca3;
-      }
-
-      .slot-card-16.is-spinning .card-rank {
-        color: #ba7c38;
-      }
-
-      /* Trạng thái 3: Đã quay xong (Completed) - RÕ NÉT, TRANG NHÃ */
-      .slot-card-16.is-completed {
-        opacity: 1;
-        filter: none;
-        border: 2px solid rgba(186, 124, 56, 0.6);
-        background: rgba(26, 19, 14, 0.92);
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
-      }
-
-      .slot-card-16.is-completed:hover {
-        border-color: #ba7c38;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
-      }
-
-      .slot-card-16.is-completed .card-code {
-        color: #ffffff;
-      }
-
-      .slot-card-16.is-completed .card-name {
-        color: #ffdca3;
-      }
-
-      /* Các thành phần tử trong thẻ */
-      .card-rank {
-        font-size: 11px;
-        font-weight: 800;
-        color: #ba7c38;
-        text-transform: uppercase;
-        letter-spacing: 1.2px;
-        margin-bottom: 4px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .card-badge {
-        font-size: 9px;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-weight: 700;
-        text-transform: uppercase;
-      }
-
-      .card-badge.badge-waiting {
-        background: rgba(255, 255, 255, 0.08);
-        color: #888;
-      }
-
-      .card-badge.badge-spinning {
-        background: #ba7c38;
-        color: #fff;
-        animation: blinkBadge 0.6s infinite alternate;
-      }
-
-      .card-badge.badge-won {
-        background: rgba(186, 124, 56, 0.25);
-        color: #ffdca3;
-        border: 1px solid rgba(186, 124, 56, 0.45);
-      }
-
-      @keyframes blinkBadge {
-        0% { opacity: 0.6; }
-        100% { opacity: 1; }
-      }
-
-      .card-code {
-        font-size: 26px;
-        font-weight: 900;
-        letter-spacing: 1.5px;
-        margin-bottom: 6px;
-        font-family: "Be Vietnam Pro", sans-serif;
-        line-height: 1.1;
-        font-variant-numeric: tabular-nums;
-        font-feature-settings: "tnum";
-        width: 90px;
-        min-width: 90px;
-        max-width: 90px;
-        flex: 0 0 90px;
-        text-align: center;
-        display: inline-block;
-      }
-
-      .card-name {
-        font-size: 14px;
-        font-weight: 700;
-        margin-bottom: 4px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .card-agency {
-        font-size: 12px;
-        color: #a89f91;
-        margin-bottom: 10px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .card-secure {
-        display: flex;
-        justify-content: space-between;
-        font-size: 11px;
-        color: #d4c5b2;
-        background: rgba(186, 124, 56, 0.1);
-        padding: 5px 8px;
-        border-radius: 6px;
-        border: 1px solid rgba(186, 124, 56, 0.2);
-        font-weight: 500;
-      }
-
-      .card-main-content {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex: 1;
-        min-height: 0;
-      }
-
-      .card-details {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        flex: 1;
-        min-width: 0;
-        gap: 2px;
-      }
-
-      /* ===== MODAL XÁC NHẬN QUAY LẠI (CONFIRM RESPIN) ===== */
-      .modal-backdrop {
-        display: none;
+      /* Canvas sao băng rơi động & hạt vũ trụ sống động */
+      #cosmosCanvas {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.75);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        z-index: 1000;
-        justify-content: center;
-        align-items: center;
-        opacity: 0;
-        transition: opacity 0.25s ease;
+        z-index: 3;
+        pointer-events: none;
       }
 
-      .modal-backdrop.show {
+      /* Canvas ăn mừng khi có người trúng giải */
+      #celebrationCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 50;
+        pointer-events: none;
+      }
+
+      /* Khung sân khấu chính */
+      .lottery-stage {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        height: 100%;
+        min-height: 100dvh;
         display: flex;
-        opacity: 1;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        gap: 36px;
       }
 
-      .modal-box {
-        background: rgba(22, 16, 11, 0.96);
-        border: 2px solid #ba7c38;
-        border-radius: 20px;
-        width: 90%;
-        max-width: 480px;
-        padding: 28px 24px;
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-        transform: scale(0.9);
-        transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      /* ============================================================
+         LIQUID GLASS DROPDOWN (GIỌT NƯỚC PILL THỦY TINH 3D)
+         ============================================================ */
+      .prize-dropdown-wrapper {
+        position: relative;
+        z-index: 30;
       }
 
-      .modal-backdrop.show .modal-box {
-        transform: scale(1);
+      .prize-dropdown-trigger {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 13px 28px;
+        background: var(--liquid-glass-bg);
+        backdrop-filter: var(--liquid-glass-blur);
+        -webkit-backdrop-filter: var(--liquid-glass-blur);
+        border-radius: 9999px;
+        border: 1px solid transparent;
+        background-clip: padding-box;
+        box-shadow: 
+          inset 1.8px 1.8px 3px 0 rgba(255, 255, 255, 0.85),
+          inset -1.8px -1.8px 3px 0 rgba(0, 0, 0, 0.55),
+          inset 0 12px 24px rgba(255, 255, 255, 0.15),
+          0 14px 40px rgba(0, 0, 0, 0.55),
+          0 0 40px rgba(243, 112, 33, 0.45);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
-      .modal-title {
-        color: #ba7c38;
-        font-size: 22px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 12px;
+      /* Viền lăng kính lỏng (Prismatic Edge) */
+      .prize-dropdown-trigger::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.75) 0%,
+          rgba(243, 112, 33, 0.5) 45%,
+          rgba(239, 65, 35, 0.3) 100%
+        );
+        -webkit-mask: linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
       }
 
-      .modal-desc {
-        color: #d4c5b2;
-        font-size: 14px;
-        line-height: 1.6;
-        margin-bottom: 20px;
+      /* Đốm sáng phản chiếu thấu kính lồi */
+      .prize-dropdown-trigger::after {
+        content: "";
+        position: absolute;
+        top: 1px;
+        left: 20%;
+        right: 20%;
+        height: 45%;
+        border-radius: 9999px 9999px 0 0;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.35) 0%,
+          transparent 100%
+        );
+        pointer-events: none;
       }
 
-      .modal-current-winner {
-        background: rgba(186, 124, 56, 0.12);
-        border: 1px solid rgba(186, 124, 56, 0.3);
-        border-radius: 10px;
-        padding: 12px;
-        margin-bottom: 24px;
-        text-align: left;
+      .prize-dropdown-trigger:hover {
+        background: var(--liquid-glass-bg-hover);
+        transform: translateY(-1px);
+        box-shadow: 
+          inset 1.8px 1.8px 3px 0 rgba(255, 255, 255, 0.95),
+          inset -1.8px -1.8px 3px 0 rgba(0, 0, 0, 0.55),
+          0 18px 46px rgba(243, 112, 33, 0.4),
+          0 0 55px rgba(243, 112, 33, 0.65);
       }
 
-      .modal-current-winner .winner-rank {
-        color: #ba7c38;
-        font-size: 12px;
-        font-weight: 800;
-        text-transform: uppercase;
-        margin-bottom: 4px;
+      .prize-dropdown-trigger:active {
+        transform: translateY(0) scale(0.98);
       }
 
-      .modal-current-winner .winner-detail {
-        color: #fff;
+      .prize-badge-indicator {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background-color: var(--color-msb-orange);
+        box-shadow: 0 0 16px var(--color-msb-orange), 0 0 8px #ffffff;
+        flex-shrink: 0;
+      }
+
+      .prize-title-display {
         font-size: 16px;
         font-weight: 700;
-      }
-
-      .modal-btn-group {
-        display: flex;
-        gap: 12px;
-        justify-content: center;
-      }
-
-      .modal-btn {
-        flex: 1;
-        height: 46px;
-        border-radius: 23px;
-        border: 0;
-        font-size: 15px;
-        font-weight: 800;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
+        color: #ffffff;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+      }
+
+      /* Badge hiển thị số lượng giải: Chỉ hiện khi >= 1 giải */
+      .prize-count-tag {
+        display: none; /* Mặc định ẩn khi 0 giải */
+        font-size: 13px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+        background: rgba(243, 112, 33, 0.22);
+        padding: 3px 12px;
+        border-radius: 9999px;
+        border: 1px solid rgba(243, 112, 33, 0.45);
         cursor: pointer;
-        font-family: "Be Vietnam Pro", sans-serif;
         transition: all 0.2s ease;
       }
 
-      .modal-btn.btn-respin {
-        background-color: #ba7c38;
-        color: #fff;
+      .prize-count-tag:hover {
+        background: rgba(243, 112, 33, 0.4);
+        border-color: rgba(243, 112, 33, 0.7);
+        transform: scale(1.05);
       }
 
-      .modal-btn.btn-respin:hover {
-        background-color: #9f6527;
-        transform: translateY(-2px);
+      .prize-dropdown-chevron {
+        width: 9px;
+        height: 9px;
+        border-right: 2px solid rgba(255, 255, 255, 0.85);
+        border-bottom: 2px solid rgba(255, 255, 255, 0.85);
+        transform: rotate(45deg) translateY(-2px);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        margin-left: 4px;
       }
 
-      .modal-btn.btn-close {
-        background-color: rgba(255, 255, 255, 0.1);
-        color: #aaa;
+      .prize-dropdown-wrapper.is-open .prize-dropdown-chevron {
+        transform: rotate(-135deg) translateY(-2px);
       }
 
-      .modal-btn.btn-close:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-        color: #fff;
+      /* Dropdown Menu (Khối Thủy Tinh Giọt Nước Siêu Trong) */
+      .prize-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 12px);
+        left: 50%;
+        transform: translateX(-50%) translateY(-10px) scale(0.96);
+        min-width: 340px;
+        background: rgba(18, 10, 24, 0.82);
+        backdrop-filter: blur(50px);
+        -webkit-backdrop-filter: blur(50px);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 24px;
+        padding: 10px;
+        box-shadow: 
+          inset 1.8px 1.8px 3px 0 rgba(255, 255, 255, 0.5),
+          0 30px 80px rgba(0, 0, 0, 0.85),
+          0 0 60px rgba(243, 112, 33, 0.35);
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
       }
 
-      /* ===== MODAL VINH DANH NGƯỜI TRÚNG GIẢI CỰC ĐẠI CHO MC ===== */
-      .winner-announcement-backdrop {
+      .prize-dropdown-wrapper.is-open .prize-dropdown-menu {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(-50%) translateY(0) scale(1);
+      }
+
+      .prize-option-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 13px 20px;
+        border-radius: 16px;
+        background: transparent;
+        border: 1px solid transparent;
+        color: rgba(255, 255, 255, 0.85);
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-align: left;
+        transition: all 0.2s ease;
+      }
+
+      .prize-option-item:hover {
+        background: rgba(255, 255, 255, 0.09);
+        color: #ffffff;
+      }
+
+      .prize-option-item.is-selected {
+        background: rgba(243, 112, 33, 0.22);
+        color: #ffaa80;
+        border-color: rgba(243, 112, 33, 0.45);
+      }
+
+      /* Option count badge: Ẩn khi 0 giải, hiện khi >= 1 giải */
+      .prize-option-count {
         display: none;
+        font-size: 12px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+        background: rgba(243, 112, 33, 0.25);
+        border: 1px solid rgba(243, 112, 33, 0.45);
+        padding: 2px 9px;
+        border-radius: 9999px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .prize-option-count:hover {
+        background: rgba(243, 112, 33, 0.5);
+        color: #ffffff;
+        transform: scale(1.08);
+      }
+
+      /* ============================================================
+         SLOT MACHINE (KHỐI THỦY TINH GIỌT NƯỚC NỔI 3D CHUẨN iOS)
+         ============================================================ */
+      .slot-machine-container {
+        position: relative;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 36px 48px;
+        background: var(--liquid-glass-bg);
+        backdrop-filter: var(--liquid-glass-blur);
+        -webkit-backdrop-filter: var(--liquid-glass-blur);
+        border-radius: 40px;
+        border: 1px solid transparent;
+        background-clip: padding-box;
+        box-shadow: var(--water-drop-shadow);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+      }
+
+      /* Viền lăng kính giọt nước phát sáng */
+      .slot-machine-container::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        padding: 1.5px;
+        background: linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.85) 0%,
+          rgba(243, 112, 33, 0.5) 40%,
+          rgba(239, 65, 35, 0.3) 75%,
+          rgba(255, 255, 255, 0.45) 100%
+        );
+        -webkit-mask: linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+
+      /* Đốm sáng phản chiếu thấu kính cong */
+      .slot-machine-container::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 8%;
+        right: 8%;
+        height: 38%;
+        border-radius: 40px 40px 0 0;
+        background: radial-gradient(
+          ellipse at 50% 0%,
+          rgba(255, 255, 255, 0.45) 0%,
+          rgba(255, 255, 255, 0.1) 45%,
+          transparent 75%
+        );
+        pointer-events: none;
+      }
+
+      .slot-machine-container:hover {
+        box-shadow: 
+          inset 2.5px 2.5px 6px 0 rgba(255, 255, 255, 0.95),
+          inset -2.5px -2.5px 6px 0 rgba(0, 0, 0, 0.7),
+          inset 0 25px 45px -10px rgba(255, 255, 255, 0.25),
+          0 40px 95px -10px rgba(0, 0, 0, 0.98),
+          0 0 100px -5px rgba(243, 112, 33, 0.8);
+      }
+
+      .slot-machine-container.is-spinning {
+        box-shadow: 
+          inset 2.5px 2.5px 6px 0 rgba(255, 255, 255, 0.95),
+          inset -2.5px -2.5px 6px 0 rgba(0, 0, 0, 0.7),
+          0 40px 105px -10px rgba(0, 0, 0, 0.98),
+          0 0 115px rgba(243, 112, 33, 0.9);
+      }
+
+      .slot-machine-container.is-celebrating {
+        animation: celebrateScale 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 
+          inset 2.5px 2.5px 6px 0 rgba(255, 255, 255, 0.95),
+          inset -2.5px -2.5px 6px 0 rgba(0, 0, 0, 0.7),
+          0 40px 115px -10px rgba(0, 0, 0, 0.98),
+          0 0 130px rgba(243, 112, 33, 0.95);
+      }
+
+      @keyframes celebrateScale {
+        0% {
+          transform: scale(1);
+        }
+        40% {
+          transform: scale(1.03);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Lưới 4 ô số */
+      .slot-grid {
+        display: flex;
+        gap: 22px;
+        align-items: center;
+      }
+
+      /* Từng ô số: THẤU KÍNH 3D RIÊNG BIỆT (KHÔNG CÓ GẠCH NGANG CHIA CẮT SỐ) */
+      .slot-cell {
+        position: relative;
+        width: 140px;
+        height: 180px;
+        background: rgba(10, 4, 16, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 
+          inset 0 4px 15px rgba(0, 0, 0, 0.85),
+          inset 0 -2px 6px rgba(255, 255, 255, 0.18),
+          0 4px 12px rgba(0, 0, 0, 0.4);
+        box-sizing: border-box;
+        perspective: 800px;
+        transform-style: preserve-3d;
+        will-change: transform;
+        transition: transform 0.25s ease-out;
+      }
+
+      /* Lớp bóng vòm mặt kính ô số (BỎ đường line gạch ngang ở giữa) */
+      .slot-cell::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 48%;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.18) 0%,
+          rgba(255, 255, 255, 0.01) 100%
+        );
+        pointer-events: none;
+        border-top-left-radius: 23px;
+        border-top-right-radius: 23px;
+        z-index: 6;
+      }
+
+      /* Dải chữ số cuộn (Điều khiển 100% bằng JavaScript, KHÔNG transition) */
+      .digit-strip {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        will-change: transform;
+      }
+
+      /* Từng con số: THỦY TINH LỎNG SIÊU SẮC NÉT (KHÔNG BLUR, CHỈ DÙNG CAM - ĐỎ MSB) */
+      .digit-item {
+        width: 100%;
+        height: 180px;
+        line-height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 110px;
+        font-weight: 800;
+        font-feature-settings: "tnum";
+        font-variant-numeric: tabular-nums;
+        box-sizing: border-box;
+        
+        /* Hiệu ứng chữ thủy tinh lỏng ánh cam MSB (KHÔNG DÙNG VÀNG) */
+        background: linear-gradient(
+          180deg,
+          #ffffff 0%,
+          #ffe5d9 30%,
+          #f37021 75%,
+          #ef4123 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.95))
+          drop-shadow(0 0 18px rgba(243, 112, 33, 0.55));
+      }
+
+      /* Khi số dừng khóa kết quả: Báo hiệu trúng giải bằng hiệu ứng Liquid Glass Cam Đỏ MSB */
+      .slot-cell.is-locked {
+        background: radial-gradient(
+          circle at 50% 30%,
+          rgba(243, 112, 33, 0.28) 0%,
+          rgba(239, 65, 35, 0.16) 50%,
+          rgba(10, 4, 16, 0.75) 100%
+        );
+        border: 1.5px solid rgba(243, 112, 33, 0.85);
+        box-shadow: 
+          inset 2px 2px 5px 0 rgba(255, 255, 255, 0.75),
+          inset -2px -2px 5px 0 rgba(0, 0, 0, 0.65),
+          inset 0 0 30px rgba(243, 112, 33, 0.45),
+          0 8px 30px rgba(0, 0, 0, 0.7),
+          0 0 50px rgba(243, 112, 33, 0.75),
+          0 0 90px rgba(239, 65, 35, 0.5);
+        transform: scale(1.03);
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      /* Lớp bóng vòm thấu kính trên ô số khi trúng giải */
+      .slot-cell.is-locked::after {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.4) 0%,
+          rgba(243, 112, 33, 0.2) 50%,
+          transparent 100%
+        );
+      }
+
+      /* Chữ số trúng giải: THỦY TINH LỎNG SẮC CAM ĐỎ MSB RỰC RỠ (KHÔNG BỊ TRẮNG) */
+      .slot-cell.is-locked .digit-item {
+        background: linear-gradient(
+          180deg,
+          #ffffff 0%,
+          #ffe3d1 15%,
+          #f37021 48%,
+          #ef4123 78%,
+          #ed1c24 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.95))
+          drop-shadow(0 0 28px rgba(243, 112, 33, 0.95))
+          drop-shadow(0 0 55px rgba(239, 65, 35, 0.85))
+          drop-shadow(0 0 95px rgba(237, 28, 36, 0.65));
+        transition: all 0.35s ease;
+      }
+
+      /* Space Hint Bar */
+      .space-hint-bar {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.55);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: opacity 0.3s ease;
+      }
+
+      .space-key-pill {
+        display: inline-block;
+        padding: 3px 10px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 6px;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 11px;
+        box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+      }
+
+      /* ============================================================
+         MODAL VINH DANH NGƯỜI TRÚNG (LIQUID GLASS SIÊU TRONG SUỐT)
+         ============================================================ */
+      .modal-overlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(10, 7, 5, 0.88);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        z-index: 2000;
-        justify-content: center;
+        z-index: 100;
+        background: rgba(4, 2, 8, 0.45); /* Siêu trong suốt */
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
+        display: flex;
         align-items: center;
+        justify-content: center;
+        padding: 24px;
         opacity: 0;
-        transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none;
+        transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
-      .winner-announcement-backdrop.show {
-        display: flex;
+      .modal-overlay.is-visible {
         opacity: 1;
+        pointer-events: auto;
       }
 
-      .winner-announcement-box {
-        background: radial-gradient(circle at 50% 10%, #2a1d13 0%, #16100b 90%);
-        border: 2.5px solid #ba7c38;
-        border-radius: 24px;
-        width: 92%;
-        max-width: 720px;
-        padding: 36px 32px 40px 32px;
-        text-align: center;
-        box-shadow: 0 0 60px rgba(186, 124, 56, 0.45), 0 20px 50px rgba(0, 0, 0, 0.85);
-        transform: scale(0.85);
-        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      .modal-card {
         position: relative;
-      }
-
-      .winner-announcement-backdrop.show .winner-announcement-box {
-        transform: scale(1);
-      }
-
-      .winner-congrats-tag {
-        color: #ffdca3;
-        font-size: 15px;
-        font-weight: 800;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        margin-bottom: 8px;
-        text-shadow: 0 2px 8px rgba(186, 124, 56, 0.6);
-      }
-
-      .winner-rank-large {
-        color: #ba7c38;
-        font-size: 24px;
-        font-weight: 900;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-bottom: 12px;
-      }
-
-      .winner-code-large {
-        font-size: 88px;
-        font-weight: 900;
-        letter-spacing: 4px;
-        color: #ffdca3;
-        line-height: 1;
-        margin: 10px 0 16px 0;
-        text-shadow: 0 0 25px rgba(255, 220, 163, 0.4), 0 4px 15px rgba(0, 0, 0, 0.9);
-        font-family: "Be Vietnam Pro", sans-serif;
-      }
-
-      .winner-name-large {
-        font-size: 46px;
-        font-weight: 900;
-        color: #ffffff;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 12px;
-        line-height: 1.2;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
-        word-break: break-word;
-      }
-
-      .winner-agency-large {
-        font-size: 26px;
-        font-weight: 700;
-        color: #d4c5b2;
-        margin-bottom: 20px;
-        letter-spacing: 0.5px;
-      }
-
-      .winner-secure-large {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        background: rgba(186, 124, 56, 0.15);
-        border: 1px solid rgba(186, 124, 56, 0.4);
-        padding: 10px 24px;
-        border-radius: 30px;
-        font-size: 20px;
-        font-weight: 700;
-        color: #ffdca3;
-        letter-spacing: 1px;
-      }
-
-      .winner-actions-group {
+        width: 100%;
+        max-width: 580px;
+        background: rgba(255, 255, 255, 0.04); /* Kính siêu trong lộ nền */
+        backdrop-filter: blur(45px) saturate(220%) contrast(110%);
+        -webkit-backdrop-filter: blur(45px) saturate(220%) contrast(110%);
+        border-radius: 36px;
+        padding: 48px 42px 42px;
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        box-shadow: 
+          inset 2.5px 2.5px 6px rgba(255, 255, 255, 0.75),
+          inset -2.5px -2.5px 6px rgba(0, 0, 0, 0.6),
+          inset 0 25px 50px rgba(255, 255, 255, 0.12),
+          0 35px 90px rgba(0, 0, 0, 0.85),
+          0 0 80px rgba(243, 112, 33, 0.38);
         display: flex;
-        gap: 16px;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
-        margin-top: 24px;
-        flex-wrap: wrap;
+        text-align: center;
+        transform: translateY(24px) scale(0.95);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
-      .winner-btn-action {
-        background: linear-gradient(135deg, #ba7c38 0%, #e09b4c 50%, #ba7c38 100%);
-        color: #ffffff;
-        border: 2px solid #ffdca3;
-        border-radius: 35px;
-        padding: 0 42px;
-        height: 56px;
-        min-width: 200px;
-        font-size: 20px;
-        font-weight: 900;
-        letter-spacing: 2px;
-        text-transform: uppercase;
+      /* Viền lăng kính trên modal */
+      .modal-card::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        padding: 1.5px;
+        background: linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.8) 0%,
+          rgba(243, 112, 33, 0.5) 45%,
+          rgba(239, 65, 35, 0.3) 100%
+        );
+        -webkit-mask: linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+
+      /* Đốm sáng cong đỉnh modal */
+      .modal-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 15%;
+        right: 15%;
+        height: 35%;
+        border-radius: 36px 36px 0 0;
+        background: radial-gradient(
+          ellipse at 50% 0%,
+          rgba(255, 255, 255, 0.45) 0%,
+          rgba(255, 255, 255, 0.09) 50%,
+          transparent 75%
+        );
+        pointer-events: none;
+      }
+
+      .modal-overlay.is-visible .modal-card {
+        transform: translateY(0) scale(1);
+      }
+
+      /* Nút đóng hình tròn Liquid Glass Orb ở góc trên modal */
+      .modal-close-btn {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        color: rgba(255, 255, 255, 0.85);
+        font-family: inherit;
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
-        box-shadow: 0 6px 25px rgba(186, 124, 56, 0.5);
-        transition: all 0.25s ease;
-        font-family: "Be Vietnam Pro", sans-serif;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        box-shadow: 
+          inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.65),
+          inset -1.5px -1.5px 3px rgba(0, 0, 0, 0.5),
+          0 8px 20px rgba(0, 0, 0, 0.4);
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 15;
       }
 
-      .winner-btn-action:hover {
-        background: linear-gradient(135deg, #a66a2c 0%, #ba7c38 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(186, 124, 56, 0.7);
+      .modal-close-btn:hover {
+        background: rgba(243, 112, 33, 0.25);
+        border-color: rgba(243, 112, 33, 0.7);
+        color: #ffffff;
+        transform: scale(1.08);
+        box-shadow: 
+          inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.85),
+          inset -1.5px -1.5px 3px rgba(0, 0, 0, 0.4),
+          0 10px 25px rgba(243, 112, 33, 0.4),
+          0 0 20px rgba(243, 112, 33, 0.55);
       }
 
-      .winner-btn-absent {
-        background: rgba(180, 45, 45, 0.25);
-        color: #ffb8b8;
-        border: 2px solid rgba(235, 87, 87, 0.75);
-        border-radius: 35px;
-        padding: 0 32px;
-        height: 56px;
-        min-width: 190px;
-        font-size: 19px;
+      .modal-close-btn:active {
+        transform: scale(0.95);
+      }
+
+      /* Tiêu đề Giải Thưởng (ĐÃ BỎ CHỮ CHÚC MỪNG) */
+      .modal-prize-title {
+        font-size: 26px;
         font-weight: 800;
-        letter-spacing: 1.5px;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
-        cursor: pointer;
-        box-shadow: 0 4px 20px rgba(220, 53, 69, 0.3);
-        transition: all 0.25s ease;
-        font-family: "Be Vietnam Pro", sans-serif;
+        color: #ffffff;
+        margin-bottom: 22px;
+        text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8), 0 0 22px rgba(243, 112, 33, 0.65);
+      }
+
+      /* Huy hiệu mã số: Khối Thủy Tinh Giọt Nước Siêu Trong (BỎ KÝ TỰ #) */
+      .modal-code-badge {
+        position: relative;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-      }
-
-      .winner-btn-absent:hover {
-        background: rgba(220, 53, 69, 0.5);
-        border-color: #ff6b6b;
+        padding: 14px 46px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.32);
+        border-radius: 26px;
+        font-size: 54px;
+        font-weight: 900;
+        letter-spacing: 0.12em;
         color: #ffffff;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 25px rgba(220, 53, 69, 0.6);
+        text-shadow: 
+          0 0 35px rgba(243, 112, 33, 0.95),
+          0 0 18px #ffffff,
+          0 4px 12px rgba(0, 0, 0, 0.9);
+        font-feature-settings: "tnum";
+        font-variant-numeric: tabular-nums;
+        margin-bottom: 22px;
+        backdrop-filter: blur(35px) saturate(220%);
+        -webkit-backdrop-filter: blur(35px) saturate(220%);
+        box-shadow: 
+          inset 2.5px 2.5px 5px 0 rgba(255, 255, 255, 0.85),
+          inset -2.5px -2.5px 5px 0 rgba(0, 0, 0, 0.6),
+          inset 0 16px 32px rgba(255, 255, 255, 0.14),
+          0 16px 42px rgba(0, 0, 0, 0.5),
+          0 0 55px rgba(243, 112, 33, 0.45);
+        overflow: hidden;
       }
 
-      .winner-btn-action.btn-finish {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        border-color: #a7f3d0;
-        box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
+      /* Đốm sáng thấu kính lồi đỉnh khối số */
+      .modal-code-badge::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 12%;
+        right: 12%;
+        height: 48%;
+        border-radius: 26px 26px 0 0;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.4) 0%,
+          transparent 100%
+        );
+        pointer-events: none;
       }
 
-      .winner-btn-action.btn-finish:hover {
-        background: linear-gradient(135deg, #059669 0%, #047857 100%);
-        box-shadow: 0 8px 30px rgba(16, 185, 129, 0.7);
+      .modal-winner-name {
+        font-size: 32px;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        color: #ffffff;
+        margin-bottom: 8px;
+        line-height: 1.2;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
       }
 
-      .winner-key-hint {
-        color: rgba(255, 255, 255, 0.45);
-        font-size: 13px;
+      .modal-winner-agency {
+        font-size: 15px;
         font-weight: 500;
-        margin-top: 10px;
-        letter-spacing: 0.5px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 22px;
+        padding: 5px 18px;
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 9999px;
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        display: inline-block;
+        box-shadow: 
+          inset 1px 1px 2px rgba(255, 255, 255, 0.35),
+          inset -1px -1px 2px rgba(0, 0, 0, 0.35);
       }
 
-      /* ===== TỐI ƯU MÀN CHIẾU SÂN KHẤU 3m x 1,5m (1152 x 576 px, TỶ LỆ 2:1) ===== */
-      @media screen and (max-height: 650px), screen and (max-width: 1200px) and (max-height: 700px) {
-        html, body {
-          height: 100vh;
-          max-height: 576px;
-          overflow: hidden !important;
-          margin: 0;
-          padding: 0;
+      /* Thông tin phụ: 2 HÀNG THẺ LIQUID GLASS RIÊNG BIỆT (CCCD & SĐT) */
+      .modal-meta-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        max-width: 440px;
+        margin-bottom: 28px;
+      }
+
+      .modal-meta-card {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 24px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 16px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        box-shadow: 
+          inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.45),
+          inset -1.5px -1.5px 3px rgba(0, 0, 0, 0.4),
+          0 6px 18px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+        transition: all 0.25s ease;
+      }
+
+      /* Viền khúc xạ giọt nước lồi trên thẻ meta */
+      .modal-meta-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 15%;
+        right: 15%;
+        height: 40%;
+        border-radius: 16px 16px 0 0;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.25) 0%,
+          transparent 100%
+        );
+        pointer-events: none;
+      }
+
+      .modal-meta-card:hover {
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(243, 112, 33, 0.45);
+        box-shadow: 
+          inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.65),
+          0 8px 22px rgba(243, 112, 33, 0.25);
+      }
+
+      /* Modal Action Buttons: 100% LIQUID GLASS BUTTONS */
+      .modal-actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        width: 100%;
+        max-width: 440px;
+      }
+
+      .btn-modal {
+        position: relative;
+        flex: 1;
+        padding: 16px 24px;
+        border-radius: 18px;
+        font-family: inherit;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid transparent;
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        overflow: hidden;
+      }
+
+      /* Nút "VẮNG MẶT": Kính lỏng phản quang đỏ nhẹ */
+      .btn-absent {
+        background: rgba(237, 28, 36, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #ffb3b3;
+        box-shadow: 
+          inset 1.5px 1.5px 3px 0 rgba(255, 255, 255, 0.65),
+          inset -1.5px -1.5px 3px 0 rgba(0, 0, 0, 0.5),
+          0 10px 25px rgba(0, 0, 0, 0.45);
+      }
+
+      .btn-absent::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 15%;
+        right: 15%;
+        height: 45%;
+        border-radius: 18px 18px 0 0;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.3) 0%,
+          transparent 100%
+        );
+        pointer-events: none;
+      }
+
+      .btn-absent:hover {
+        background: rgba(237, 28, 36, 0.22);
+        border-color: rgba(255, 255, 255, 0.45);
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 
+          inset 1.5px 1.5px 3px 0 rgba(255, 255, 255, 0.8),
+          0 14px 30px rgba(237, 28, 36, 0.35);
+      }
+
+      .btn-absent:active {
+        transform: scale(0.98);
+      }
+
+      /* Nút "TIẾP TỤC": Kính lỏng Cam MSB nổi khối 3D rực rỡ */
+      .btn-continue {
+        background: linear-gradient(
+          135deg,
+          rgba(243, 112, 33, 0.4) 0%,
+          rgba(239, 65, 35, 0.5) 100%
+        );
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        color: #ffffff;
+        box-shadow: 
+          inset 2px 2px 4px 0 rgba(255, 255, 255, 0.85),
+          inset -2px -2px 4px 0 rgba(0, 0, 0, 0.55),
+          0 12px 32px rgba(243, 112, 33, 0.55),
+          0 0 25px rgba(243, 112, 33, 0.4);
+      }
+
+      .btn-continue::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        right: 10%;
+        height: 48%;
+        border-radius: 18px 18px 0 0;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.45) 0%,
+          transparent 100%
+        );
+        pointer-events: none;
+      }
+
+      .btn-continue:hover {
+        background: linear-gradient(
+          135deg,
+          rgba(243, 112, 33, 0.55) 0%,
+          rgba(239, 65, 35, 0.65) 100%
+        );
+        border-color: rgba(255, 255, 255, 0.65);
+        transform: translateY(-1px);
+        box-shadow: 
+          inset 2px 2px 4px 0 rgba(255, 255, 255, 0.95),
+          0 16px 40px rgba(243, 112, 33, 0.75),
+          0 0 35px rgba(243, 112, 33, 0.6);
+      }
+
+      .btn-continue:active {
+        transform: translateY(0) scale(0.98);
+      }
+
+      .modal-keyboard-hints {
+        margin-top: 22px;
+        font-size: 12px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 0.04em;
+        padding: 8px 20px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 9999px;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+      }
+
+      /* ============================================================
+         MODAL DANH SÁCH NGƯỜI TRÚNG GIẢI (LIQUID GLASS)
+         ============================================================ */
+      .winner-list-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 110;
+        background: rgba(4, 2, 8, 0.5);
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .winner-list-modal-overlay.is-visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .winner-list-card {
+        position: relative;
+        width: 100%;
+        max-width: 680px;
+        max-height: 80vh;
+        background: rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(40px) saturate(220%) contrast(110%);
+        -webkit-backdrop-filter: blur(40px) saturate(220%) contrast(110%);
+        border-radius: 36px;
+        padding: 36px 32px;
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        box-shadow: 
+          inset 2px 2px 5px rgba(255, 255, 255, 0.65),
+          inset -2px -2px 5px rgba(0, 0, 0, 0.5),
+          0 35px 85px rgba(0, 0, 0, 0.85),
+          0 0 75px rgba(243, 112, 33, 0.4);
+        display: flex;
+        flex-direction: column;
+        transform: translateY(20px) scale(0.96);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .winner-list-modal-overlay.is-visible .winner-list-card {
+        transform: translateY(0) scale(1);
+      }
+
+      .winner-list-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .winner-list-title {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #ffffff;
+        text-shadow: 0 0 16px rgba(243, 112, 33, 0.6);
+      }
+
+      /* Nút đóng tròn dạng Liquid Glass cho Modal Danh sách */
+      .winner-list-close-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        color: rgba(255, 255, 255, 0.85);
+        font-family: inherit;
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        box-shadow: 
+          inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.65),
+          inset -1.5px -1.5px 3px rgba(0, 0, 0, 0.5),
+          0 8px 20px rgba(0, 0, 0, 0.4);
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .winner-list-close-btn:hover {
+        background: rgba(243, 112, 33, 0.25);
+        border-color: rgba(243, 112, 33, 0.7);
+        color: #ffffff;
+        transform: scale(1.08);
+        box-shadow: 
+          inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.85),
+          inset -1.5px -1.5px 3px rgba(0, 0, 0, 0.4),
+          0 10px 25px rgba(243, 112, 33, 0.4),
+          0 0 20px rgba(243, 112, 33, 0.55);
+      }
+
+      .winner-list-close-btn:active {
+        transform: scale(0.95);
+      }
+
+      .winner-list-scroll {
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding-right: 6px;
+        max-height: calc(80vh - 160px);
+      }
+
+      /* Từng hàng người trúng giải */
+      .winner-list-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 18px;
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 18px;
+        transition: all 0.2s ease;
+      }
+
+      .winner-list-row:hover {
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(243, 112, 33, 0.4);
+      }
+
+      .winner-list-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .winner-list-code {
+        font-size: 20px;
+        font-weight: 800;
+        color: #ffffff;
+        text-shadow: 0 0 12px rgba(243, 112, 33, 0.8);
+        font-feature-settings: "tnum";
+        font-variant-numeric: tabular-nums;
+      }
+
+      .winner-list-info {
+        text-align: left;
+      }
+
+      .winner-list-name {
+        font-size: 15px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .winner-list-agency {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.65);
+      }
+
+      .winner-list-right {
+        text-align: right;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.65);
+      }
+
+      .winner-list-empty {
+        padding: 40px 20px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 14px;
+      }
+
+      /* Nút Làm Mới ở góc màn hình */
+      .corner-reset-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 30;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 9999px;
+        padding: 8px 16px;
+        color: rgba(255, 255, 255, 0.4);
+        font-family: inherit;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        cursor: pointer;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        transition: all 0.25s ease;
+      }
+
+      .corner-reset-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
+        color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      }
+
+      /* ============================================================
+         RESPONSIVE BREAKPOINTS
+         ============================================================ */
+      @media (max-width: 768px) {
+        .lottery-stage {
+          gap: 24px;
+          padding: 16px;
         }
 
-        .game-root {
-          height: 100vh;
-          max-height: 576px;
-          min-height: 0;
-          padding: 6px 14px 8px 14px;
-          overflow: hidden;
-          justify-content: flex-start;
+        .prize-dropdown-trigger {
+          padding: 10px 20px;
         }
 
-        /* 1. Top Bar tinh gọn ngang */
-        .stage-top-bar {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          width: 100%;
-          max-width: 1360px;
-          margin-bottom: 6px;
-          padding: 0 4px;
-        }
-
-        .stage-brand-group {
-          display: flex;
-          align-items: baseline;
-          gap: 14px;
-          text-align: left;
-        }
-
-        .stage-brand-group h1 {
-          font-size: 26px;
-          margin-bottom: 0;
-          letter-spacing: 2px;
-          line-height: 1.1;
-        }
-
-        .stage-brand-group .event-subtitle {
-          font-size: 13px;
-          margin-bottom: 0;
-          letter-spacing: 1px;
-          opacity: 0.9;
-        }
-
-        .action-btn-group {
-          margin: 0;
-          gap: 10px;
-        }
-
-        .button {
-          height: 38px;
-          min-width: 130px;
+        .prize-title-display {
           font-size: 14px;
-          padding: 0 20px;
-          border-radius: 20px;
-          letter-spacing: 1px;
         }
 
-        /* 2. Progress Bar siêu mỏng không border */
-        .prize-progress-container {
-          width: 100%;
-          max-width: 1360px;
-          margin: 0 auto 6px auto;
-          padding: 0 2px;
-          border: none !important;
-          background: transparent !important;
-          box-shadow: none !important;
+        .slot-machine-container {
+          padding: 22px 26px;
+          border-radius: 28px;
         }
 
-        .progress-bar-bg {
-          height: 5px;
-          border: none !important;
-          background: rgba(255, 255, 255, 0.12);
-        }
-
-        /* 3. Lưới 16 thẻ: 4 HÀNG x 4 CỘT (Chiều rộng card gấp đôi) */
-        .lottery-grid-container {
-          width: 100%;
-          max-width: 1360px;
-          margin: 0 auto;
-          padding: 8px 12px;
-          border-radius: 14px;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          max-height: 485px;
-        }
-
-        .slot-grid-16 {
-          grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-          gap: 7px !important;
-          height: 100%;
-        }
-
-        /* 4. Thẻ giải thưởng bố cục 2 cột ngang tận dụng chiều rộng gấp đôi */
-        .slot-card-16 {
-          padding: 7px 10px;
-          border-radius: 9px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          height: 100%;
-          min-height: 92px;
-          max-height: 108px;
-        }
-
-        .slot-card-16.is-spinning::after {
-          border-radius: 7px;
-        }
-
-        .card-rank {
-          font-size: 10px;
-          letter-spacing: 0.5px;
-          margin-bottom: 2px;
-        }
-
-        .card-badge {
-          font-size: 8px;
-          padding: 1px 4px;
-        }
-
-        .card-main-content {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          flex: 1;
-          min-height: 0;
-        }
-
-        .card-code {
-          font-size: 26px;
-          letter-spacing: 1px;
-          margin-bottom: 0;
-          line-height: 1;
-          flex: 0 0 90px;
-          width: 90px;
-          min-width: 90px;
-          max-width: 90px;
-          color: #ffdca3;
-          font-variant-numeric: tabular-nums;
-          font-feature-settings: "tnum";
-          text-align: center;
-        }
-
-        .card-details {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          flex: 1;
-          min-width: 0;
-          gap: 1px;
-        }
-
-        .card-name {
-          font-size: 12.5px;
-          font-weight: 800;
-          margin-bottom: 1px;
-          color: #ffffff;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .card-agency {
-          font-size: 10.5px;
-          color: #d4c5b2;
-          margin-bottom: 2px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .card-secure {
-          font-size: 9.5px;
-          padding: 2px 5px;
-          background: rgba(186, 124, 56, 0.12);
-          border-radius: 4px;
-          border: 1px solid rgba(186, 124, 56, 0.2);
-          color: #ffdca3;
-        }
-
-        /* 5. Modal vinh danh vừa khít 576px */
-        .winner-announcement-box {
-          max-height: 520px !important;
-          max-width: 640px !important;
-          padding: 18px 24px !important;
-        }
-
-        .winner-congrats-tag {
-          font-size: 13px;
-          margin-bottom: 4px;
-        }
-
-        .winner-rank-large {
-          font-size: 18px;
-          margin-bottom: 4px;
-        }
-
-        .winner-code-large {
-          font-size: 68px;
-          margin: 4px 0 8px 0;
-          line-height: 1.05;
-        }
-
-        .winner-name-large {
-          font-size: 34px;
-          margin-bottom: 6px;
-          line-height: 1.15;
-        }
-
-        .winner-agency-large {
-          font-size: 20px;
-          margin-bottom: 12px;
-        }
-
-        .winner-secure-large {
-          font-size: 16px;
-          padding: 6px 18px;
-        }
-
-        .winner-actions-group {
-          margin-top: 14px;
+        .slot-grid {
           gap: 12px;
         }
 
-        .winner-btn-action,
-        .winner-btn-absent {
-          height: 44px;
-          font-size: 15px;
-          min-width: 150px;
-          padding: 0 24px;
-          letter-spacing: 1px;
+        .slot-cell {
+          width: 72px;
+          height: 104px;
+          border-radius: 16px;
+        }
+
+        .digit-item {
+          height: 104px;
+          line-height: 104px;
+          font-size: 64px;
+        }
+
+        .modal-card {
+          padding: 32px 24px;
+        }
+
+        .modal-code-badge {
+          font-size: 36px;
+          padding: 8px 24px;
+        }
+
+        .modal-winner-name {
+          font-size: 24px;
+        }
+      }
+
+      @media (min-width: 1800px) {
+        .slot-cell {
+          width: 165px;
+          height: 215px;
+        }
+
+        .digit-item {
+          height: 215px;
+          line-height: 215px;
+          font-size: 135px;
+        }
+
+        .prize-title-display {
+          font-size: 19px;
         }
       }
     </style>
   </head>
   <body>
-    <!-- CANVAS PHÁO HOA GIẤY (CONFETTI EFFECT) -->
-    <canvas
-      id="confettiCanvas"
-      style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 999;
-        display: none;
-      "
-    ></canvas>
+    <!-- Canvas Sao Vũ Trụ & Sao Băng Rơi Động Liên Tục -->
+    <canvas id="cosmosCanvas"></canvas>
 
-    <div class="game-root">
-      <!-- THANH TOP BAR SÂN KHẤU (STAGE TOP BAR - GỘP HEADER & ĐIỀU KHIỂN) -->
-      <div class="stage-top-bar" id="stageTopBar">
-        <div class="stage-brand-group">
-          <h1>LUCKY DRAW</h1>
-          <div class="event-subtitle">16 GIẢI THƯỞNG MAY MẮN</div>
+    <!-- Canvas Ăn Mừng Sao Băng & Pháo Hoa Cam Đỏ MSB -->
+    <canvas id="celebrationCanvas"></canvas>
+
+    <!-- Nội dung chính giữa màn hình -->
+    <div class="lottery-stage">
+      <!-- Dropdown Chọn Giải Thưởng (Liquid Glass Pill) -->
+      <div class="prize-dropdown-wrapper" id="prizeDropdownWrapper">
+        <div
+          class="prize-dropdown-trigger"
+          id="prizeDropdownTrigger"
+          onclick="togglePrizeDropdown(event)"
+        >
+          <div class="prize-badge-indicator"></div>
+          <div class="prize-title-display" id="currentPrizeTitle">
+            GIẢI ĐẶC BIỆT
+          </div>
+          <!-- Badge số lượng giải: Chỉ hiện khi có >= 1 giải -->
+          <div
+            class="prize-count-tag"
+            id="currentPrizeCountTag"
+            onclick="handleCurrentPrizeCountClick(event)"
+          ></div>
+          <div class="prize-dropdown-chevron"></div>
         </div>
-        <div class="action-btn-group">
+
+        <div class="prize-dropdown-menu" id="prizeDropdownMenu">
           <button
-            class="button"
-            id="spinButton"
-            onclick="spin16WinnersSequential()"
+            class="prize-option-item is-selected"
+            data-tier="Đặc biệt"
+            onclick="selectPrizeTier('Đặc biệt')"
           >
-            QUAY SỐ
+            <span>GIẢI ĐẶC BIỆT</span>
+            <span class="prize-option-count" id="count-tier-dac-biet"></span>
           </button>
           <button
-            class="button button-secondary"
-            id="resetBtn"
-            onclick="clearSessionData()"
+            class="prize-option-item"
+            data-tier="Nhất"
+            onclick="selectPrizeTier('Nhất')"
           >
-            LÀM MỚI
+            <span>GIẢI NHẤT</span>
+            <span class="prize-option-count" id="count-tier-nhat"></span>
+          </button>
+          <button
+            class="prize-option-item"
+            data-tier="Nhì"
+            onclick="selectPrizeTier('Nhì')"
+          >
+            <span>GIẢI NHÌ</span>
+            <span class="prize-option-count" id="count-tier-nhi"></span>
+          </button>
+          <button
+            class="prize-option-item"
+            data-tier="Ba"
+            onclick="selectPrizeTier('Ba')"
+          >
+            <span>GIẢI BA</span>
+            <span class="prize-option-count" id="count-tier-ba"></span>
           </button>
         </div>
       </div>
 
-      <!-- THANH PROGRESS BAR TRỰC QUAN PHÍA TRÊN GRID -->
-      <div class="prize-progress-container" id="prizeProgressContainer">
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" id="progressBarFill" style="width: 0%;"></div>
+      <!-- Ô Quay Số 4 Chữ Số (Khối Thủy Tinh Giọt Nước 3D, Không Đồng Trục) -->
+      <div
+        class="slot-machine-container"
+        id="slotMachineContainer"
+        onclick="handleSlotClick()"
+      >
+        <div class="slot-grid">
+          <div class="slot-cell" id="slot-cell-0">
+            <div class="digit-strip" id="strip-0"></div>
+          </div>
+          <div class="slot-cell" id="slot-cell-1">
+            <div class="digit-strip" id="strip-1"></div>
+          </div>
+          <div class="slot-cell" id="slot-cell-2">
+            <div class="digit-strip" id="strip-2"></div>
+          </div>
+          <div class="slot-cell" id="slot-cell-3">
+            <div class="digit-strip" id="strip-3"></div>
+          </div>
         </div>
       </div>
 
-      <!-- HỆ LƯỚI QUAY SỐ 16 GIẢI HIỂN THỊ SẴN TỪ ĐẦU (GRID) -->
-      <div class="lottery-grid-container" id="lotteryGridContainer">
-        <div class="slot-grid-16" id="slotGrid16">
-          <!-- 16 thẻ giải thưởng được khởi tạo tại đây -->
-        </div>
+      <!-- Hướng dẫn phím Space tinh tế -->
+      <div class="space-hint-bar" id="spaceHintBar">
+        <span class="space-key-pill">SPACE</span>
+        <span>BẤM ĐỂ QUAY / DỪNG</span>
       </div>
     </div>
 
-    <!-- MODAL XÁC NHẬN QUAY LẠI CARD ĐÃ CÓ KẾT QUẢ -->
-    <div class="modal-backdrop" id="reSpinModal">
-      <div class="modal-box">
-        <div class="modal-title">XÁC NHẬN QUAY LẠI</div>
-        <div class="modal-desc">
-          Giải thưởng này hiện đã có người trúng thưởng. Bạn có chắc chắn muốn hủy kết quả hiện tại và quay lại không?
+    <!-- Modal Vinh Danh Người Trúng Thưởng (Liquid Glass Siêu Trong Suốt, Bỏ "Chúc Mừng") -->
+    <div class="modal-overlay" id="winnerModalOverlay">
+      <div class="modal-card">
+        <button class="modal-close-btn" onclick="hideWinnerModal()" aria-label="Đóng">✕</button>
+        <div class="modal-prize-title" id="modalPrizeTitle">GIẢI ĐẶC BIỆT</div>
+        <div class="modal-code-badge" id="modalWinnerCode">0000</div>
+        <div class="modal-winner-name" id="modalWinnerName">NGUYỄN VĂN A</div>
+        <div class="modal-winner-agency" id="modalWinnerAgency">
+          Đơn vị / Chi nhánh
         </div>
-        <div class="modal-current-winner" id="modalWinnerInfo">
-          <div class="winner-rank" id="modalWinnerRank">GIẢI #01</div>
-          <div class="winner-detail" id="modalWinnerDetail">#0000 - Đang tải...</div>
+        <div class="modal-meta-list">
+          <div class="modal-meta-card" id="modalWinnerCccd">CCCD: ****0000</div>
+          <div class="modal-meta-card" id="modalWinnerPhone">SĐT: ****0000</div>
         </div>
-        <div class="modal-btn-group">
-          <button class="modal-btn btn-close" onclick="closeReSpinModal()">ĐÓNG</button>
-          <button class="modal-btn btn-respin" onclick="confirmReSpin()">QUAY LẠI</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- MODAL VINH DANH NGƯỜI TRÚNG GIẢI CỰC ĐẠI CHO MC -->
-    <div class="winner-announcement-backdrop" id="winnerAnnouncementModal">
-      <div class="winner-announcement-box">
-        <div class="winner-congrats-tag">✨ CHÚC MỪNG NGƯỜI TRÚNG GIẢI ✨</div>
-        <div class="winner-rank-large" id="winnerModalRank">GIẢI #01</div>
-        <div class="winner-code-large" id="winnerModalCode">#0000</div>
-        <div class="winner-name-large" id="winnerModalName">ĐANG TẢI...</div>
-        <div class="winner-agency-large" id="winnerModalAgency">ĐẠI LÝ</div>
-        <div class="winner-secure-large" id="winnerModalSecure">
-          <span id="winnerModalCccd">CCCD: ****0000</span>
-          <span style="opacity: 0.5;">•</span>
-          <span id="winnerModalPhone">SĐT: 098***0000</span>
-        </div>
-        <div class="winner-actions-group">
-          <button
-            class="winner-btn-absent"
-            id="winnerModalAbsentBtn"
-            onclick="handleWinnerAbsent()"
-          >
+        <div class="modal-actions">
+          <button class="btn-modal btn-absent" onclick="handleWinnerAbsent()">
             VẮNG MẶT
           </button>
-          <button
-            class="winner-btn-action"
-            id="winnerModalNextBtn"
-            onclick="handleWinnerModalConfirm()"
-          >
+          <button class="btn-modal btn-continue" onclick="handleWinnerConfirm()">
             TIẾP TỤC
           </button>
         </div>
-        <div class="winner-key-hint">
-          [Space / Enter]: Có mặt (Tiếp tục) &nbsp;•&nbsp; [V / Delete]: Vắng mặt (Quay lại ô này)
+        <div class="modal-keyboard-hints">
+          [SPACE / ENTER]: Tiếp tục &nbsp;•&nbsp; [V / DELETE]: Vắng mặt &nbsp;•&nbsp; [ESC]: Đóng
         </div>
       </div>
     </div>
 
+    <!-- Modal Danh Sách Người Trúng Giải (Liquid Glass) -->
+    <div class="winner-list-modal-overlay" id="winnerListModalOverlay" onclick="handleWinnerListOverlayClick(event)">
+      <div class="winner-list-card">
+        <div class="winner-list-header">
+          <div class="winner-list-title" id="winnerListModalTitle">DANH SÁCH TRÚNG THƯỞNG</div>
+          <button class="winner-list-close-btn" onclick="closeWinnerListModal()" aria-label="Đóng">✕</button>
+        </div>
+        <div class="winner-list-scroll" id="winnerListScrollContainer">
+          <!-- Các hàng danh sách người trúng giải sẽ render tại đây -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Nút Làm Mới ở góc màn hình -->
+    <button
+      class="corner-reset-btn"
+      id="cornerResetBtn"
+      onclick="handleResetSession()"
+    >
+      LÀM MỚI
+    </button>
+
     <script>
-      // ==========================================
-      // ⚙️ CẤU HÌNH BIẾN TOÀN CỤC & DỮ LIỆU
-      // ==========================================
-      let participants = []; // Danh sách người tham gia chọn đáp án C
-      let usedNumbers = []; // Danh sách ID đã trúng giải
-      let absentWinners = []; // Danh sách ID bị hủy do vắng mặt tại sự kiện
-      let currentWinners = []; // 16 người trúng giải của đợt quay hiện tại
-      let isSpinning16 = false;
-      let spinningCards = new Set(); // Các card đang quay riêng lẻ
-      let pendingReSpinIndex = null; // Index của card đang chờ xác nhận quay lại
+      /* ============================================================
+         QUẢN LÝ DỮ LIỆU & TRẠNG THÁI ỨNG DỤNG
+         ============================================================ */
+      const PRIZE_CONFIG = {
+        "Đặc biệt": { name: "GIẢI ĐẶC BIỆT", code: "dac-biet" },
+        Nhất: { name: "GIẢI NHẤT", code: "nhat" },
+        Nhì: { name: "GIẢI NHÌ", code: "nhi" },
+        Ba: { name: "GIẢI BA", code: "ba" },
+      };
 
-      // ==========================================
-      // 🎨 KHỞI TẠO 16 Ô THẺ TRÊN GRID BAN ĐẦU
-      // ==========================================
-      function init16Cards() {
-        const grid = document.getElementById("slotGrid16");
-        if (!grid) return;
-        grid.innerHTML = "";
+      let currentSelectedTier = "Đặc biệt";
+      let participants = []; // Danh sách chọn đáp án C
+      let usedNumbers = []; // Danh sách ID đã trúng
+      let absentWinners = []; // Danh sách ID vắng mặt
+      let sessionWinners = []; // Danh sách kết quả phiên quay
 
-        for (let i = 0; i < 16; i++) {
-          const rankNum = (i + 1).toString().padStart(2, "0");
-          const card = document.createElement("div");
-          // Mặc định ban đầu: LÀM MỜ RÕ RỆT (is-pending)
-          card.className = "slot-card-16 is-pending";
-          card.id = `slot-card-${i}`;
-          card.setAttribute("onclick", `handleCardClick(${i})`);
-          card.title = `Nhấn để quay Giải #${rankNum}`;
-          card.innerHTML = `
-            <div class="card-rank">
-              <span>GIẢI #${rankNum}</span>
-              <span class="card-badge badge-waiting" id="card-badge-${i}">CHỜ</span>
-            </div>
-            <div class="card-main-content">
-              <div class="card-code" id="card-code-${i}">#----</div>
-              <div class="card-details">
-                <div class="card-name" id="card-name-${i}">Chờ quay số...</div>
-                <div class="card-agency" id="card-agency-${i}">Nhấn để quay ô này</div>
-                <div class="card-secure">
-                  <span id="card-cccd-${i}">CCCD: ****</span>
-                  <span id="card-phone-${i}">SĐT: ****</span>
-                </div>
-              </div>
-            </div>
-          `;
-          grid.appendChild(card);
+      let isSpinning = false;
+      let spinTimeoutId = null;
+      let currentWinnerCandidate = null;
+
+      // Cấu hình lồng quay 4 số
+      const DIGIT_COUNT = 4;
+      const STRIP_REPEAT = 16; // Lặp 16 chu kỳ số 0-9
+      let stripPositions = [0, 0, 0, 0];
+      let stripVelocities = [0, 0, 0, 0];
+      let stripAnimFrameIds = [null, null, null, null];
+      let isStripSpinning = [false, false, false, false];
+
+      // Biến điều khiển dao động 3D không đồng trục
+      let nonCoaxialAngle = 0;
+      let nonCoaxialFrameId = null;
+
+      /* ============================================================
+         KHỞI TẠO & CĂN CHỈNH CHIỀU CAO Ô SỐ CHÍNH XÁC 100%
+         ============================================================ */
+      function getCellHeight() {
+        const cell = document.getElementById("slot-cell-0");
+        return cell ? cell.clientHeight : 180;
+      }
+
+      function initSlotStrips() {
+        const h = getCellHeight();
+        for (let col = 0; col < DIGIT_COUNT; col++) {
+          const stripEl = document.getElementById(`strip-${col}`);
+          if (!stripEl) continue;
+          stripEl.innerHTML = "";
+
+          // Tạo chuỗi số 0-9 với chiều cao đồng bộ tuyệt đối với ô kính
+          for (let r = 0; r < STRIP_REPEAT; r++) {
+            for (let d = 0; d <= 9; d++) {
+              const digitDiv = document.createElement("div");
+              digitDiv.className = "digit-item";
+              digitDiv.style.height = `${h}px`;
+              digitDiv.style.lineHeight = `${h}px`;
+              digitDiv.textContent = d.toString();
+              stripEl.appendChild(digitDiv);
+            }
+          }
+          stripPositions[col] = 0;
+          setStripTransform(col, 0);
         }
       }
 
-      // ==========================================
-      // 📁 LOAD VÀ LỌC THÍ SINH ĐÁP ÁN C
-      // ==========================================
-      async function loadParticipants() {
+      function setStripTransform(col, y) {
+        const stripEl = document.getElementById(`strip-${col}`);
+        if (stripEl) {
+          stripEl.style.transform = `translate3d(0, ${-y}px, 0)`;
+        }
+      }
+
+      /* ============================================================
+         DAO ĐỘNG 3D KHÔNG ĐỒNG TRỤC (NON-COAXIAL 3D REVOLUTION)
+         ============================================================ */
+      function startNonCoaxialAnimation() {
+        function step() {
+          if (!isSpinning) return;
+          nonCoaxialAngle += 0.08;
+
+          const offsets = [
+            Math.sin(nonCoaxialAngle) * 4.2,
+            Math.cos(nonCoaxialAngle * 1.15) * 4.8,
+            Math.sin(nonCoaxialAngle * 0.9 + 1.2) * 3.9,
+            Math.cos(nonCoaxialAngle * 1.05 + 2.1) * 4.5,
+          ];
+
+          const tiltX = [
+            Math.sin(nonCoaxialAngle) * 1.8,
+            Math.cos(nonCoaxialAngle * 1.1) * -1.8,
+            Math.sin(nonCoaxialAngle * 0.95) * 1.5,
+            Math.cos(nonCoaxialAngle * 1.2) * -1.5,
+          ];
+
+          for (let col = 0; col < DIGIT_COUNT; col++) {
+            if (isStripSpinning[col]) {
+              const cell = document.getElementById(`slot-cell-${col}`);
+              if (cell) {
+                cell.style.transform = `translate3d(0, ${offsets[col]}px, 0) rotateX(${tiltX[col]}deg)`;
+              }
+            }
+          }
+
+          nonCoaxialFrameId = requestAnimationFrame(step);
+        }
+
+        nonCoaxialFrameId = requestAnimationFrame(step);
+      }
+
+      function stopNonCoaxialForColumn(col) {
+        const cell = document.getElementById(`slot-cell-${col}`);
+        if (cell) {
+          cell.style.transform = `translate3d(0, 0px, 0) rotateX(0deg)`;
+        }
+      }
+
+      /* ============================================================
+         ĐỌC FILE DATA/DATA.CSV (CHỈ LẤY ĐÁP ÁN C)
+         ============================================================ */
+      async function loadParticipantsData() {
         try {
           const response = await fetch("data/data.csv");
-          const csvData = await response.text();
-          const lines = csvData.split("\n");
+          const csvText = await response.text();
+          const lines = csvText.split("\n");
           if (lines.length <= 1) return;
 
           const header = lines[0].toLowerCase();
@@ -1186,66 +1562,42 @@
           for (let i = 1; i < lines.length; i++) {
             const line = lines[i].trim();
             if (!line) continue;
-            const columns = parseCSVLine(line);
-            if (columns.length >= 5) {
-              const id = parseInt(columns[0]);
-              const name = (columns[1] || "").replace(/"/g, "").trim();
-              const phone = (columns[2] || "").replace(/"/g, "").trim();
-              const nationalId = (columns[3] || "").replace(/"/g, "").trim();
-              const agency = (columns[4] || "").replace(/"/g, "").trim();
+            const cols = parseCSVLine(line);
+            if (cols.length >= 5) {
+              const id = parseInt(cols[0], 10);
+              const name = (cols[1] || "").replace(/"/g, "").trim();
+              const phone = (cols[2] || "").replace(/"/g, "").trim();
+              const nationalId = (cols[3] || "").replace(/"/g, "").trim();
+              const agency = (cols[4] || "").replace(/"/g, "").trim();
               let answer = "";
               let prizeWon = "";
 
-              if (columns.length >= 7 || hasAnswerCol) {
-                answer = (columns[5] || "").replace(/"/g, "").trim();
-                prizeWon = (columns[6] || "").replace(/"/g, "").trim();
+              if (cols.length >= 7 || hasAnswerCol) {
+                answer = (cols[5] || "").replace(/"/g, "").trim();
+                prizeWon = (cols[6] || "").replace(/"/g, "").trim();
               } else {
                 answer = "C";
-                prizeWon = (columns[5] || "").replace(/"/g, "").trim();
+                prizeWon = (cols[5] || "").replace(/"/g, "").trim();
               }
 
-              // ĐIỀU KIỆN TIÊN QUYẾT: CHỈ QUAY NHỮNG THÍ SINH CHỌN ĐÁP ÁN C
-              if (answer.toUpperCase() !== "C") {
-                continue;
+              // Điều kiện bắt buộc: chỉ chọn thí sinh trả lời C
+              if (answer.toUpperCase() === "C") {
+                participants.push({
+                  id,
+                  name,
+                  phone,
+                  nationalId,
+                  agency,
+                  answer,
+                  prizeWon,
+                });
               }
-
-              participants.push({
-                id,
-                name,
-                phone,
-                nationalId,
-                agency,
-                answer,
-                prizeWon,
-              });
             }
           }
 
-          // Khôi phục usedNumbers từ session storage
-          const savedWinners = sessionStorage.getItem("usedNumbers");
-          if (savedWinners) {
-            usedNumbers = JSON.parse(savedWinners);
-          }
-
-          // Khôi phục absentWinners từ session storage
-          const savedAbsent = sessionStorage.getItem("absentWinners");
-          if (savedAbsent) {
-            absentWinners = JSON.parse(savedAbsent);
-          }
-
-          // Khôi phục 16 giải nếu đã từng quay trong session
-          const saved16 = sessionStorage.getItem("winners16Data");
-          if (saved16) {
-            try {
-              currentWinners = JSON.parse(saved16);
-              restoreSaved16Winners(currentWinners);
-            } catch (err) {
-              console.error("Lỗi khi khôi phục winners16Data:", err);
-            }
-          }
-        } catch (error) {
-          console.error("Lỗi khi load dữ liệu:", error);
-          alert("Không thể load file data/data.csv!");
+          restoreSessionState();
+        } catch (err) {
+          console.error("Lỗi khi tải dữ liệu từ data/data.csv:", err);
         }
       }
 
@@ -1268,166 +1620,517 @@
         return result;
       }
 
-      // Cập nhật Progress Bar
-      function updateProgressBar(completedCount, totalCount) {
-        const fillEl = document.getElementById("progressBarFill");
-        const percent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
-        if (fillEl) {
-          fillEl.style.width = `${percent}%`;
+      /* ============================================================
+         LƯU & KHÔI PHỤC SESSION STORAGE
+         ============================================================ */
+      function restoreSessionState() {
+        try {
+          const savedUsed = sessionStorage.getItem("msb_usedNumbers");
+          if (savedUsed) usedNumbers = JSON.parse(savedUsed);
+
+          const savedAbsent = sessionStorage.getItem("msb_absentWinners");
+          if (savedAbsent) absentWinners = JSON.parse(savedAbsent);
+
+          const savedWinners = sessionStorage.getItem("msb_winnersData");
+          if (savedWinners) sessionWinners = JSON.parse(savedWinners);
+
+          updatePrizeCountsUI();
+        } catch (e) {
+          console.warn("Lỗi khi đọc session storage:", e);
         }
       }
 
-      // ==========================================
-      // 🎯 XỬ LÝ CLICK TỪNG Ô THẺ (QUAY RIÊNG LẺ / CONFIRM)
-      // ==========================================
-      function handleCardClick(idx) {
-        // Nếu đang trong tiến trình quay hàng loạt, bỏ qua
-        if (isSpinning16) {
-          return;
-        }
-
-        // Nếu ô này đang quay riêng lẻ, bỏ qua
-        if (spinningCards.has(idx)) {
-          return;
-        }
-
-        // Tìm xem ô này đã có người trúng thưởng chưa
-        const existingWinner = currentWinners.find((w) => w.cardIndex === idx);
-
-        if (existingWinner) {
-          // Ô ĐÃ CÓ KẾT QUẢ: Hiển thị Modal Confirm hỏi có muốn quay lại không
-          openReSpinModal(idx, existingWinner);
-        } else {
-          // Ô CHƯA CÓ KẾT QUẢ: Bắt đầu quay riêng lẻ ô này ngay lập tức!
-          spinSingleCard(idx);
+      function saveSessionState() {
+        try {
+          sessionStorage.setItem("msb_usedNumbers", JSON.stringify(usedNumbers));
+          sessionStorage.setItem("msb_absentWinners", JSON.stringify(absentWinners));
+          sessionStorage.setItem("msb_winnersData", JSON.stringify(sessionWinners));
+        } catch (e) {
+          console.warn("Lỗi khi lưu session storage:", e);
         }
       }
 
-      // Mở modal xác nhận quay lại
-      function openReSpinModal(idx, winner) {
-        pendingReSpinIndex = idx;
-        const modal = document.getElementById("reSpinModal");
-        const rankEl = document.getElementById("modalWinnerRank");
-        const detailEl = document.getElementById("modalWinnerDetail");
-
-        if (rankEl) rankEl.innerText = `GIẢI #${(idx + 1).toString().padStart(2, "0")}`;
-        if (detailEl) {
-          detailEl.innerText = `#${winner.id.toString().padStart(4, "0")} - ${winner.name} (${winner.agency})`;
-        }
-
-        if (modal) {
-          modal.classList.add("show");
-        }
-      }
-
-      // Đóng modal xác nhận
-      function closeReSpinModal() {
-        pendingReSpinIndex = null;
-        const modal = document.getElementById("reSpinModal");
-        if (modal) {
-          modal.classList.remove("show");
-        }
-      }
-
-      // Người dùng xác nhận quay lại ô đó
-      function confirmReSpin() {
-        if (pendingReSpinIndex === null) return;
-        const idx = pendingReSpinIndex;
-        closeReSpinModal();
-
-        // Xóa người cũ khỏi danh sách đã trúng
-        const oldWinnerIndex = currentWinners.findIndex((w) => w.cardIndex === idx);
-        if (oldWinnerIndex !== -1) {
-          const oldWinner = currentWinners[oldWinnerIndex];
-          // Cho phép ID cũ có thể quay lại hoặc loại khỏi usedNumbers
-          usedNumbers = usedNumbers.filter((id) => id !== oldWinner.id);
-          currentWinners.splice(oldWinnerIndex, 1);
-
-          sessionStorage.setItem("usedNumbers", JSON.stringify(usedNumbers));
-          sessionStorage.setItem("winners16Data", JSON.stringify(currentWinners));
-        }
-
-        // Bắt đầu quay lại ngay ô đó
-        spinSingleCard(idx);
-      }
-
-      // ==========================================
-      // 🏆 MODAL VINH DANH NGƯỜI TRÚNG CHO MC
-      // ==========================================
-      let winnerModalResolver = null;
-
-      function showWinnerAnnouncementModal(winner, isLastWinner) {
-        return new Promise((resolve) => {
-          winnerModalResolver = resolve;
-          const modal = document.getElementById("winnerAnnouncementModal");
-          const rankEl = document.getElementById("winnerModalRank");
-          const codeEl = document.getElementById("winnerModalCode");
-          const nameEl = document.getElementById("winnerModalName");
-          const agencyEl = document.getElementById("winnerModalAgency");
-          const cccdEl = document.getElementById("winnerModalCccd");
-          const phoneEl = document.getElementById("winnerModalPhone");
-          const nextBtn = document.getElementById("winnerModalNextBtn");
-
-          const rankNum = (
-            winner.rankIndex ||
-            (winner.cardIndex !== undefined ? winner.cardIndex + 1 : 1)
-          )
-            .toString()
-            .padStart(2, "0");
-
-          if (rankEl) rankEl.innerText = `GIẢI #${rankNum}`;
-          if (codeEl) codeEl.innerText = `#${winner.id.toString().padStart(4, "0")}`;
-          if (nameEl) nameEl.innerText = (winner.name || "").toUpperCase();
-          if (agencyEl) agencyEl.innerText = winner.agency || "";
-          if (cccdEl)
-            cccdEl.innerText = `CCCD: ****${(winner.nationalId || "").slice(-4)}`;
-          if (phoneEl)
-            phoneEl.innerText = `SĐT: ****${(winner.phone || "").slice(-4)}`;
-
-          if (nextBtn) {
-            if (isLastWinner) {
-              nextBtn.innerText = "HOÀN TẤT";
-              nextBtn.classList.add("btn-finish");
-            } else {
-              nextBtn.innerText = "TIẾP TỤC";
-              nextBtn.classList.remove("btn-finish");
-            }
+      /* ============================================================
+         CẬP NHẬT GIAO DIỆN SỐ LƯỢNG GIẢI (0 GIẢI THÌ ẨN, >=1 MỚI HIỆN)
+         ============================================================ */
+      function updatePrizeCountsUI() {
+        const counts = { "Đặc biệt": 0, Nhất: 0, Nhì: 0, Ba: 0 };
+        sessionWinners.forEach((w) => {
+          if (counts[w.tier] !== undefined) {
+            counts[w.tier]++;
           }
+        });
 
-          if (modal) {
-            modal.classList.add("show");
+        // 1. Cập nhật tag ở thanh Trigger chính
+        const curCount = counts[currentSelectedTier] || 0;
+        const countTag = document.getElementById("currentPrizeCountTag");
+        if (countTag) {
+          if (curCount === 0) {
+            countTag.style.display = "none";
+          } else {
+            countTag.style.display = "inline-flex";
+            countTag.textContent = `${curCount} giải`;
+            countTag.title = "Nhấn để xem danh sách trúng giải này";
+          }
+        }
+
+        // 2. Cập nhật từng mục trong dropdown list
+        const tierMapping = [
+          { tier: "Đặc biệt", elId: "count-tier-dac-biet" },
+          { tier: "Nhất", elId: "count-tier-nhat" },
+          { tier: "Nhì", elId: "count-tier-nhi" },
+          { tier: "Ba", elId: "count-tier-ba" },
+        ];
+
+        tierMapping.forEach((item) => {
+          const count = counts[item.tier] || 0;
+          const el = document.getElementById(item.elId);
+          if (el) {
+            if (count === 0) {
+              el.style.display = "none";
+            } else {
+              el.style.display = "inline-flex";
+              el.textContent = `${count} giải`;
+              el.title = "Nhấn để xem danh sách trúng giải";
+              el.onclick = (e) => {
+                e.stopPropagation();
+                openWinnerListModal(item.tier);
+              };
+            }
           }
         });
       }
 
-      function handleWinnerModalConfirm() {
-        const modal = document.getElementById("winnerAnnouncementModal");
-        if (modal) {
-          modal.classList.remove("show");
+      function handleCurrentPrizeCountClick(event) {
+        event.stopPropagation();
+        openWinnerListModal(currentSelectedTier);
+      }
+
+      /* ============================================================
+         MODAL DANH SÁCH NGƯỜI TRÚNG GIẢI (LIQUID GLASS)
+         ============================================================ */
+      function openWinnerListModal(tier) {
+        const modal = document.getElementById("winnerListModalOverlay");
+        const titleEl = document.getElementById("winnerListModalTitle");
+        const container = document.getElementById("winnerListScrollContainer");
+        if (!modal || !container) return;
+
+        const tierName = PRIZE_CONFIG[tier] ? PRIZE_CONFIG[tier].name : tier;
+        const filtered = sessionWinners.filter((w) => w.tier === tier);
+
+        if (titleEl) {
+          titleEl.textContent = `DANH SÁCH TRÚNG ${tierName} (${filtered.length} GIẢI)`;
         }
-        if (winnerModalResolver) {
-          const resolve = winnerModalResolver;
-          winnerModalResolver = null;
-          resolve({ action: "confirm" });
+
+        container.innerHTML = "";
+
+        if (filtered.length === 0) {
+          container.innerHTML = `
+            <div class="winner-list-empty">
+              Chưa có người trúng giải này trong phiên quay hiện tại.
+            </div>
+          `;
+        } else {
+          filtered.forEach((winner, idx) => {
+            const row = document.createElement("div");
+            row.className = "winner-list-row";
+            const timeStr = winner.timestamp
+              ? new Date(winner.timestamp).toLocaleTimeString("vi-VN", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                })
+              : "";
+            row.innerHTML = `
+              <div class="winner-list-left">
+                <div class="winner-list-code">#${winner.id.toString().padStart(4, "0")}</div>
+                <div class="winner-list-info">
+                  <div class="winner-list-name">${winner.name}</div>
+                  <div class="winner-list-agency">${winner.agency || "Không xác định"}</div>
+                </div>
+              </div>
+              <div class="winner-list-right">
+                <div>CCCD: ****${(winner.nationalId || "").slice(-4)} | SĐT: ****${(winner.phone || "").slice(-4)}</div>
+                <div style="opacity: 0.6; margin-top: 2px;">${timeStr}</div>
+              </div>
+            `;
+            container.appendChild(row);
+          });
         }
+
+        modal.classList.add("is-visible");
+      }
+
+      function closeWinnerListModal() {
+        const modal = document.getElementById("winnerListModalOverlay");
+        if (modal) modal.classList.remove("is-visible");
+      }
+
+      function handleWinnerListOverlayClick(e) {
+        if (e.target.id === "winnerListModalOverlay") {
+          closeWinnerListModal();
+        }
+      }
+
+      /* ============================================================
+         LOGIC DROPDOWN CHỌN GIẢI THƯỞNG
+         ============================================================ */
+      function togglePrizeDropdown(event) {
+        event.stopPropagation();
+        if (isSpinning) return;
+        const wrapper = document.getElementById("prizeDropdownWrapper");
+        wrapper.classList.toggle("is-open");
+      }
+
+      function selectPrizeTier(tier) {
+        if (isSpinning) return;
+        currentSelectedTier = tier;
+        const titleEl = document.getElementById("currentPrizeTitle");
+        if (titleEl) {
+          titleEl.textContent = PRIZE_CONFIG[tier].name;
+        }
+
+        document.querySelectorAll(".prize-option-item").forEach((item) => {
+          if (item.dataset.tier === tier) {
+            item.classList.add("is-selected");
+          } else {
+            item.classList.remove("is-selected");
+          }
+        });
+
+        const wrapper = document.getElementById("prizeDropdownWrapper");
+        if (wrapper) wrapper.classList.remove("is-open");
+
+        updatePrizeCountsUI();
+      }
+
+      window.addEventListener("click", () => {
+        const wrapper = document.getElementById("prizeDropdownWrapper");
+        if (wrapper) wrapper.classList.remove("is-open");
+      });
+
+      /* ============================================================
+         QUAY SỐ LỆCH CHU KỲ & LỆCH Ô HOÀN TOÀN (NON-CYCLICAL)
+         ============================================================ */
+      function handleSlotClick() {
+        if (!isSpinning) {
+          startSpin();
+        } else {
+          stopSpin();
+        }
+      }
+
+      function startSpin() {
+        if (isSpinning) return;
+
+        const modal = document.getElementById("winnerModalOverlay");
+        if (modal && modal.classList.contains("is-visible")) return;
+
+        const listModal = document.getElementById("winnerListModalOverlay");
+        if (listModal && listModal.classList.contains("is-visible")) return;
+
+        const available = participants.filter(
+          (p) =>
+            !usedNumbers.includes(p.id) &&
+            !absentWinners.includes(p.id) &&
+            !p.prizeWon
+        );
+
+        if (available.length === 0) {
+          alert("Đã hết người tham gia hợp lệ (Đáp án C) chưa trúng giải!");
+          return;
+        }
+
+        currentWinnerCandidate =
+          available[Math.floor(Math.random() * available.length)];
+
+        isSpinning = true;
+        const container = document.getElementById("slotMachineContainer");
+        if (container) {
+          container.classList.remove("is-celebrating");
+          container.classList.add("is-spinning");
+        }
+
+        const hint = document.getElementById("spaceHintBar");
+        if (hint) hint.style.opacity = "0.2";
+
+        // Bắt đầu dao động 3D không đồng trục
+        startNonCoaxialAnimation();
+
+        // Khởi tạo vị trí ngẫu nhiên so le cho 4 cột (LỆCH Ô HOÀN TOÀN)
+        const h = getCellHeight();
+        const initialStagger = [
+          Math.random() * h * 0.4,
+          h * 0.6 + Math.random() * h * 0.3,
+          h * 0.2 + Math.random() * h * 0.4,
+          h * 0.8 + Math.random() * h * 0.3,
+        ];
+
+        // Khởi động 4 cột quay với vận tốc khác nhau rõ rệt (KHÔNG CÙNG CHU KỲ)
+        for (let i = 0; i < DIGIT_COUNT; i++) {
+          const cell = document.getElementById(`slot-cell-${i}`);
+          if (cell) {
+            cell.classList.add("is-spinning");
+            cell.classList.remove("is-locked");
+          }
+          isStripSpinning[i] = true;
+          stripPositions[i] = (stripPositions[i] + initialStagger[i]) % (h * 10);
+          startStripContinuousSpin(i);
+        }
+
+        // Tự động dừng sau 5 đến 7 giây
+        const randomDuration = Math.floor(Math.random() * 2000) + 5000;
+        spinTimeoutId = setTimeout(() => {
+          stopSpin();
+        }, randomDuration);
+      }
+
+      function startStripContinuousSpin(col) {
+        const h = getCellHeight();
+        const maxScroll = h * 10 * (STRIP_REPEAT - 3);
+
+        // Vận tốc cuộn không đồng trục, không trùng bội số: Lệch chu kỳ 100%
+        const baseSpeed = [78, 48, 86, 56];
+        stripVelocities[col] = baseSpeed[col] + Math.random() * 5;
+
+        function step() {
+          if (!isStripSpinning[col]) return;
+          stripPositions[col] += stripVelocities[col];
+          if (stripPositions[col] >= maxScroll) {
+            stripPositions[col] -= h * 10 * 5;
+          }
+          setStripTransform(col, stripPositions[col]);
+          stripAnimFrameIds[col] = requestAnimationFrame(step);
+        }
+
+        stripAnimFrameIds[col] = requestAnimationFrame(step);
+      }
+
+      function stopSpin() {
+        if (!isSpinning) return;
+        if (spinTimeoutId) {
+          clearTimeout(spinTimeoutId);
+          spinTimeoutId = null;
+        }
+
+        const container = document.getElementById("slotMachineContainer");
+        if (container) container.classList.remove("is-spinning");
+
+        const targetIdStr = currentWinnerCandidate.id
+          .toString()
+          .padStart(DIGIT_COUNT, "0");
+        const targetDigits = targetIdStr.split("").map((d) => parseInt(d, 10));
+
+        // Dừng so le từ trái sang phải với độ trễ 320ms mỗi số
+        const cascadeDelay = 320;
+        for (let col = 0; col < DIGIT_COUNT; col++) {
+          setTimeout(() => {
+            stopSingleStrip(col, targetDigits[col]);
+          }, col * cascadeDelay);
+        }
+
+        const totalStopTime = (DIGIT_COUNT - 1) * cascadeDelay + 700;
+        setTimeout(() => {
+          onAllDigitsLocked();
+        }, totalStopTime);
+      }
+
+      function stopSingleStrip(col, targetDigit) {
+        isStripSpinning[col] = false;
+        if (stripAnimFrameIds[col]) {
+          cancelAnimationFrame(stripAnimFrameIds[col]);
+          stripAnimFrameIds[col] = null;
+        }
+
+        stopNonCoaxialForColumn(col);
+
+        const h = getCellHeight();
+        const currentY = stripPositions[col];
+
+        // Tìm vị trí chữ số mục tiêu tiếp theo trên dải số
+        const currentIndex = Math.ceil(currentY / h);
+        const currentMod = currentIndex % 10;
+        let diff = (targetDigit - currentMod + 10) % 10;
+        if (diff < 4) diff += 10;
+
+        const targetIndex = currentIndex + diff;
+        const targetY = targetIndex * h;
+        const startY = currentY;
+        const startTime = performance.now();
+        const duration = 650; // Giảm tốc trong 650ms
+
+        function easeOutCubic(t) {
+          return --t * t * t + 1;
+        }
+
+        function animateStop(now) {
+          const elapsed = now - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easeProgress = easeOutCubic(progress);
+
+          const currentDecelY = startY + (targetY - startY) * easeProgress;
+          setStripTransform(col, currentDecelY);
+
+          if (progress < 1) {
+            requestAnimationFrame(animateStop);
+          } else {
+            // KHÓA CHÍNH TÂM 100% TUYỆT ĐỐI THEO PIXEL TARGET
+            stripPositions[col] = targetY;
+            setStripTransform(col, targetY);
+
+            const cell = document.getElementById(`slot-cell-${col}`);
+            if (cell) {
+              cell.classList.remove("is-spinning");
+              cell.classList.add("is-locked");
+            }
+          }
+        }
+
+        requestAnimationFrame(animateStop);
+      }
+
+      function onAllDigitsLocked() {
+        isSpinning = false;
+        if (nonCoaxialFrameId) {
+          cancelAnimationFrame(nonCoaxialFrameId);
+          nonCoaxialFrameId = null;
+        }
+
+        const hint = document.getElementById("spaceHintBar");
+        if (hint) hint.style.opacity = "1";
+
+        const container = document.getElementById("slotMachineContainer");
+        if (container) container.classList.add("is-celebrating");
+
+        // Kích hoạt pháo hoa sao băng ăn mừng (Chỉ màu Cam - Đỏ MSB)
+        triggerCelebration();
+
+        // Hiển thị modal vinh danh sau khi pháo hoa bung tỏa (delay 1.6s)
+        setTimeout(() => {
+          showWinnerModal(currentWinnerCandidate, currentSelectedTier);
+        }, 1600);
+      }
+
+      /* ============================================================
+         MODAL VINH DANH NGƯỜI TRÚNG
+         ============================================================ */
+      function showWinnerModal(winner, tier) {
+        const modal = document.getElementById("winnerModalOverlay");
+        const prizeTitle = document.getElementById("modalPrizeTitle");
+        const codeEl = document.getElementById("modalWinnerCode");
+        const nameEl = document.getElementById("modalWinnerName");
+        const agencyEl = document.getElementById("modalWinnerAgency");
+        const cccdEl = document.getElementById("modalWinnerCccd");
+        const phoneEl = document.getElementById("modalWinnerPhone");
+
+        if (prizeTitle) prizeTitle.textContent = PRIZE_CONFIG[tier].name;
+        if (codeEl)
+          codeEl.textContent = winner.id
+            .toString()
+            .padStart(DIGIT_COUNT, "0");
+        if (nameEl) nameEl.textContent = (winner.name || "").toUpperCase();
+        if (agencyEl) agencyEl.textContent = winner.agency || "Không xác định";
+        if (cccdEl)
+          cccdEl.textContent = `CCCD: ****${(winner.nationalId || "").slice(-4)}`;
+        if (phoneEl)
+          phoneEl.textContent = `SĐT: ****${(winner.phone || "").slice(-4)}`;
+
+        if (modal) modal.classList.add("is-visible");
+      }
+
+      function hideWinnerModal() {
+        const modal = document.getElementById("winnerModalOverlay");
+        if (modal) modal.classList.remove("is-visible");
+      }
+
+      function handleWinnerConfirm() {
+        if (!currentWinnerCandidate) return;
+
+        usedNumbers.push(currentWinnerCandidate.id);
+        const record = {
+          ...currentWinnerCandidate,
+          tier: currentSelectedTier,
+          timestamp: new Date().toISOString(),
+        };
+        sessionWinners.push(record);
+
+        saveSessionState();
+        updatePrizeCountsUI();
+        hideWinnerModal();
+        currentWinnerCandidate = null;
       }
 
       function handleWinnerAbsent() {
-        const modal = document.getElementById("winnerAnnouncementModal");
-        if (modal) {
-          modal.classList.remove("show");
+        if (!currentWinnerCandidate) return;
+
+        if (!absentWinners.includes(currentWinnerCandidate.id)) {
+          absentWinners.push(currentWinnerCandidate.id);
         }
-        if (winnerModalResolver) {
-          const resolve = winnerModalResolver;
-          winnerModalResolver = null;
-          resolve({ action: "absent" });
+        usedNumbers = usedNumbers.filter(
+          (id) => id !== currentWinnerCandidate.id
+        );
+
+        saveSessionState();
+        hideWinnerModal();
+        currentWinnerCandidate = null;
+
+        setTimeout(() => {
+          startSpin();
+        }, 400);
+      }
+
+      /* ============================================================
+         LÀM MỚI PHIÊN QUAY
+         ============================================================ */
+      function handleResetSession() {
+        if (isSpinning) return;
+        const ok = confirm(
+          "Bạn có chắc chắn muốn LÀM MỚI toàn bộ kết quả quay số của phiên này?"
+        );
+        if (!ok) return;
+
+        usedNumbers = [];
+        absentWinners = [];
+        sessionWinners = [];
+        sessionStorage.removeItem("msb_usedNumbers");
+        sessionStorage.removeItem("msb_absentWinners");
+        sessionStorage.removeItem("msb_winnersData");
+
+        updatePrizeCountsUI();
+
+        for (let i = 0; i < DIGIT_COUNT; i++) {
+          const cell = document.getElementById(`slot-cell-${i}`);
+          if (cell) {
+            cell.classList.remove("is-spinning", "is-locked");
+            cell.style.transform = "translate3d(0,0,0) rotateX(0deg)";
+          }
+          stripPositions[i] = 0;
+          setStripTransform(i, 0);
         }
       }
 
-      // Bắt sự kiện phím Space / Enter (Có mặt) & V / Delete (Vắng mặt)
+      /* ============================================================
+         PHÍM TẮT BÀN PHÍM
+         ============================================================ */
       window.addEventListener("keydown", (e) => {
-        const modal = document.getElementById("winnerAnnouncementModal");
-        if (modal && modal.classList.contains("show")) {
+        const listModal = document.getElementById("winnerListModalOverlay");
+        if (listModal && listModal.classList.contains("is-visible")) {
+          if (e.key === "Escape" || e.code === "Escape") {
+            closeWinnerListModal();
+          }
+          return;
+        }
+
+        const modal = document.getElementById("winnerModalOverlay");
+        const isModalOpen = modal && modal.classList.contains("is-visible");
+
+        if (isModalOpen) {
+          if (e.key === "Escape" || e.code === "Escape") {
+            e.preventDefault();
+            hideWinnerModal();
+            return;
+          }
+
           if (
             e.code === "Space" ||
             e.code === "Enter" ||
@@ -1435,460 +2138,475 @@
             e.key === "Enter"
           ) {
             e.preventDefault();
-            handleWinnerModalConfirm();
+            handleWinnerConfirm();
           } else if (
             e.code === "KeyV" ||
             e.key === "v" ||
             e.key === "V" ||
             e.code === "Delete" ||
-            e.code === "Backspace" ||
-            e.key === "Delete"
+            e.code === "Backspace"
           ) {
             e.preventDefault();
             handleWinnerAbsent();
           }
+          return;
+        }
+
+        if (e.code === "Space" || e.key === " ") {
+          e.preventDefault();
+          if (!isSpinning) {
+            startSpin();
+          } else {
+            stopSpin();
+          }
         }
       });
 
-      // Quay riêng lẻ 1 thẻ
-      async function spinSingleCard(idx) {
-        if (!participants || participants.length === 0) {
-          alert("Chưa có danh sách người tham gia!");
-          return;
+      /* ============================================================
+         CANVAS SAO BĂNG RƠI ĐỘNG LIÊN TỤC & BỤI VŨ TRỤ SỐNG ĐỘNG
+         ============================================================ */
+      const cosmosCanvas = document.getElementById("cosmosCanvas");
+      const cosmosCtx = cosmosCanvas.getContext("2d");
+
+      let stars = [];
+      let crossStars = [];
+      let stardust = [];
+      let activeShootingStars = [];
+      let meteorSparks = [];
+      let lastShootingStarSpawn = 0;
+      let nextShootingStarDelay = 700;
+
+      function resizeCosmosCanvas() {
+        cosmosCanvas.width = window.innerWidth;
+        cosmosCanvas.height = window.innerHeight;
+        initStars();
+        initCrossStars();
+        initStardust();
+        initSlotStrips();
+      }
+
+      window.addEventListener("resize", () => {
+        resizeCosmosCanvas();
+        resizeCelebrationCanvas();
+      });
+
+      function initStars() {
+        stars = [];
+        const count = Math.floor((window.innerWidth * window.innerHeight) / 7000);
+        for (let i = 0; i < count; i++) {
+          stars.push({
+            x: Math.random() * cosmosCanvas.width,
+            y: Math.random() * cosmosCanvas.height * 0.78,
+            size: Math.random() * 1.6 + 0.4,
+            alpha: Math.random() * 0.75 + 0.2,
+            twinkleSpeed: Math.random() * 0.03 + 0.01,
+            twinklePhase: Math.random() * Math.PI * 2,
+          });
         }
+      }
 
-        // Lọc người hợp lệ chưa trúng giải và chưa bị vắng mặt
-        const available = participants.filter(
-          (p) => !usedNumbers.includes(p.id) && !absentWinners.includes(p.id) && !p.prizeWon
-        );
-
-        if (available.length === 0) {
-          alert("Đã hết người tham gia hợp lệ (Đáp án C) chưa trúng giải!");
-          return;
+      function initCrossStars() {
+        crossStars = [];
+        const count = 14; // Các vì sao lớn lấp lánh tia 4 cánh
+        for (let i = 0; i < count; i++) {
+          crossStars.push({
+            x: Math.random() * cosmosCanvas.width,
+            y: Math.random() * (cosmosCanvas.height * 0.65),
+            spikeLength: Math.random() * 12 + 8,
+            coreSize: Math.random() * 1.5 + 1.2,
+            baseAlpha: Math.random() * 0.4 + 0.4,
+            pulseSpeed: Math.random() * 0.02 + 0.015,
+            pulsePhase: Math.random() * Math.PI * 2,
+            color: i % 3 === 0 ? "#f37021" : (i % 3 === 1 ? "#ffffff" : "#ffaa80"),
+          });
         }
+      }
 
-        // Chọn ngẫu nhiên 1 người
-        const randWinner = available[Math.floor(Math.random() * available.length)];
-
-        spinningCards.add(idx);
-        const card = document.getElementById(`slot-card-${idx}`);
-        const badge = document.getElementById(`card-badge-${idx}`);
-        const codeEl = document.getElementById(`card-code-${idx}`);
-        const nameEl = document.getElementById(`card-name-${idx}`);
-        const agencyEl = document.getElementById(`card-agency-${idx}`);
-        const cccdEl = document.getElementById(`card-cccd-${idx}`);
-        const phoneEl = document.getElementById(`card-phone-${idx}`);
-
-        // TRẠNG THÁI: ĐANG QUAY
-        if (card) card.className = "slot-card-16 is-spinning";
-        if (badge) {
-          badge.className = "card-badge badge-spinning";
-          badge.innerText = "QUAY...";
+      function initStardust() {
+        stardust = [];
+        const count = 75; // Hạt bụi thiên hà bồng bềnh
+        for (let i = 0; i < count; i++) {
+          stardust.push({
+            x: Math.random() * cosmosCanvas.width,
+            y: Math.random() * cosmosCanvas.height * 0.8,
+            size: Math.random() * 2.4 + 1.0,
+            speedY: Math.random() * 0.28 + 0.12,
+            speedX: Math.random() * 0.25 - 0.125,
+            wavePhase: Math.random() * Math.PI * 2,
+            waveSpeed: Math.random() * 0.02 + 0.01,
+            alpha: Math.random() * 0.5 + 0.2,
+            color: i % 3 === 0 ? "rgba(243, 112, 33, " : (i % 3 === 1 ? "rgba(239, 65, 35, " : "rgba(255, 255, 255, "),
+          });
         }
-        if (nameEl) nameEl.innerText = "Đang chọn số...";
-        if (agencyEl) agencyEl.innerText = "Đang quay số ngẫu nhiên";
+      }
 
-        // Thời gian quay ngẫu nhiên 3 - 5s
-        const spinDuration = Math.floor(Math.random() * 2000) + 3000;
+      function createShootingStar(customOpts = {}) {
+        const isBolide = customOpts.isBolide || (Math.random() < 0.18);
+        const startX = customOpts.startX !== undefined ? customOpts.startX : (Math.random() * cosmosCanvas.width * 0.95);
+        const startY = customOpts.startY !== undefined ? customOpts.startY : (Math.random() * cosmosCanvas.height * 0.4);
+        const angle = customOpts.angle !== undefined ? customOpts.angle : (Math.PI / 4 + (Math.random() * 0.22 - 0.11)); // ~45 độ
+        const speed = isBolide ? (Math.random() * 10 + 26) : (Math.random() * 12 + 16);
+        const length = isBolide ? (Math.random() * 180 + 220) : (Math.random() * 120 + 100);
+        const colorType = Math.random();
+        const color = colorType > 0.35 ? "#f37021" : (colorType > 0.15 ? "#ef4123" : "#ffffff");
 
-        const shuffleInterval = setInterval(() => {
-          const randNum = Math.floor(1000 + Math.random() * 9000);
-          if (codeEl) codeEl.innerText = `#${randNum}`;
-        }, 40);
-
-        await new Promise((resolve) => setTimeout(resolve, spinDuration));
-        clearInterval(shuffleInterval);
-
-        // TRẠNG THÁI: HOÀN TẤT
-        const finalCode = `#${randWinner.id.toString().padStart(4, "0")}`;
-        if (codeEl) codeEl.innerText = finalCode;
-        if (nameEl) nameEl.innerText = randWinner.name;
-        if (agencyEl) agencyEl.innerText = randWinner.agency;
-        if (cccdEl)
-          cccdEl.innerText = `CCCD: ****${(randWinner.nationalId || "").slice(-4)}`;
-        if (phoneEl)
-          phoneEl.innerText = `SĐT: ****${(randWinner.phone || "").slice(-4)}`;
-
-        if (badge) {
-          badge.className = "card-badge badge-won";
-          badge.innerText = "TRÚNG";
-        }
-        if (card) {
-          card.className = "slot-card-16 is-completed";
-          card.title = `Nhấn để quay lại Giải #${(idx + 1).toString().padStart(2, "0")}`;
-        }
-
-        // Lưu kết quả
-        usedNumbers.push(randWinner.id);
-        const winnerRecord = {
-          ...randWinner,
-          cardIndex: idx,
-          rankIndex: idx + 1,
+        return {
+          x: startX,
+          y: startY,
+          length: length,
+          speed: speed,
+          angle: angle,
+          opacity: 1,
+          decay: isBolide ? 0.009 : 0.014,
+          headRadius: isBolide ? 4.2 : 2.6,
+          lineWidth: isBolide ? 4.8 : 2.8,
+          isBolide: isBolide,
+          color: color,
         };
+      }
 
-        // Cập nhật currentWinners
-        const existingIdx = currentWinners.findIndex((w) => w.cardIndex === idx);
-        if (existingIdx !== -1) {
-          currentWinners[existingIdx] = winnerRecord;
-        } else {
-          currentWinners.push(winnerRecord);
-        }
+      function spawnShootingStar() {
+        const star = createShootingStar();
+        activeShootingStars.push(star);
 
-        sessionStorage.setItem("usedNumbers", JSON.stringify(usedNumbers));
-        sessionStorage.setItem("winners16Data", JSON.stringify(currentWinners));
-
-        spinningCards.delete(idx);
-        updateProgressBar(currentWinners.length, 16);
-
-        // HIỂN THỊ POPUP VINH DANH CHO MC ĐỌC VÀ CHỜ PHẢN HỒI (CÓ MẶT HOẶC VẮNG MẶT)
-        const isLastCard = currentWinners.length === 16;
-        const modalResult = await showWinnerAnnouncementModal(winnerRecord, isLastCard);
-
-        if (modalResult && modalResult.action === "absent") {
-          // Xử lý khi người trúng vắng mặt:
-          // 1. Loại khỏi usedNumbers và đưa vào absentWinners
-          usedNumbers = usedNumbers.filter((id) => id !== randWinner.id);
-          if (!absentWinners.includes(randWinner.id)) {
-            absentWinners.push(randWinner.id);
-          }
-          // 2. Xóa khỏi currentWinners
-          const winnerIdxInCurrent = currentWinners.findIndex((w) => w.cardIndex === idx);
-          if (winnerIdxInCurrent !== -1) {
-            currentWinners.splice(winnerIdxInCurrent, 1);
-          }
-          // 3. Cập nhật sessionStorage & tiến trình
-          sessionStorage.setItem("absentWinners", JSON.stringify(absentWinners));
-          sessionStorage.setItem("usedNumbers", JSON.stringify(usedNumbers));
-          sessionStorage.setItem("winners16Data", JSON.stringify(currentWinners));
-          updateProgressBar(currentWinners.length, 16);
-
-          // 4. Tự động kích hoạt quay lại ngay ô đó!
+        // 22% cơ hội sinh cặp sao băng đôi lướt song song
+        if (Math.random() < 0.22) {
           setTimeout(() => {
-            spinSingleCard(idx);
-          }, 300);
-          return;
-        }
-
-        if (currentWinners.length === 16) {
-          startConfetti();
-          setTimeout(stopConfetti, 8000);
+            const twin = createShootingStar({
+              startX: star.x + (Math.random() * 120 - 60),
+              startY: star.y + (Math.random() * 80 - 40),
+              angle: star.angle + (Math.random() * 0.06 - 0.03),
+            });
+            activeShootingStars.push(twin);
+          }, Math.random() * 250 + 100);
         }
       }
 
-      // ==========================================
-      // 🔄 THUẬT TOÁN QUAY TUẦN TỰ TOÀN BỘ 16 NGƯỜI
-      // ==========================================
-      async function spin16WinnersSequential() {
-        if (isSpinning16 || spinningCards.size > 0) return;
+      function animateCosmos(now) {
+        cosmosCtx.clearRect(0, 0, cosmosCanvas.width, cosmosCanvas.height);
 
-        if (!participants || participants.length === 0) {
-          alert("Chưa có danh sách người tham gia chọn đáp án C!");
-          return;
+        // 1. Quầng sáng tinh vân thở nhẹ nhàng (Cosmic Nebula Pulse)
+        const pulseTime = now * 0.001;
+        const nebulaAlpha = 0.12 + 0.05 * Math.sin(pulseTime * 0.8);
+        const nebulaGrad = cosmosCtx.createRadialGradient(
+          cosmosCanvas.width * 0.5,
+          cosmosCanvas.height * 0.25,
+          50,
+          cosmosCanvas.width * 0.5,
+          cosmosCanvas.height * 0.25,
+          cosmosCanvas.width * 0.65
+        );
+        nebulaGrad.addColorStop(0, `rgba(243, 112, 33, ${nebulaAlpha * 1.4})`);
+        nebulaGrad.addColorStop(0.5, `rgba(239, 65, 35, ${nebulaAlpha * 0.6})`);
+        nebulaGrad.addColorStop(1, "transparent");
+        cosmosCtx.save();
+        cosmosCtx.fillStyle = nebulaGrad;
+        cosmosCtx.fillRect(0, 0, cosmosCanvas.width, cosmosCanvas.height * 0.85);
+        cosmosCtx.restore();
+
+        // 2. Vẽ các vì sao nền lấp lánh (Background Stars)
+        stars.forEach((s) => {
+          s.twinklePhase += s.twinkleSpeed;
+          const currentAlpha = s.alpha * (0.6 + 0.4 * Math.sin(s.twinklePhase));
+          cosmosCtx.fillStyle = `rgba(255, 255, 255, ${currentAlpha})`;
+          cosmosCtx.beginPath();
+          cosmosCtx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+          cosmosCtx.fill();
+        });
+
+        // 3. Vẽ các ngôi sao tia sáng 4 cánh (Cross-Spike Stars)
+        crossStars.forEach((cs) => {
+          cs.pulsePhase += cs.pulseSpeed;
+          const curAlpha = cs.baseAlpha * (0.65 + 0.35 * Math.sin(cs.pulsePhase));
+          const len = cs.spikeLength * (0.85 + 0.25 * Math.sin(cs.pulsePhase));
+
+          cosmosCtx.save();
+          cosmosCtx.globalAlpha = curAlpha;
+          cosmosCtx.strokeStyle = cs.color;
+          cosmosCtx.lineWidth = 1.2;
+          cosmosCtx.shadowColor = cs.color;
+          cosmosCtx.shadowBlur = 8;
+
+          // Tia ngang & dọc
+          cosmosCtx.beginPath();
+          cosmosCtx.moveTo(cs.x - len, cs.y);
+          cosmosCtx.lineTo(cs.x + len, cs.y);
+          cosmosCtx.moveTo(cs.x, cs.y - len);
+          cosmosCtx.lineTo(cs.x, cs.y + len);
+          cosmosCtx.stroke();
+
+          // Lõi phát sáng
+          cosmosCtx.fillStyle = "#ffffff";
+          cosmosCtx.beginPath();
+          cosmosCtx.arc(cs.x, cs.y, cs.coreSize, 0, Math.PI * 2);
+          cosmosCtx.fill();
+
+          cosmosCtx.restore();
+        });
+
+        // 4. Bụi thiên hà & đốm lửa vũ trụ bồng bềnh (Floating Stardust & Embers)
+        stardust.forEach((p) => {
+          p.y -= p.speedY;
+          p.wavePhase += p.waveSpeed;
+          p.x += Math.sin(p.wavePhase) * 0.4 + p.speedX;
+
+          if (p.y < 0) {
+            p.y = cosmosCanvas.height * 0.85;
+            p.x = Math.random() * cosmosCanvas.width;
+          }
+          if (p.x < 0) p.x = cosmosCanvas.width;
+          if (p.x > cosmosCanvas.width) p.x = 0;
+
+          cosmosCtx.save();
+          cosmosCtx.fillStyle = `${p.color}${p.alpha})`;
+          cosmosCtx.shadowColor = p.color.includes("243") ? "#f37021" : "#ffffff";
+          cosmosCtx.shadowBlur = 6;
+          cosmosCtx.beginPath();
+          cosmosCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          cosmosCtx.fill();
+          cosmosCtx.restore();
+        });
+
+        // 5. Tự động spawn sao băng rơi động liên tục (mỗi 500 - 1100ms)
+        if (now - lastShootingStarSpawn > nextShootingStarDelay) {
+          spawnShootingStar();
+          lastShootingStarSpawn = now;
+          nextShootingStarDelay = Math.random() * 600 + 500; // Nhịp độ nhanh, sinh động
         }
 
-        // Lọc các ô còn chưa quay
-        const pendingCardIndices = [];
-        for (let i = 0; i < 16; i++) {
-          if (!currentWinners.some((w) => w.cardIndex === i)) {
-            pendingCardIndices.push(i);
+        // 6. Cập nhật và vẽ các vệt sao băng (Shooting Stars)
+        for (let i = activeShootingStars.length - 1; i >= 0; i--) {
+          const ss = activeShootingStars[i];
+          const tailX = ss.x - Math.cos(ss.angle) * ss.length;
+          const tailY = ss.y - Math.sin(ss.angle) * ss.length;
+
+          // Gradient dải đuôi sao băng lộng lẫy
+          const grad = cosmosCtx.createLinearGradient(tailX, tailY, ss.x, ss.y);
+          grad.addColorStop(0, "transparent");
+          grad.addColorStop(0.5, ss.color === "#ffffff" ? "rgba(255, 255, 255, 0.2)" : "rgba(243, 112, 33, 0.25)");
+          grad.addColorStop(0.85, ss.color === "#ffffff" ? "rgba(255, 255, 255, 0.8)" : "rgba(243, 112, 33, 0.85)");
+          grad.addColorStop(1, "#ffffff");
+
+          cosmosCtx.save();
+          cosmosCtx.globalAlpha = ss.opacity;
+          cosmosCtx.strokeStyle = grad;
+          cosmosCtx.lineWidth = ss.lineWidth;
+          cosmosCtx.lineCap = "round";
+          cosmosCtx.shadowColor = ss.color;
+          cosmosCtx.shadowBlur = ss.isBolide ? 24 : 14;
+          cosmosCtx.beginPath();
+          cosmosCtx.moveTo(tailX, tailY);
+          cosmosCtx.lineTo(ss.x, ss.y);
+          cosmosCtx.stroke();
+
+          // Đầu phát quang rực rỡ (Meteor Head Nucleus)
+          cosmosCtx.fillStyle = "#ffffff";
+          cosmosCtx.shadowColor = ss.color;
+          cosmosCtx.shadowBlur = ss.isBolide ? 30 : 18;
+          cosmosCtx.beginPath();
+          cosmosCtx.arc(ss.x, ss.y, ss.headRadius, 0, Math.PI * 2);
+          cosmosCtx.fill();
+          cosmosCtx.restore();
+
+          // Thả tàn lửa sao băng rơi rụng (Meteor Sparks)
+          if (Math.random() < 0.6) {
+            meteorSparks.push({
+              x: ss.x - Math.cos(ss.angle) * (Math.random() * 25),
+              y: ss.y - Math.sin(ss.angle) * (Math.random() * 25),
+              vx: (Math.random() - 0.5) * 1.5,
+              vy: Math.random() * 1.5 + 0.5,
+              size: Math.random() * 2.2 + 0.8,
+              alpha: 0.9,
+              color: ss.color,
+            });
+          }
+
+          // Di chuyển sao băng
+          ss.x += Math.cos(ss.angle) * ss.speed;
+          ss.y += Math.sin(ss.angle) * ss.speed;
+          ss.opacity -= ss.decay;
+
+          if (ss.opacity <= 0 || ss.x > cosmosCanvas.width + 100 || ss.y > cosmosCanvas.height + 100) {
+            activeShootingStars.splice(i, 1);
           }
         }
 
-        if (pendingCardIndices.length === 0) {
-          alert("Toàn bộ 16 giải đã hoàn tất! Nếu muốn quay lại giải nào, vui lòng nhấn trực tiếp vào ô giải đó.");
-          return;
+        // 7. Cập nhật và vẽ tàn lửa sao băng rơi rụng (Meteor Sparks)
+        for (let i = meteorSparks.length - 1; i >= 0; i--) {
+          const sp = meteorSparks[i];
+          sp.x += sp.vx;
+          sp.y += sp.vy;
+          sp.alpha -= 0.035;
+
+          if (sp.alpha <= 0) {
+            meteorSparks.splice(i, 1);
+            continue;
+          }
+
+          cosmosCtx.save();
+          cosmosCtx.globalAlpha = sp.alpha;
+          cosmosCtx.fillStyle = sp.color;
+          cosmosCtx.shadowColor = sp.color;
+          cosmosCtx.shadowBlur = 6;
+          cosmosCtx.beginPath();
+          cosmosCtx.arc(sp.x, sp.y, sp.size, 0, Math.PI * 2);
+          cosmosCtx.fill();
+          cosmosCtx.restore();
         }
 
-        const available = participants.filter(
-          (p) => !usedNumbers.includes(p.id) && !p.prizeWon
+        requestAnimationFrame(animateCosmos);
+      }
+
+      /* ============================================================
+         PHÁO HOA SAO BĂNG ĂN MỪNG (CHỈ DÙNG CAM - ĐỎ MSB VÀ TRẮNG)
+         ============================================================ */
+      const celebrationCanvas = document.getElementById("celebrationCanvas");
+      const celebrationCtx = celebrationCanvas.getContext("2d");
+      let celebrationParticles = [];
+      let celebrationShootingStars = [];
+      let isCelebrationRunning = false;
+
+      function resizeCelebrationCanvas() {
+        celebrationCanvas.width = window.innerWidth;
+        celebrationCanvas.height = window.innerHeight;
+      }
+
+      function triggerCelebration() {
+        resizeCelebrationCanvas();
+        celebrationParticles = [];
+        celebrationShootingStars = [];
+
+        // 8 vệt sao băng Cam và Đỏ Cam MSB
+        for (let i = 0; i < 8; i++) {
+          celebrationShootingStars.push({
+            x: Math.random() * celebrationCanvas.width * 0.7,
+            y: Math.random() * celebrationCanvas.height * 0.4,
+            length: Math.random() * 130 + 80,
+            speed: Math.random() * 16 + 18,
+            angle: Math.PI / 4 + (Math.random() * 0.3 - 0.15),
+            opacity: 1,
+            color: i % 2 === 0 ? "#f37021" : "#ef4123",
+          });
+        }
+
+        // 150 hạt ánh sáng Cam, Đỏ Cam, Đỏ Cờ và Trắng MSB (KHÔNG CÓ MÀU VÀNG)
+        const centerX = celebrationCanvas.width / 2;
+        const centerY = celebrationCanvas.height / 2;
+        const colors = [
+          "#f37021",
+          "#ef4123",
+          "#ed1c24",
+          "#ffffff",
+          "#ff8c5a",
+          "#ffaa80",
+        ];
+
+        for (let i = 0; i < 150; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 14 + 4;
+          celebrationParticles.push({
+            x: centerX,
+            y: centerY,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 2.5,
+            size: Math.random() * 4.5 + 2,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            alpha: 1,
+            gravity: 0.18,
+            drag: 0.97,
+            decay: Math.random() * 0.015 + 0.008,
+          });
+        }
+
+        if (!isCelebrationRunning) {
+          isCelebrationRunning = true;
+          animateCelebration();
+        }
+      }
+
+      function animateCelebration() {
+        if (!isCelebrationRunning) return;
+        celebrationCtx.clearRect(
+          0,
+          0,
+          celebrationCanvas.width,
+          celebrationCanvas.height
         );
 
-        if (available.length === 0) {
-          alert("Đã hết người tham gia hợp lệ (Đáp án C) chưa trúng giải!");
-          return;
-        }
+        for (let i = celebrationShootingStars.length - 1; i >= 0; i--) {
+          const ss = celebrationShootingStars[i];
+          const tailX = ss.x - Math.cos(ss.angle) * ss.length;
+          const tailY = ss.y - Math.sin(ss.angle) * ss.length;
 
-        const countToPick = Math.min(pendingCardIndices.length, available.length);
-        const shuffled = [...available].sort(() => 0.5 - Math.random());
-        const selectedWinners = shuffled.slice(0, countToPick);
+          const grad = celebrationCtx.createLinearGradient(
+            tailX,
+            tailY,
+            ss.x,
+            ss.y
+          );
+          grad.addColorStop(0, "transparent");
+          grad.addColorStop(1, ss.color);
 
-        isSpinning16 = true;
-        const spinBtn = document.getElementById("spinButton");
-        const resetBtn = document.getElementById("resetBtn");
-        if (spinBtn) spinBtn.disabled = true;
-        if (resetBtn) resetBtn.disabled = true;
+          celebrationCtx.strokeStyle = grad;
+          celebrationCtx.lineWidth = 2.5;
+          celebrationCtx.beginPath();
+          celebrationCtx.moveTo(tailX, tailY);
+          celebrationCtx.lineTo(ss.x, ss.y);
+          celebrationCtx.stroke();
 
-        // Cuộn mượt đến lưới quay số
-        document
-          .getElementById("prizeProgressContainer")
-          .scrollIntoView({ behavior: "smooth", block: "start" });
+          ss.x += Math.cos(ss.angle) * ss.speed;
+          ss.y += Math.sin(ss.angle) * ss.speed;
+          ss.opacity -= 0.015;
 
-        // Quay tuần tự từng ô còn thiếu cho đến khi được MC xác nhận Có mặt
-        for (let i = 0; i < pendingCardIndices.length; i++) {
-          const cardIdx = pendingCardIndices[i];
-          let cardConfirmed = false;
-
-          while (!cardConfirmed) {
-            const available = participants.filter(
-              (p) => !usedNumbers.includes(p.id) && !absentWinners.includes(p.id) && !p.prizeWon
-            );
-
-            if (available.length === 0) {
-              alert("Đã hết người tham gia hợp lệ (Đáp án C) chưa trúng giải!");
-              isSpinning16 = false;
-              if (spinBtn) spinBtn.disabled = false;
-              if (resetBtn) resetBtn.disabled = false;
-              return;
-            }
-
-            const winner = available[Math.floor(Math.random() * available.length)];
-            const rankNum = (cardIdx + 1).toString().padStart(2, "0");
-
-            const card = document.getElementById(`slot-card-${cardIdx}`);
-            const badge = document.getElementById(`card-badge-${cardIdx}`);
-            const codeEl = document.getElementById(`card-code-${cardIdx}`);
-            const nameEl = document.getElementById(`card-name-${cardIdx}`);
-            const agencyEl = document.getElementById(`card-agency-${cardIdx}`);
-            const cccdEl = document.getElementById(`card-cccd-${cardIdx}`);
-            const phoneEl = document.getElementById(`card-phone-${cardIdx}`);
-
-            if (card) card.className = "slot-card-16 is-spinning";
-            if (badge) {
-              badge.className = "card-badge badge-spinning";
-              badge.innerText = "QUAY...";
-            }
-            if (nameEl) nameEl.innerText = "Đang chọn số...";
-            if (agencyEl) agencyEl.innerText = "Đang quay số ngẫu nhiên";
-
-            // Random thời gian quay từ 3 đến 5 giây
-            const spinDuration = Math.floor(Math.random() * 2000) + 3000;
-
-            const shuffleInterval = setInterval(() => {
-              const randNum = Math.floor(1000 + Math.random() * 9000);
-              if (codeEl) codeEl.innerText = `#${randNum}`;
-            }, 40);
-
-            await new Promise((resolve) => setTimeout(resolve, spinDuration));
-            clearInterval(shuffleInterval);
-
-            // Chốt kết quả
-            const finalCode = `#${winner.id.toString().padStart(4, "0")}`;
-            if (codeEl) codeEl.innerText = finalCode;
-            if (nameEl) nameEl.innerText = winner.name;
-            if (agencyEl) agencyEl.innerText = winner.agency;
-            if (cccdEl)
-              cccdEl.innerText = `CCCD: ****${(winner.nationalId || "").slice(-4)}`;
-            if (phoneEl)
-              phoneEl.innerText = `SĐT: ****${(winner.phone || "").slice(-4)}`;
-
-            if (badge) {
-              badge.className = "card-badge badge-won";
-              badge.innerText = "TRÚNG";
-            }
-            if (card) {
-              card.className = "slot-card-16 is-completed";
-              card.title = `Nhấn để quay lại Giải #${rankNum}`;
-            }
-
-            // Lưu kết quả
-            usedNumbers.push(winner.id);
-            const winnerRecord = {
-              ...winner,
-              cardIndex: cardIdx,
-              rankIndex: cardIdx + 1,
-            };
-            currentWinners.push(winnerRecord);
-
-            sessionStorage.setItem("usedNumbers", JSON.stringify(usedNumbers));
-            sessionStorage.setItem("winners16Data", JSON.stringify(currentWinners));
-
-            updateProgressBar(currentWinners.length, 16);
-
-            // HIỂN THỊ POPUP VINH DANH CHO MC ĐỌC VÀ CHỜ BẤM "TIẾP TỤC" HOẶC "VẮNG MẶT"
-            const isLast = (i === pendingCardIndices.length - 1) || (currentWinners.length === 16);
-            const modalResult = await showWinnerAnnouncementModal(winnerRecord, isLast);
-
-            if (modalResult && modalResult.action === "absent") {
-              // NGƯỜI NÀY VẮNG MẶT: Hủy kết quả, đưa vào absentWinners và quay lại ô này!
-              usedNumbers = usedNumbers.filter((id) => id !== winner.id);
-              if (!absentWinners.includes(winner.id)) {
-                absentWinners.push(winner.id);
-              }
-              const winnerIdxInCurrent = currentWinners.findIndex((w) => w.cardIndex === cardIdx);
-              if (winnerIdxInCurrent !== -1) {
-                currentWinners.splice(winnerIdxInCurrent, 1);
-              }
-
-              sessionStorage.setItem("absentWinners", JSON.stringify(absentWinners));
-              sessionStorage.setItem("usedNumbers", JSON.stringify(usedNumbers));
-              sessionStorage.setItem("winners16Data", JSON.stringify(currentWinners));
-              updateProgressBar(currentWinners.length, 16);
-
-              // Tạm dừng 250ms trước khi tự động quay lại chính ô này
-              await new Promise((resolve) => setTimeout(resolve, 250));
-            } else {
-              // NGƯỜI NÀY CÓ MẶT: Xác nhận thành công ô này, tiếp tục sang ô kế tiếp!
-              cardConfirmed = true;
-              if (!isLast) {
-                await new Promise((resolve) => setTimeout(resolve, 300));
-              }
-            }
+          if (ss.opacity <= 0) {
+            celebrationShootingStars.splice(i, 1);
           }
         }
 
-        isSpinning16 = false;
-        if (spinBtn) spinBtn.disabled = false;
-        if (resetBtn) resetBtn.disabled = false;
+        for (let i = celebrationParticles.length - 1; i >= 0; i--) {
+          const p = celebrationParticles[i];
+          p.vx *= p.drag;
+          p.vy *= p.drag;
+          p.vy += p.gravity;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.alpha -= p.decay;
 
-        if (currentWinners.length === 16) {
-          startConfetti();
-          setTimeout(stopConfetti, 8000);
+          if (p.alpha <= 0) {
+            celebrationParticles.splice(i, 1);
+            continue;
+          }
+
+          celebrationCtx.save();
+          celebrationCtx.globalAlpha = p.alpha;
+          celebrationCtx.fillStyle = p.color;
+          celebrationCtx.shadowColor = p.color;
+          celebrationCtx.shadowBlur = 8;
+          celebrationCtx.beginPath();
+          celebrationCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          celebrationCtx.fill();
+          celebrationCtx.restore();
         }
-      }
 
-      // Khôi phục 16 ô đã quay từ sessionStorage
-      function restoreSaved16Winners(winners) {
-        if (!winners || winners.length === 0) return;
-        winners.forEach((winner) => {
-          const i = winner.cardIndex !== undefined ? winner.cardIndex : winner.rankIndex - 1;
-          const card = document.getElementById(`slot-card-${i}`);
-          const badge = document.getElementById(`card-badge-${i}`);
-          const codeEl = document.getElementById(`card-code-${i}`);
-          const nameEl = document.getElementById(`card-name-${i}`);
-          const agencyEl = document.getElementById(`card-agency-${i}`);
-          const cccdEl = document.getElementById(`card-cccd-${i}`);
-          const phoneEl = document.getElementById(`card-phone-${i}`);
-
-          if (card) {
-            card.className = "slot-card-16 is-completed";
-            card.title = `Nhấn để quay lại Giải #${(i + 1).toString().padStart(2, "0")}`;
-          }
-          if (badge) {
-            badge.className = "card-badge badge-won";
-            badge.innerText = "TRÚNG";
-          }
-          if (codeEl)
-            codeEl.innerText = `#${winner.id.toString().padStart(4, "0")}`;
-          if (nameEl) nameEl.innerText = winner.name;
-          if (agencyEl) agencyEl.innerText = winner.agency;
-          if (cccdEl)
-            cccdEl.innerText = `CCCD: ****${(winner.nationalId || "").slice(-4)}`;
-          if (phoneEl)
-            phoneEl.innerText = `SĐT: ****${(winner.phone || "").slice(-4)}`;
-        });
-        updateProgressBar(winners.length, 16);
-      }
-
-      // ==========================================
-      // 🧹 LÀM MỚI (RESET SESSION DATA)
-      // ==========================================
-      function clearSessionData() {
-        if (isSpinning16 || spinningCards.size > 0) return;
         if (
-          !confirm(
-            "Bạn có chắc chắn muốn LÀM MỚI toàn bộ kết quả quay của phiên này?"
-          )
+          celebrationParticles.length > 0 ||
+          celebrationShootingStars.length > 0
         ) {
-          return;
-        }
-
-        sessionStorage.removeItem("usedNumbers");
-        sessionStorage.removeItem("winners16Data");
-        sessionStorage.removeItem("absentWinners");
-        usedNumbers = [];
-        currentWinners = [];
-        absentWinners = [];
-        spinningCards.clear();
-
-        init16Cards();
-        updateProgressBar(0, 16);
-      }
-
-      // ==========================================
-      // 🎉 CONFETTI CANVAS EFFECT
-      // ==========================================
-      const canvas = document.getElementById("confettiCanvas");
-      const ctx = canvas.getContext("2d");
-      let confettiActive = false;
-      let confettiParticles = [];
-      const confettiColors = [
-        "#ba7c38",
-        "#ffdca3",
-        "#f5efe6",
-        "#ffffff",
-        "#d18d45",
-      ];
-
-      function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      window.addEventListener("resize", resizeCanvas);
-
-      class ConfettiParticle {
-        constructor() {
-          this.x = Math.random() * canvas.width;
-          this.y = Math.random() * canvas.height - canvas.height;
-          this.size = Math.random() * 8 + 4;
-          this.color =
-            confettiColors[Math.floor(Math.random() * confettiColors.length)];
-          this.speedX = Math.random() * 4 - 2;
-          this.speedY = Math.random() * 4 + 3;
-          this.rotation = Math.random() * 360;
-          this.rotationSpeed = Math.random() * 4 - 2;
-        }
-        update() {
-          this.x += this.speedX;
-          this.y += this.speedY;
-          this.rotation += this.rotationSpeed;
-          if (this.y > canvas.height) {
-            this.y = -20;
-            this.x = Math.random() * canvas.width;
-          }
-        }
-        draw() {
-          ctx.save();
-          ctx.translate(this.x, this.y);
-          ctx.rotate((this.rotation * Math.PI) / 180);
-          ctx.fillStyle = this.color;
-          ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
-          ctx.restore();
+          requestAnimationFrame(animateCelebration);
+        } else {
+          isCelebrationRunning = false;
         }
       }
 
-      function startConfetti() {
-        resizeCanvas();
-        confettiParticles = [];
-        for (let i = 0; i < 120; i++) {
-          confettiParticles.push(new ConfettiParticle());
-        }
-        canvas.style.display = "block";
-        confettiActive = true;
-        animateConfetti();
-      }
-
-      function animateConfetti() {
-        if (!confettiActive) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        confettiParticles.forEach((p) => {
-          p.update();
-          p.draw();
-        });
-        requestAnimationFrame(animateConfetti);
-      }
-
-      function stopConfetti() {
-        confettiActive = false;
-        canvas.style.display = "none";
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      }
-
-      // ==========================================
-      // 🚀 KHỞI ĐỘNG TRANG
-      // ==========================================
+      /* ============================================================
+         KHỞI ĐỘNG TRANG
+         ============================================================ */
       window.addEventListener("DOMContentLoaded", () => {
-        init16Cards();
-        loadParticipants();
+        resizeCosmosCanvas();
+        resizeCelebrationCanvas();
+        requestAnimationFrame(animateCosmos);
+        initSlotStrips();
+        loadParticipantsData();
       });
     </script>
   </body>

@@ -1,52 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 interface LogoProps {
   className?: string;
-  alt?: string;
 }
 
-export const Logo: React.FC<LogoProps> = ({ 
-  className = 'h-16 w-auto mx-auto mb-4', 
-  alt = 'Logo' 
-}) => {
-  const [logoExists, setLogoExists] = useState(false);
-  const [logoUrl, setLogoUrl] = useState('/logo.png');
-
-  useEffect(() => {
-    // Check if logo exists
-    const checkLogo = async () => {
-      try {
-        const response = await fetch('/logo.png', { method: 'HEAD' });
-        if (response.ok) {
-          setLogoExists(true);
-          // Add timestamp to prevent caching
-          setLogoUrl(`/logo.png?t=${Date.now()}`);
-        } else {
-          setLogoExists(false);
-        }
-      } catch (error) {
-        setLogoExists(false);
-      }
-    };
-
-    checkLogo();
-  }, []);
-
-  if (!logoExists) {
-    return null;
-  }
-
+export const Logo: React.FC<LogoProps> = ({ className = 'mb-6' }) => {
   return (
-    <div className="flex justify-center mb-4">
+    <div className={`flex items-center justify-center gap-4 sm:gap-6 ${className}`}>
       <img 
-        src={logoUrl}
-        alt={alt}
-        className={className}
-        onError={() => setLogoExists(false)}
-        style={{
-          maxHeight: '120px',
-          objectFit: 'contain'
-        }}
+        src="/logo-obc.png"
+        alt="OBC Holdings"
+        className="h-10 sm:h-12 w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
+      />
+      <div className="h-7 sm:h-8 w-[1.5px] bg-gradient-to-b from-transparent via-[#ba7c38]/80 to-transparent" />
+      <img 
+        src="/logo-ak.png"
+        alt="AK Tower"
+        className="h-11 sm:h-14 w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
       />
     </div>
   );

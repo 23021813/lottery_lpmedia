@@ -26,12 +26,8 @@ def generate_quayso_html():
 
         body {{
             font-family: "Be Vietnam Pro", Arial, sans-serif;
-            background-color: #0d0905;
-            background-image: url("background.jpg");
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background-color: #2b550b;
+            background-image: radial-gradient(circle at 50% 30%, #386b0e 0%, #2b550b 60%, #173305 100%);
             color: #fff;
             min-height: 100vh;
             display: flex;
@@ -97,7 +93,7 @@ def generate_quayso_html():
         .header-logo-divider {{
             width: 1.5px;
             height: 32px;
-            background: linear-gradient(180deg, transparent, rgba(186, 124, 56, 0.8), transparent);
+            background: linear-gradient(180deg, transparent, rgba(226, 180, 72, 0.8), transparent);
         }}
 
         .action-btn-group {{
@@ -107,9 +103,9 @@ def generate_quayso_html():
         }}
 
         .btn-top-icon {{
-            background: rgba(20, 15, 11, 0.75);
-            border: 1.5px solid rgba(186, 124, 56, 0.5);
-            color: #ffdca3;
+            background: rgba(14, 30, 6, 0.75);
+            border: 1.5px solid rgba(226, 180, 72, 0.5);
+            color: #ffeaa7;
             width: 44px;
             height: 44px;
             border-radius: 50%;
@@ -123,11 +119,11 @@ def generate_quayso_html():
         }}
 
         .btn-top-icon:hover {{
-            background: linear-gradient(135deg, #ba7c38 0%, #e09b4c 100%);
-            color: #ffffff;
-            border-color: #ffdca3;
+            background: linear-gradient(135deg, #d4ac0d 0%, #f1c40f 100%);
+            color: #0f2005;
+            border-color: #fff3c4;
             transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(186, 124, 56, 0.6);
+            box-shadow: 0 6px 20px rgba(241, 196, 15, 0.6);
         }}
 
         .icon-svg {{
@@ -149,11 +145,11 @@ def generate_quayso_html():
 
         /* Bộ chọn giải thưởng */
         .prize-selector-card {{
-            background: rgba(20, 15, 11, 0.85);
-            border: 2px solid rgba(186, 124, 56, 0.6);
+            background: rgba(12, 26, 6, 0.85);
+            border: 2px solid rgba(226, 180, 72, 0.6);
             border-radius: 20px;
             padding: 16px 28px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 30px rgba(186, 124, 56, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 30px rgba(226, 180, 72, 0.2);
             backdrop-filter: blur(12px);
             margin-bottom: 36px;
             display: flex;
@@ -167,8 +163,8 @@ def generate_quayso_html():
             font-weight: 800;
             letter-spacing: 2px;
             text-transform: uppercase;
-            color: #ffdca3;
-            text-shadow: 0 2px 8px rgba(186, 124, 56, 0.5);
+            color: #ffeaa7;
+            text-shadow: 0 2px 8px rgba(226, 180, 72, 0.5);
         }}
 
         .prize-select-wrapper {{
@@ -179,14 +175,16 @@ def generate_quayso_html():
         #prizeSelect {{
             appearance: none;
             -webkit-appearance: none;
-            background: linear-gradient(135deg, #2a1d13 0%, #1a120b 100%);
-            border: 2px solid #ba7c38;
+            background: linear-gradient(135deg, #18330c 0%, #0d1e06 100%);
+            border: 2px solid #e2b448;
             border-radius: 14px;
-            color: #ffdca3;
+            color: #fff3c4;
             font-family: "Be Vietnam Pro", sans-serif;
             font-size: 28px;
             font-weight: 900;
-            padding: 10px 56px 10px 24px;
+            line-height: 1.4;
+            min-height: 64px;
+            padding: 14px 56px 12px 24px;
             cursor: pointer;
             outline: none;
             letter-spacing: 1.5px;
@@ -196,16 +194,17 @@ def generate_quayso_html():
         }}
 
         #prizeSelect option {{
-            background-color: #1a120b;
-            color: #ffdca3;
+            background-color: #0d1e06;
+            color: #fff3c4;
             padding: 12px 20px;
             font-size: 20px;
             font-weight: 700;
+            line-height: 1.4;
         }}
 
         #prizeSelect:hover, #prizeSelect:focus {{
-            border-color: #ffdca3;
-            box-shadow: 0 0 20px rgba(186, 124, 56, 0.5);
+            border-color: #fff3c4;
+            box-shadow: 0 0 20px rgba(226, 180, 72, 0.5);
         }}
 
         .select-arrow {{
@@ -214,7 +213,7 @@ def generate_quayso_html():
             top: 50%;
             transform: translateY(-50%);
             pointer-events: none;
-            color: #ba7c38;
+            color: #e2b448;
             font-size: 18px;
             font-weight: 900;
         }}
@@ -224,7 +223,7 @@ def generate_quayso_html():
             align-items: center;
             gap: 8px;
             font-size: 12.5px;
-            color: #d4c5b2;
+            color: #d2e4cb;
             cursor: pointer;
             user-select: none;
             margin-top: 4px;
@@ -232,7 +231,7 @@ def generate_quayso_html():
 
         .prize-filter-toggle input {{
             cursor: pointer;
-            accent-color: #ba7c38;
+            accent-color: #e2b448;
             width: 16px;
             height: 16px;
         }}
@@ -245,27 +244,27 @@ def generate_quayso_html():
             gap: 16px;
             margin-bottom: 36px;
             padding: 20px 28px;
-            background: rgba(14, 10, 7, 0.85);
-            border: 2px solid rgba(186, 124, 56, 0.4);
+            background: rgba(10, 22, 5, 0.88);
+            border: 2px solid rgba(226, 180, 72, 0.45);
             border-radius: 28px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 40px rgba(186, 124, 56, 0.25);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 40px rgba(226, 180, 72, 0.25);
             backdrop-filter: blur(14px);
         }}
 
         .slot-box {{
             width: 120px;
             height: 160px;
-            background: radial-gradient(circle at 50% 20%, #2e1e12 0%, #160f09 100%);
-            border: 3px solid #ba7c38;
+            background: radial-gradient(circle at 50% 20%, #1e3c0f 0%, #0c1c06 100%);
+            border: 3px solid #e2b448;
             border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 96px;
             font-weight: 900;
-            color: #ffdca3;
+            color: #fff3c4;
             box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9), 0 6px 20px rgba(0, 0, 0, 0.6);
-            text-shadow: 0 0 25px rgba(255, 220, 163, 0.5), 0 4px 15px rgba(0, 0, 0, 0.9);
+            text-shadow: 0 0 25px rgba(255, 234, 167, 0.5), 0 4px 15px rgba(0, 0, 0, 0.9);
             font-variant-numeric: tabular-nums;
             font-feature-settings: "tnum";
             position: relative;
@@ -274,27 +273,27 @@ def generate_quayso_html():
         }}
 
         .slot-box.is-spinning {{
-            border-color: #ffdca3;
-            box-shadow: 0 0 30px rgba(186, 124, 56, 0.8), inset 0 0 20px rgba(186, 124, 56, 0.4);
+            border-color: #fff3c4;
+            box-shadow: 0 0 30px rgba(241, 196, 15, 0.8), inset 0 0 20px rgba(241, 196, 15, 0.4);
             animation: pulseGlow 0.4s infinite alternate;
         }}
 
         @keyframes pulseGlow {{
-            0% {{ box-shadow: 0 0 15px rgba(186, 124, 56, 0.5); }}
-            100% {{ box-shadow: 0 0 35px rgba(255, 220, 163, 0.9); }}
+            0% {{ box-shadow: 0 0 15px rgba(241, 196, 15, 0.5); }}
+            100% {{ box-shadow: 0 0 35px rgba(255, 243, 196, 0.9); }}
         }}
 
         .slot-box.is-stopped {{
-            border-color: #ba7c38;
+            border-color: #e2b448;
             transform: scale(1.02);
         }}
 
         /* Nút quay số lớn */
         .btn-spin-action {{
-            background: linear-gradient(135deg, #ba7c38 0%, #e09b4c 50%, #ba7c38 100%);
-            border: 2px solid #ffdca3;
+            background: linear-gradient(135deg, #d4ac0d 0%, #f1c40f 50%, #b7950b 100%);
+            border: 2px solid #fff3c4;
             border-radius: 40px;
-            color: #ffffff;
+            color: #122204;
             font-family: "Be Vietnam Pro", sans-serif;
             font-size: 24px;
             font-weight: 900;
@@ -304,20 +303,20 @@ def generate_quayso_html():
             cursor: pointer;
             letter-spacing: 2.5px;
             text-transform: uppercase;
-            box-shadow: 0 6px 25px rgba(186, 124, 56, 0.6), 0 0 35px rgba(186, 124, 56, 0.4);
+            box-shadow: 0 6px 25px rgba(241, 196, 15, 0.5), 0 0 35px rgba(241, 196, 15, 0.3);
             transition: all 0.25s ease;
             outline: none;
         }}
 
         .btn-spin-action:hover:not(:disabled) {{
-            background: linear-gradient(135deg, #a66a2c 0%, #ba7c38 100%);
+            background: linear-gradient(135deg, #b7950b 0%, #d4ac0d 100%);
             transform: translateY(-2px);
-            box-shadow: 0 8px 35px rgba(186, 124, 56, 0.8);
+            box-shadow: 0 8px 35px rgba(241, 196, 15, 0.8);
         }}
 
         .btn-spin-action:disabled {{
-            background: rgba(186, 124, 56, 0.35);
-            border-color: rgba(186, 124, 56, 0.35);
+            background: rgba(226, 180, 72, 0.35);
+            border-color: rgba(226, 180, 72, 0.35);
             color: rgba(255, 255, 255, 0.5);
             cursor: not-allowed;
             transform: none;
@@ -327,6 +326,7 @@ def generate_quayso_html():
         .btn-spin-action.btn-stopping {{
             background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
             border-color: #ffb8b8;
+            color: #ffffff;
             box-shadow: 0 6px 25px rgba(231, 76, 60, 0.6);
         }}
 
@@ -335,8 +335,8 @@ def generate_quayso_html():
             width: 100%;
             max-width: 1000px;
             margin-top: 48px;
-            background: rgba(18, 13, 9, 0.88);
-            border: 1.5px solid rgba(186, 124, 56, 0.45);
+            background: rgba(12, 26, 6, 0.9);
+            border: 1.5px solid rgba(226, 180, 72, 0.45);
             border-radius: 20px;
             padding: 24px 28px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
@@ -347,7 +347,7 @@ def generate_quayso_html():
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(186, 124, 56, 0.3);
+            border-bottom: 1px solid rgba(226, 180, 72, 0.3);
             padding-bottom: 14px;
             margin-bottom: 18px;
         }}
@@ -355,7 +355,7 @@ def generate_quayso_html():
         .winners-history-title {{
             font-size: 18px;
             font-weight: 800;
-            color: #ffdca3;
+            color: #fff3c4;
             letter-spacing: 1.5px;
             text-transform: uppercase;
         }}
@@ -363,11 +363,11 @@ def generate_quayso_html():
         .winners-count-tag {{
             font-size: 13px;
             font-weight: 700;
-            color: #ba7c38;
-            background: rgba(186, 124, 56, 0.15);
+            color: #e2b448;
+            background: rgba(226, 180, 72, 0.15);
             padding: 4px 12px;
             border-radius: 12px;
-            border: 1px solid rgba(186, 124, 56, 0.3);
+            border: 1px solid rgba(226, 180, 72, 0.3);
         }}
 
         .winners-table {{
@@ -379,11 +379,11 @@ def generate_quayso_html():
         .winners-table th {{
             font-size: 12px;
             font-weight: 800;
-            color: #ba7c38;
+            color: #e2b448;
             text-transform: uppercase;
             letter-spacing: 1px;
             padding: 10px 14px;
-            border-bottom: 1px solid rgba(186, 124, 56, 0.2);
+            border-bottom: 1px solid rgba(226, 180, 72, 0.2);
         }}
 
         .winners-table td {{
@@ -394,7 +394,7 @@ def generate_quayso_html():
         }}
 
         .winners-table tr:hover td {{
-            background: rgba(186, 124, 56, 0.08);
+            background: rgba(226, 180, 72, 0.08);
         }}
 
         .badge-prize {{
@@ -410,12 +410,12 @@ def generate_quayso_html():
         .badge-giai-dac-biet {{ background: rgba(231, 76, 60, 0.25); color: #ff9999; border: 1px solid #e74c3c; }}
         .badge-giai-nhat {{ background: rgba(241, 196, 15, 0.25); color: #ffeaa7; border: 1px solid #f1c40f; }}
         .badge-giai-nhi {{ background: rgba(189, 195, 199, 0.25); color: #ecf0f1; border: 1px solid #bdc3c7; }}
-        .badge-giai-ba {{ background: rgba(211, 84, 0, 0.25); color: #f39c12; border: 1px solid #d35400; }}
-        .badge-khac {{ background: rgba(186, 124, 56, 0.2); color: #ffdca3; border: 1px solid #ba7c38; }}
+        .badge-giai-ba {{ background: rgba(230, 126, 34, 0.25); color: #f39c12; border: 1px solid #d35400; }}
+        .badge-khac {{ background: rgba(46, 204, 113, 0.2); color: #a8f0c6; border: 1px solid #2ecc71; }}
 
         .code-col {{
             font-weight: 800;
-            color: #ffdca3;
+            color: #fff3c4;
             font-size: 16px;
             letter-spacing: 1px;
         }}
@@ -436,7 +436,7 @@ def generate_quayso_html():
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(10, 7, 5, 0.88);
+            background: rgba(6, 15, 3, 0.88);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             z-index: 2000;
@@ -452,14 +452,14 @@ def generate_quayso_html():
         }}
 
         .winner-announcement-box {{
-            background: radial-gradient(circle at 50% 10%, #2a1d13 0%, #16100b 90%);
-            border: 2.5px solid #ba7c38;
+            background: radial-gradient(circle at 50% 10%, #1a360c 0%, #0a1804 90%);
+            border: 2.5px solid #e2b448;
             border-radius: 24px;
             width: 92%;
             max-width: 720px;
             padding: 36px 32px 40px 32px;
             text-align: center;
-            box-shadow: 0 0 60px rgba(186, 124, 56, 0.45), 0 20px 50px rgba(0, 0, 0, 0.85);
+            box-shadow: 0 0 60px rgba(226, 180, 72, 0.45), 0 20px 50px rgba(0, 0, 0, 0.85);
             transform: scale(0.85);
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
@@ -470,17 +470,17 @@ def generate_quayso_html():
         }}
 
         .winner-congrats-tag {{
-            color: #ffdca3;
+            color: #fff3c4;
             font-size: 15px;
             font-weight: 800;
             letter-spacing: 3px;
             text-transform: uppercase;
             margin-bottom: 8px;
-            text-shadow: 0 2px 8px rgba(186, 124, 56, 0.6);
+            text-shadow: 0 2px 8px rgba(226, 180, 72, 0.6);
         }}
 
         .winner-rank-large {{
-            color: #ba7c38;
+            color: #f1c40f;
             font-size: 26px;
             font-weight: 900;
             text-transform: uppercase;
@@ -492,10 +492,10 @@ def generate_quayso_html():
             font-size: 88px;
             font-weight: 900;
             letter-spacing: 4px;
-            color: #ffdca3;
+            color: #fff3c4;
             line-height: 1;
             margin: 10px 0 16px 0;
-            text-shadow: 0 0 25px rgba(255, 220, 163, 0.4), 0 4px 15px rgba(0, 0, 0, 0.9);
+            text-shadow: 0 0 25px rgba(255, 243, 196, 0.4), 0 4px 15px rgba(0, 0, 0, 0.9);
             font-family: "Be Vietnam Pro", sans-serif;
         }}
 
@@ -514,7 +514,7 @@ def generate_quayso_html():
         .winner-agency-large {{
             font-size: 24px;
             font-weight: 700;
-            color: #d4c5b2;
+            color: #d2e4cb;
             margin-bottom: 18px;
             letter-spacing: 0.5px;
         }}
@@ -523,13 +523,13 @@ def generate_quayso_html():
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            background: rgba(186, 124, 56, 0.15);
-            border: 1px solid rgba(186, 124, 56, 0.4);
+            background: rgba(226, 180, 72, 0.15);
+            border: 1px solid rgba(226, 180, 72, 0.4);
             padding: 8px 22px;
             border-radius: 30px;
             font-size: 18px;
             font-weight: 700;
-            color: #ffdca3;
+            color: #fff3c4;
             letter-spacing: 1px;
         }}
 
@@ -543,9 +543,9 @@ def generate_quayso_html():
         }}
 
         .winner-btn-action {{
-            background: linear-gradient(135deg, #ba7c38 0%, #e09b4c 50%, #ba7c38 100%);
-            color: #ffffff;
-            border: 2px solid #ffdca3;
+            background: linear-gradient(135deg, #d4ac0d 0%, #f1c40f 50%, #b7950b 100%);
+            color: #122204;
+            border: 2px solid #fff3c4;
             border-radius: 35px;
             padding: 0 38px;
             height: 52px;
@@ -555,7 +555,7 @@ def generate_quayso_html():
             letter-spacing: 1.5px;
             text-transform: uppercase;
             cursor: pointer;
-            box-shadow: 0 6px 25px rgba(186, 124, 56, 0.5);
+            box-shadow: 0 6px 25px rgba(241, 196, 15, 0.5);
             transition: all 0.25s ease;
             font-family: "Be Vietnam Pro", sans-serif;
             display: inline-flex;
@@ -564,9 +564,9 @@ def generate_quayso_html():
         }}
 
         .winner-btn-action:hover {{
-            background: linear-gradient(135deg, #a66a2c 0%, #ba7c38 100%);
+            background: linear-gradient(135deg, #b7950b 0%, #d4ac0d 100%);
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(186, 124, 56, 0.7);
+            box-shadow: 0 8px 30px rgba(241, 196, 15, 0.7);
         }}
 
         .winner-btn-absent {{
@@ -611,7 +611,9 @@ def generate_quayso_html():
             }}
             #prizeSelect {{
                 font-size: 20px;
-                padding: 8px 40px 8px 16px;
+                line-height: 1.3;
+                min-height: 52px;
+                padding: 10px 42px 10px 18px;
             }}
             .btn-spin-action {{
                 font-size: 18px;
@@ -755,6 +757,11 @@ def generate_quayso_html():
       return false;
     }}
 
+    function hasValidCCCD(p) {{
+      const cccd = (p.nationalId || '').toString().trim();
+      return cccd.length > 4;
+    }}
+
     function formatCCCD(nationalId) {{
       const raw = (nationalId || "").toString().trim();
       if (!raw) return "************";
@@ -891,9 +898,9 @@ def generate_quayso_html():
     function startSpin() {{
       const prize = document.getElementById("prizeSelect").value;
 
-      // Lọc danh sách khả dụng: Mặc định LOẠI BỎ KHÁCH MỜI
+      // Lọc danh sách khả dụng: Mặc định LOẠI BỎ KHÁCH MỜI và NGƯỜI THIẾU CCCD HỢP LỆ (<= 4 số)
       const usedCodes = new Set(winnersHistory.map(w => w.code));
-      let available = allParticipants.filter(p => !usedCodes.has(p.code) && !isGuest(p));
+      let available = allParticipants.filter(p => !usedCodes.has(p.code) && !isGuest(p) && hasValidCCCD(p));
 
       if (available.length === 0) {{
         alert("Đã hết thí sinh hợp lệ chưa trúng giải để tiếp tục quay!");
@@ -1010,7 +1017,7 @@ def generate_quayso_html():
       canvas.height = window.innerHeight;
 
       const particles = [];
-      const colors = ["#ba7c38", "#ffdca3", "#ffffff", "#e09b4c", "#ff4757", "#2ed573"];
+      const colors = ["#e2b448", "#fff3c4", "#ffffff", "#2ecc71", "#f1c40f", "#27ae60"];
 
       for (let i = 0; i < 150; i++) {{
         particles.push({{

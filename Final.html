@@ -54,7 +54,41 @@
       }
 
       .stage-brand-group {
+        display: flex;
+        align-items: center;
         text-align: left;
+      }
+
+      .header-logo-container {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .header-logo {
+        height: 48px;
+        width: auto;
+        object-fit: contain;
+        filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
+        transition: transform 0.25s ease;
+      }
+
+      .header-logo:hover {
+        transform: scale(1.03);
+      }
+
+      .logo-obc {
+        height: 45px;
+      }
+
+      .logo-ak {
+        height: 48px;
+      }
+
+      .header-logo-divider {
+        width: 1.5px;
+        height: 32px;
+        background: linear-gradient(180deg, transparent, rgba(186, 124, 56, 0.8), transparent);
       }
 
       .stage-brand-group h1,
@@ -800,9 +834,25 @@
 
         .stage-brand-group {
           display: flex;
-          align-items: baseline;
-          gap: 14px;
+          align-items: center;
+          gap: 12px;
           text-align: left;
+        }
+
+        .header-logo-container {
+          gap: 12px;
+        }
+
+        .logo-obc {
+          height: 33px;
+        }
+
+        .logo-ak {
+          height: 35px;
+        }
+
+        .header-logo-divider {
+          height: 22px;
         }
 
         .stage-brand-group h1 {
@@ -1032,8 +1082,11 @@
       <!-- THANH TOP BAR SÂN KHẤU (STAGE TOP BAR - GỘP HEADER & ĐIỀU KHIỂN) -->
       <div class="stage-top-bar" id="stageTopBar">
         <div class="stage-brand-group">
-          <h1>LUCKY DRAW</h1>
-          <div class="event-subtitle">16 GIẢI THƯỞNG MAY MẮN</div>
+          <div class="header-logo-container">
+            <img src="logo-obc.png" alt="OBC Holdings" class="header-logo logo-obc" />
+            <div class="header-logo-divider"></div>
+            <img src="logo-ak.png" alt="AK Tower" class="header-logo logo-ak" />
+          </div>
         </div>
         <div class="action-btn-group">
           <button

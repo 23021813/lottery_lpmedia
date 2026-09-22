@@ -733,7 +733,7 @@ def generate_quayso_html():
     // 1. Tải danh sách người tham gia từ data/data_import.csv hoặc inline
     async function loadImportParticipants() {{
       try {{
-        const res = await fetch("data/data_import.csv");
+        const res = await fetch(`data/data_import.csv?t=${{Date.now()}}`);
         if (!res.ok) throw new Error("HTTP error " + res.status);
         const text = await res.text();
         const lines = text.replace(/\\r/g, "").trim().split("\\n");
@@ -748,6 +748,7 @@ def generate_quayso_html():
             const agency = row[4].trim();
             const answer = (row[5] || "C").trim();
             const prizeWon = (row[6] || "").trim();
+            const note = (row[7] || "").trim();
             list.push({{
               id: parseInt(idStr, 10),
               code: idStr.padStart(4, "0"),
@@ -755,6 +756,7 @@ def generate_quayso_html():
               phone: phone,
               nationalId: nationalId,
               agency: agency,
+              note: note,
               answer: answer,
               prizeWon: prizeWon
             }});

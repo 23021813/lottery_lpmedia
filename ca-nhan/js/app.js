@@ -538,21 +538,21 @@ class AppMotionController {
       );
     }
 
-    // Hiệu ứng Màn hình Marketplace (1.4.2): Title + Mô hình điện thoại trung tâm
-    const marketplaceTitle = toEl.querySelector('.marketplace-title');
-    const marketplacePhone = toEl.querySelector('.marketplace-phone-center .my-phone-gold');
-    if (marketplaceTitle) {
-      tl.fromTo(marketplaceTitle,
-        { opacity: 0, x: -35, y: -15 },
-        { opacity: 1, x: 0, y: 0, duration: 0.6, ease: 'power2.out' },
-        0.3
+    // Hiệu ứng Màn hình Marketplace (1.4.2): Heading bên trái & Banner đối tác
+    const marketplaceHeading = toEl.querySelector('.marketplace-heading');
+    const marketplaceInfo = toEl.querySelector('.marketplace-info');
+    if (marketplaceHeading) {
+      tl.fromTo(marketplaceHeading,
+        { opacity: 0, x: -35 },
+        { opacity: 1, x: 0, duration: 0.65, ease: 'power2.out' },
+        0.28
       );
     }
-    if (marketplacePhone) {
-      tl.fromTo(marketplacePhone,
-        { opacity: 0, y: 60, scale: 0.92 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.75, ease: 'back.out(1.2)' },
-        0.38
+    if (marketplaceInfo) {
+      tl.fromTo(marketplaceInfo,
+        { opacity: 0, scale: 0.9, y: 15 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: 'back.out(1.2)' },
+        0.4
       );
     }
 

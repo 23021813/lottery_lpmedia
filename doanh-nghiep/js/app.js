@@ -48,6 +48,7 @@ class DoanhNghiepMotionController {
       btnDemoPhoneClose: document.getElementById('btnDemoPhoneClose'),
       // Video Presentation Player & Flat Touch Controls
       demoVideoModal: document.getElementById('screenDemoVideo'),
+      videoWrapper: document.getElementById('videoPresentationWrapper'),
       video: document.getElementById('presentationVideo'),
       videoControls: document.getElementById('videoTouchControls'),
       btnPlayToggle: document.getElementById('btnPlayToggle'),
@@ -57,14 +58,6 @@ class DoanhNghiepMotionController {
       videoScrubProgress: document.getElementById('videoScrubProgress'),
       videoScrubBuffer: document.getElementById('videoScrubBuffer'),
       videoScrubThumb: document.getElementById('videoScrubThumb'),
-      currentTimeEl: document.getElementById('videoCurrentTime'),
-      totalTimeEl: document.getElementById('videoTotalTime'),
-      btnVolumeToggle: document.getElementById('btnVolumeToggle'),
-      iconVolHigh: document.querySelector('#btnVolumeToggle .icon-vol-high'),
-      iconVolMute: document.querySelector('#btnVolumeToggle .icon-vol-mute'),
-      volumeTrackWrapper: document.getElementById('volumeTrackWrapper'),
-      volumeFill: document.getElementById('volumeFill'),
-      volumeThumb: document.getElementById('volumeThumb'),
       btnVideoBack: document.getElementById('btnVideoBack'),
       screens: new Map()
     };
@@ -652,7 +645,7 @@ class DoanhNghiepMotionController {
 
   /**
    * 6. openDemo(demoType, title, videoSrc)
-   * Trình chiếu video full màn hình kèm bộ điều khiển cảm ứng phẳng
+   * Trình chiếu video full màn hình với hiệu ứng Cinematic Zoom & Focus
    */
   openDemo(demoType = 'desktop', title = 'Trải nghiệm dịch vụ', videoSrc = null) {
     if (this.isDemoOpen) return;
@@ -667,11 +660,21 @@ class DoanhNghiepMotionController {
       gsap.set(this.dom.demoVideoModal, { opacity: 1, visibility: 'visible', pointerEvents: 'auto' });
       this.updateBackButtonVisibility();
 
+      // Mặc định không hiện player controls khi mở video
+      this.hideControls();
+
       this.dom.video.src = targetVideo;
       this.dom.video.currentTime = 0;
       this.dom.video.play().catch(() => {});
       this.updatePlayPauseUI(false);
-      this.resetControlsAutoDim();
+
+      // Hiệu ứng Mở Video Điện Ảnh (Cinematic Zoom & Focus Entrance Animation)
+      if (this.dom.videoWrapper) {
+        gsap.fromTo(this.dom.videoWrapper,
+          { opacity: 0, scale: 0.88, filter: 'blur(10px)' },
+          { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.55, ease: 'power3.out', clearProps: 'filter' }
+        );
+      }
       return;
     }
 
@@ -705,34 +708,70 @@ class DoanhNghiepMotionController {
   closeDemo() {
     if (!this.isDemoOpen) return;
 
-    if (this.dom.video) {
-      this.dom.video.pause();
-      this.dom.video.removeAttribute('src');
-      this.dom.video.load();
-    }
+    this.hideControls();
 
-    if (this.controlsDimTimer) {
-      clearTimeout(this.controlsDimTimer);
-      this.controlsDimTimer = null;
-    }
+    const finishClose = () => {
+      if (this.dom.video) {
+        this.dom.video.pause();
+        this.dom.video.removeAttribute('src');
+        this.dom.video.load();
+      }
 
-    if (this.dom.videoControls) {
-      this.dom.videoControls.classList.remove('is-dimmed');
-    }
+      const modal = this.activeDemoModal || this.dom.demoVideoModal;
+      if (modal) {
+        modal.classList.remove('active');
+        gsap.set(modal, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
+      }
 
-    const modal = this.activeDemoModal || this.dom.demoVideoModal;
-    if (modal) {
-      modal.classList.remove('active');
-      gsap.set(modal, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
-    }
+      this.isDemoOpen = false;
+      this.activeDemoModal = null;
+      this.updateBackButtonVisibility();
+    };
 
-    this.isDemoOpen = false;
-    this.activeDemoModal = null;
-    this.updateBackButtonVisibility();
+    if (this.activeDemoModal === this.dom.demoVideoModal && this.dom.videoWrapper) {
+      gsap.to(this.dom.videoWrapper, {
+        opacity: 0,
+        scale: 0.92,
+        filter: 'blur(6px)',
+        duration: 0.35,
+        ease: 'power2.in',
+        onComplete: finishClose
+      });
+    } else {
+      finishClose();
+    }
   }
 
   /**
-   * 8. setupVideoControls()
+   * 8. Quản lý Hiển Thị Player Controls: Chạm hiện -> 5s tự động ẩn
+   */
+  showControlsWithTimer(durationMs = 5000) {
+    if (!this.dom.videoControls) return;
+    this.dom.videoControls.classList.add('is-visible');
+
+    if (this.controlsTimer) {
+      clearTimeout(this.controlsTimer);
+      this.controlsTimer = null;
+    }
+
+    this.controlsTimer = setTimeout(() => {
+      if (this.isDemoOpen && !this.isScrubbing) {
+        this.dom.videoControls.classList.remove('is-visible');
+      }
+    }, durationMs);
+  }
+
+  hideControls() {
+    if (!this.dom.videoControls) return;
+    this.dom.videoControls.classList.remove('is-visible');
+    if (this.controlsTimer) {
+      clearTimeout(this.controlsTimer);
+      this.controlsTimer = null;
+    }
+  }
+
+  /**
+   * 9. setupVideoControls()
    * Thiết lập tương tác cho bộ điều khiển video dạng phẳng (Flat Touch Controls)
    */
   setupVideoControls() {
@@ -745,21 +784,10 @@ class DoanhNghiepMotionController {
       videoScrubProgress,
       videoScrubBuffer,
       videoScrubThumb,
-      currentTimeEl,
-      totalTimeEl,
-      btnVolumeToggle,
-      volumeTrackWrapper,
       btnVideoBack
     } = this.dom;
 
     if (!video || !demoVideoModal) return;
-
-    const formatTime = (seconds) => {
-      if (!seconds || isNaN(seconds)) return '00:00';
-      const m = Math.floor(seconds / 60);
-      const s = Math.floor(seconds % 60);
-      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-    };
 
     const togglePlay = () => {
       if (video.paused || video.ended) {
@@ -773,32 +801,31 @@ class DoanhNghiepMotionController {
       btnPlayToggle.addEventListener('click', (e) => {
         e.stopPropagation();
         togglePlay();
-        this.resetControlsAutoDim();
+        this.showControlsWithTimer(5000);
       });
     }
 
-    // Bấm vào video để Play / Pause
+    // Bấm vào video: Nếu controls đang ẩn -> hiện controls; nếu đang hiện -> toggle play/pause
     video.addEventListener('click', (e) => {
       e.stopPropagation();
-      togglePlay();
-      this.resetControlsAutoDim();
+      const isVisible = videoControls && videoControls.classList.contains('is-visible');
+      if (!isVisible) {
+        this.showControlsWithTimer(5000);
+      } else {
+        togglePlay();
+        this.showControlsWithTimer(5000);
+      }
     });
 
     video.addEventListener('play', () => this.updatePlayPauseUI(false));
     video.addEventListener('pause', () => this.updatePlayPauseUI(true));
     video.addEventListener('ended', () => {
       this.updatePlayPauseUI(true);
-      if (videoControls) videoControls.classList.remove('is-dimmed');
-    });
-
-    video.addEventListener('loadedmetadata', () => {
-      if (totalTimeEl) totalTimeEl.textContent = formatTime(video.duration);
-      if (currentTimeEl) currentTimeEl.textContent = formatTime(video.currentTime);
+      this.showControlsWithTimer(8000);
     });
 
     video.addEventListener('timeupdate', () => {
       if (this.isScrubbing) return;
-      if (currentTimeEl) currentTimeEl.textContent = formatTime(video.currentTime);
       const pct = video.duration ? (video.currentTime / video.duration) * 100 : 0;
       if (videoScrubProgress) videoScrubProgress.style.width = `${pct}%`;
       if (videoScrubThumb) videoScrubThumb.style.left = `${pct}%`;
@@ -822,7 +849,6 @@ class DoanhNghiepMotionController {
         if (videoScrubThumb) videoScrubThumb.style.left = `${ratio * 100}%`;
         if (video.duration) {
           video.currentTime = ratio * video.duration;
-          if (currentTimeEl) currentTimeEl.textContent = formatTime(video.currentTime);
         }
       };
 
@@ -831,88 +857,25 @@ class DoanhNghiepMotionController {
         this.isScrubbing = true;
         videoScrubBar.setPointerCapture(e.pointerId);
         updateScrub(e.clientX);
-        this.resetControlsAutoDim();
+        this.showControlsWithTimer(5000);
       });
 
       videoScrubBar.addEventListener('pointermove', (e) => {
         if (!this.isScrubbing) return;
         e.stopPropagation();
         updateScrub(e.clientX);
-        this.resetControlsAutoDim();
+        this.showControlsWithTimer(5000);
       });
 
       const endScrub = (e) => {
         if (!this.isScrubbing) return;
         this.isScrubbing = false;
         try { videoScrubBar.releasePointerCapture(e.pointerId); } catch (_) {}
-        this.resetControlsAutoDim();
+        this.showControlsWithTimer(5000);
       };
 
       videoScrubBar.addEventListener('pointerup', endScrub);
       videoScrubBar.addEventListener('pointercancel', endScrub);
-    }
-
-    // Thanh trượt âm lượng to/nhỏ cảm ứng (Volume Slider)
-    const setVolume = (val) => {
-      const vol = Math.max(0, Math.min(1, val));
-      video.volume = vol;
-      video.muted = (vol === 0);
-      const pct = vol * 100;
-      if (this.dom.volumeFill) this.dom.volumeFill.style.width = `${pct}%`;
-      if (this.dom.volumeThumb) this.dom.volumeThumb.style.left = `${pct}%`;
-      if (volumeTrackWrapper) volumeTrackWrapper.setAttribute('aria-valuenow', Math.round(pct));
-      if (this.dom.iconVolHigh && this.dom.iconVolMute) {
-        this.dom.iconVolHigh.style.display = (vol === 0 || video.muted) ? 'none' : 'block';
-        this.dom.iconVolMute.style.display = (vol === 0 || video.muted) ? 'block' : 'none';
-      }
-    };
-
-    if (btnVolumeToggle) {
-      btnVolumeToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (video.muted || video.volume === 0) {
-          video.muted = false;
-          setVolume(this.lastVolume || 1.0);
-        } else {
-          this.lastVolume = video.volume;
-          video.muted = true;
-          setVolume(0);
-        }
-        this.resetControlsAutoDim();
-      });
-    }
-
-    if (volumeTrackWrapper) {
-      const updateVolumeTouch = (clientX) => {
-        const rect = volumeTrackWrapper.getBoundingClientRect();
-        const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-        setVolume(ratio);
-      };
-
-      volumeTrackWrapper.addEventListener('pointerdown', (e) => {
-        e.stopPropagation();
-        this.isAdjustingVolume = true;
-        volumeTrackWrapper.setPointerCapture(e.pointerId);
-        updateVolumeTouch(e.clientX);
-        this.resetControlsAutoDim();
-      });
-
-      volumeTrackWrapper.addEventListener('pointermove', (e) => {
-        if (!this.isAdjustingVolume) return;
-        e.stopPropagation();
-        updateVolumeTouch(e.clientX);
-        this.resetControlsAutoDim();
-      });
-
-      const endVolume = (e) => {
-        if (!this.isAdjustingVolume) return;
-        this.isAdjustingVolume = false;
-        try { volumeTrackWrapper.releasePointerCapture(e.pointerId); } catch (_) {}
-        this.resetControlsAutoDim();
-      };
-
-      volumeTrackWrapper.addEventListener('pointerup', endVolume);
-      volumeTrackWrapper.addEventListener('pointercancel', endVolume);
     }
 
     // Nút Quay lại trong player
@@ -923,9 +886,8 @@ class DoanhNghiepMotionController {
       });
     }
 
-    // Tự động mờ thanh điều khiển sau 4s khi video đang phát
-    demoVideoModal.addEventListener('pointermove', () => this.resetControlsAutoDim());
-    demoVideoModal.addEventListener('touchstart', () => this.resetControlsAutoDim(), { passive: true });
+    // Bất kỳ thao tác chạm/vuốt trên modal video -> hiện controls kèm timer 5s
+    demoVideoModal.addEventListener('pointerdown', () => this.showControlsWithTimer(5000));
   }
 
   updatePlayPauseUI(isPaused) {

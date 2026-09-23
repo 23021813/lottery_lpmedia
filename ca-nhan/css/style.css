@@ -1155,7 +1155,7 @@ body {
   cursor: pointer;
 }
 
-/* THANH ĐIỀU KHIỂN CHẠM DẠNG PHẲNG (FLAT TOUCH VIDEO CONTROLS) */
+/* THANH ĐIỀU KHIỂN CHẠM DẠNG PHẲNG (FLAT TOUCH VIDEO CONTROLS - MẶC ĐỊNH ẨN) */
 .video-touch-controls {
   position: absolute;
   bottom: 0;
@@ -1169,21 +1169,20 @@ body {
   padding: 0 clamp(20px, 3.5vw, 48px) 14px clamp(20px, 3.5vw, 48px);
   display: flex;
   flex-direction: column;
-  transition: opacity 0.35s var(--ease-smooth, ease), transform 0.35s var(--ease-smooth, ease);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(24px);
+  transition: opacity 0.35s var(--ease-smooth, ease), transform 0.35s var(--ease-smooth, ease), visibility 0.35s var(--ease-smooth, ease);
   user-select: none;
   -webkit-user-select: none;
 }
 
-.video-touch-controls.is-dimmed {
-  opacity: 0.12;
-  transform: translateY(18px);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .video-touch-controls:hover {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-  }
+.video-touch-controls.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 /* THANH TUA TIẾN ĐỘ CẢM ỨNG (TOUCH SCRUB BAR) */
@@ -1310,91 +1309,7 @@ body {
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* THỜI GIAN DẠNG PHẲNG */
-.video-time-display {
-  font-family: var(--font-family, 'Inter', sans-serif);
-  font-size: clamp(12px, 1vw, 14px);
-  font-weight: 500;
-  color: rgba(255, 235, 220, 0.85);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
-  user-select: none;
-}
 
-/* ĐIỀU KHIỂN ÂM THANH DẠNG TRƯỢT */
-.volume-slider-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.btn-volume-toggle {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  color: rgba(255, 235, 220, 0.88);
-  transition: color 0.2s ease, transform 0.2s ease;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .btn-volume-toggle:hover {
-    color: #FFFFFF;
-    transform: scale(1.08);
-  }
-}
-
-.btn-volume-toggle:active {
-  transform: scale(0.92);
-}
-
-.volume-track-wrapper {
-  position: relative;
-  width: clamp(80px, 9vw, 130px);
-  height: 24px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  touch-action: none;
-}
-
-.volume-track {
-  position: relative;
-  width: 100%;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
-  overflow: visible;
-  transition: height 0.2s ease;
-}
-
-.volume-track-wrapper:hover .volume-track,
-.volume-track-wrapper:active .volume-track {
-  height: 7px;
-}
-
-.volume-fill {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background: #ff6b35;
-  border-radius: 999px;
-  pointer-events: none;
-}
-
-.volume-thumb {
-  position: absolute;
-  top: 50%;
-  left: 100%;
-  transform: translate(-50%, -50%);
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #FFFFFF;
-  box-shadow: 0 0 8px rgba(255, 107, 53, 0.8);
-  pointer-events: none;
-}
 
 /* NÚT QUAY LẠI (DÙNG STYLE NÚT QUAY LẠI icon-back2.png) */
 .btn-ctrl-back {

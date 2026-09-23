@@ -2,25 +2,420 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=ca-nhan/index.html">
-  <script>
-    window.location.replace("ca-nhan/index.html");
-  </script>
-  <title>MSB Digital Universe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MSB Digital Universe - Interactive LED Kiosk Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    body {
+    :root {
+      --bg-dark: #040814;
+      --orange-primary: #ff6b35;
+      --orange-glow: rgba(255, 107, 53, 0.45);
+      --blue-primary: #0077ff;
+      --blue-glow: rgba(0, 119, 255, 0.45);
+      --text-white: #ffffff;
+      --text-muted: rgba(220, 235, 255, 0.7);
+      --card-bg: rgba(12, 20, 42, 0.75);
+      --card-border: rgba(100, 150, 255, 0.15);
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      background-color: #070302;
-      color: #f2e2d5;
-      font-family: sans-serif;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-white);
+      min-height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      padding: clamp(20px, 4vw, 40px);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Vòm ánh sáng vũ trụ hai bên */
+    body::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      left: 10%;
+      width: 50vw;
+      height: 50vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--orange-glow) 0%, transparent 65%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    body::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      right: 10%;
+      width: 50vw;
+      height: 50vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--blue-glow) 0%, transparent 65%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    .portal-container {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Logo & Header */
+    .portal-header {
+      margin-bottom: clamp(30px, 5vh, 50px);
+    }
+
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.8));
+    }
+
+    .portal-tagline {
+      font-size: clamp(12px, 1.2vw, 15px);
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #ffeedb;
+      margin-bottom: 8px;
+    }
+
+    .portal-title {
+      font-size: clamp(28px, 4vw, 54px);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #ffffff 30%, #ffd0b8 65%, #a6d4ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+      line-height: 1.15;
+    }
+
+    .portal-subtitle {
+      font-size: clamp(14px, 1.3vw, 17px);
+      color: var(--text-muted);
+      max-width: 650px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* 2 Portal Cards Grid */
+    .portal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: clamp(20px, 3vw, 36px);
+      width: 100%;
+      margin-bottom: clamp(24px, 4vh, 40px);
+    }
+
+    .portal-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: clamp(28px, 3.5vw, 42px);
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Thẻ Cá nhân (Sắc Cam) */
+    .card-ca-nhan {
+      border-top: 3px solid var(--orange-primary);
+    }
+    .card-ca-nhan:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(255, 107, 53, 0.65);
+      box-shadow: 0 24px 50px rgba(255, 107, 53, 0.28), 0 0 30px rgba(255, 107, 53, 0.2);
+    }
+
+    /* Thẻ Doanh nghiệp (Sắc Xanh) */
+    .card-doanh-nghiep {
+      border-top: 3px solid var(--blue-primary);
+    }
+    .card-doanh-nghiep:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(0, 119, 255, 0.65);
+      box-shadow: 0 24px 50px rgba(0, 119, 255, 0.28), 0 0 30px rgba(0, 119, 255, 0.2);
+    }
+
+    .card-top {
+      margin-bottom: 24px;
+    }
+
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .card-ca-nhan .card-badge {
+      background: rgba(255, 107, 53, 0.15);
+      color: #ff9d75;
+      border: 1px solid rgba(255, 107, 53, 0.35);
+    }
+
+    .card-doanh-nghiep .card-badge {
+      background: rgba(0, 119, 255, 0.15);
+      color: #70b3ff;
+      border: 1px solid rgba(0, 119, 255, 0.35);
+    }
+
+    .card-badge .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .card-ca-nhan .card-badge .dot {
+      background: var(--orange-primary);
+      box-shadow: 0 0 8px var(--orange-primary);
+    }
+
+    .card-doanh-nghiep .card-badge .dot {
+      background: var(--blue-primary);
+      box-shadow: 0 0 8px var(--blue-primary);
+    }
+
+    .card-title {
+      font-size: clamp(22px, 2.2vw, 30px);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      margin-bottom: 12px;
+      color: #ffffff;
+      line-height: 1.25;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+      font-size: 13px;
+      color: rgba(230, 240, 255, 0.85);
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .feature-list li svg {
+      flex-shrink: 0;
+    }
+
+    .card-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: all 0.25s ease;
+    }
+
+    .card-ca-nhan .card-btn {
+      background: linear-gradient(135deg, #ff6b35 0%, #e84d1d 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 18px rgba(255, 107, 53, 0.4);
+    }
+
+    .card-doanh-nghiep .card-btn {
+      background: linear-gradient(135deg, #0088ff 0%, #0055cc 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 18px rgba(0, 119, 255, 0.4);
+    }
+
+    .card-btn svg {
+      transition: transform 0.25s ease;
+    }
+
+    .portal-card:hover .card-btn svg {
+      transform: translateX(4px);
+    }
+
+    /* Footer info */
+    .portal-footer {
+      font-size: 13px;
+      color: rgba(200, 220, 255, 0.55);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .kiosk-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
     }
   </style>
 </head>
 <body>
-  <p>Đang chuyển hướng đến <a href="ca-nhan/index.html" style="color: #f78f4a;">Hành Tinh Số Cá Nhân - MSB...</a></p>
+
+  <main class="portal-container">
+    <!-- Header -->
+    <header class="portal-header">
+      <div class="brand-logo">
+        <svg width="150" height="42" viewBox="0 0 160 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 28C16.4183 28 20 24.4183 20 20C20 15.5817 16.4183 12 12 12C7.58172 12 4 15.5817 4 20C4 24.4183 7.58172 28 12 28Z" fill="#E84D1D"/>
+          <path d="M28 28C32.4183 28 36 24.4183 36 20C36 15.5817 32.4183 12 28 12C23.5817 12 20 15.5817 20 20C20 24.4183 23.5817 28 28 28Z" fill="#F37021"/>
+          <path d="M20 36C24.4183 36 28 32.4183 28 28C28 23.5817 24.4183 20 20 20C15.5817 20 12 23.5817 12 28C12 32.4183 15.5817 36 20 36Z" fill="#E84D1D"/>
+          <text x="48" y="28" fill="#FFFFFF" font-family="'Inter', sans-serif" font-weight="900" font-size="24" letter-spacing="1.5">MSB</text>
+        </svg>
+      </div>
+      <p class="portal-tagline">MSB DIGITAL UNIVERSE</p>
+      <h1 class="portal-title">Interactive LED Kiosk</h1>
+      <p class="portal-subtitle">
+        Cổng trải nghiệm không gian số tương tác đa điểm chuẩn tỷ lệ LED Kiosk 1535 × 576 px. Chọn phân hệ bên dưới để bắt đầu trải nghiệm:
+      </p>
+    </header>
+
+    <!-- Grid 2 Cards -->
+    <div class="portal-grid">
+      <!-- Thẻ Cá Nhân -->
+      <a href="ca-nhan/index.html" class="portal-card card-ca-nhan" id="btnGoCaNhan">
+        <div class="card-top">
+          <div class="card-badge">
+            <span class="dot"></span>
+            <span>Phân hệ Cá Nhân</span>
+          </div>
+          <h2 class="card-title">Hành Tinh Số<br>Cá Nhân</h2>
+          <p class="card-desc">
+            Vũ trụ giải pháp tài chính số hóa dành riêng cho khách hàng cá nhân hiện đại với sắc cam vũ trụ.
+          </p>
+          <ul class="feature-list">
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Hiệu năng & An toàn bảo mật</span>
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Cá nhân hóa dịch vụ M-First</span>
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Tối ưu tài chính: M-Sinh Lời & M-Triple</span>
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>MSB Rewards & Marketplace tiện ích</span>
+            </li>
+          </ul>
+        </div>
+        <div class="card-btn">
+          <span>Khám phá Cá Nhân</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+      </a>
+
+      <!-- Thẻ Doanh Nghiệp -->
+      <a href="doanh-nghiep/index.html" class="portal-card card-doanh-nghiep" id="btnGoDoanhNghiep">
+        <div class="card-top">
+          <div class="card-badge">
+            <span class="dot"></span>
+            <span>Phân hệ Doanh Nghiệp</span>
+          </div>
+          <h2 class="card-title">Hành Tinh Số<br>Doanh Nghiệp</h2>
+          <p class="card-desc">
+            Hệ sinh thái số toàn diện cho doanh nghiệp tăng trưởng bứt phá với sắc xanh công nghệ hiện đại.
+          </p>
+          <ul class="feature-list">
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0077ff" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Quản trị & phân quyền dịch vụ trực tuyến</span>
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0077ff" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Kết nối mọi đối tác trên một nền tảng</span>
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0077ff" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Tín dụng linh hoạt & Tái cấp hạn mức</span>
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0077ff" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Thẻ tín dụng MSB Visa & Chứng chỉ tiền gửi</span>
+            </li>
+          </ul>
+        </div>
+        <div class="card-btn">
+          <span>Khám phá Doanh Nghiệp</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="portal-footer">
+      <div class="kiosk-badge">
+        <span>🖥️ Độ phân giải chuẩn LED Kiosk: 1535 × 576 px</span>
+      </div>
+      <p>© 2026 MSB Interactive LED Universe. Powered by GSAP Motion Engine.</p>
+    </footer>
+  </main>
+
 </body>
 </html>

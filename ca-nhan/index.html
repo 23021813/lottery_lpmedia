@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hành Tinh Số Cá Nhân - MSB</title>
+  <title>Hành Tinh Số Cá Nhân - MSB Interactive LED</title>
 
   <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
@@ -18,86 +18,594 @@
     <!-- Sân khấu hiển thị tỷ lệ chuẩn màn hình LED 1535x576 -->
     <div class="stage" id="screenStage">
 
-      <!-- KHỐI TIÊU ĐỀ BÊN TRÁI -->
-      <header class="brand-heading">
-        <p class="sub-title">Hành tinh số cá nhân</p>
-        <div class="divider-line" aria-hidden="true"></div>
-        <h1 class="main-title">
-          <span>MSB</span>
-          <span>DIGITAL</span>
-          <span>BANK</span>
-        </h1>
-        <p class="sub-title">Vươn xa mọi hành trình</p>
-      </header>
+      <!-- ====================================================================
+           BACKGROUND LAYERS (Điều khiển chuyển cảnh GSAP)
+           ==================================================================== -->
+      <div class="stage-bg-layer" id="bgLayerMain"></div>
+      <div class="stage-bg-layer" id="bgLayerDetail"></div>
 
-      <!-- KHỐI 4 THẺ TÍNH NĂNG BÊN PHẢI -->
-      <section class="features-container" aria-label="Các giải pháp tính năng">
+      <!-- ====================================================================
+           0. TRANG CHỜ (IDLE / SCREENSAVER DRAFT - THUẦN CSS INLINE CAM ĐỎ)
+           ==================================================================== -->
+      <section class="screen-view is-active" id="screen-idle" data-target="screen-main" aria-label="Màn hình chờ MSB (Nháp)"
+        style="background: radial-gradient(circle at 50% 24%, #ff4d00 0%, #db2900 30%, #541103 66%, #080302 100%); cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; user-select: none; z-index: 30;">
 
-        <!-- Thẻ 1: Cá nhân hoá dịch vụ -->
-        <a href="ca-nhan-hoa.html" class="feature-card card-personal" tabindex="0">
-          <div class="card-header">
-            <span class="icon-badge">
-              <img src="images/icon-user.svg" alt="Cá nhân hoá" class="card-icon">
-            </span>
-            <span class="icon-badge arrow-badge">
-              <img src="images/icon-arrow-up-right.svg" alt="Mở rộng" class="card-arrow">
-            </span>
-          </div>
-          <div class="card-body">
-            <h2 class="card-title"><span>Cá nhân hoá<br>dịch vụ</span></h2>
-          </div>
-        </a>
+        <!-- Vòm cầu hào quang ánh sáng vũ trụ -->
+        <div style="position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 140%; height: 75%; border-radius: 50%; background: radial-gradient(ellipse at 50% 0%, rgba(255, 160, 80, 0.45) 0%, rgba(232, 77, 29, 0.2) 45%, transparent 75%); filter: blur(35px); pointer-events: none;"></div>
 
-        <!-- Thẻ 2: Tối ưu tài chính -->
-        <a href="toi-uu3.html" class="feature-card card-finance" tabindex="0">
-          <div class="card-header">
-            <span class="icon-badge">
-              <img src="images/icon-finance.svg" alt="Tối ưu tài chính" class="card-icon">
-            </span>
-            <span class="icon-badge arrow-badge">
-              <img src="images/icon-arrow-up-right.svg" alt="Mở rộng" class="card-arrow">
-            </span>
+        <div style="position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center;">
+          <!-- Logo MSB inline -->
+          <div style="margin-bottom: clamp(10px, 2vh, 18px); filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.7));">
+            <svg width="150" height="42" viewBox="0 0 160 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 28C16.4183 28 20 24.4183 20 20C20 15.5817 16.4183 12 12 12C7.58172 12 4 15.5817 4 20C4 24.4183 7.58172 28 12 28Z" fill="#E84D1D"/>
+              <path d="M28 28C32.4183 28 36 24.4183 36 20C36 15.5817 32.4183 12 28 12C23.5817 12 20 15.5817 20 20C20 24.4183 23.5817 28 28 28Z" fill="#F37021"/>
+              <path d="M20 36C24.4183 36 28 32.4183 28 28C28 23.5817 24.4183 20 20 20C15.5817 20 12 23.5817 12 28C12 32.4183 15.5817 36 20 36Z" fill="#E84D1D"/>
+              <text x="48" y="28" fill="#FFFFFF" font-family="'Inter', sans-serif" font-weight="900" font-size="24" letter-spacing="1.5">MSB</text>
+            </svg>
           </div>
-          <div class="card-body">
-            <h2 class="card-title"><span>Tối ưu<br>tài chính</span></h2>
-          </div>
-        </a>
 
-        <!-- Thẻ 3: Hiệu năng mạnh mẽ & An toàn bảo mật -->
-        <a href="hieu-nang.html" class="feature-card card-security" tabindex="0">
-          <div class="card-header">
-            <span class="icon-badge">
-              <img src="images/icon-security.svg" alt="Hiệu năng & Bảo mật" class="card-icon">
-            </span>
-            <span class="icon-badge arrow-badge">
-              <img src="images/icon-arrow-up-right.svg" alt="Mở rộng" class="card-arrow">
-            </span>
-          </div>
-          <div class="card-body">
-            <h2 class="card-title"><span>Hiệu năng<br>mạnh mẽ &amp;<br>An toàn bảo mật</span></h2>
-          </div>
-        </a>
+          <p style="font-family: var(--font-family); font-size: clamp(11px, 1.1vw, 15px); letter-spacing: 0.32em; color: rgba(255, 235, 220, 0.92); margin-bottom: clamp(6px, 1.4vh, 14px); text-transform: uppercase; font-weight: 500;">
+            MSB DIGITAL UNIVERSE
+          </p>
 
-        <!-- Thẻ 4: Hệ sinh thái tiện ích All in One -->
-        <a href="he-sinh-thai2.html" class="feature-card card-ecosystem" tabindex="0">
-          <div class="card-header">
-            <span class="icon-badge">
-              <img src="images/icon-ecosystem.svg" alt="Hệ sinh thái" class="card-icon">
-            </span>
-            <span class="icon-badge arrow-badge">
-              <img src="images/icon-arrow-up-right.svg" alt="Mở rộng" class="card-arrow">
+          <h1 style="font-family: var(--font-family); font-weight: 800; font-size: clamp(40px, 5.4vw, 80px); letter-spacing: 0.08em; text-transform: uppercase; color: #ffffff; text-shadow: 0 0 45px rgba(255, 140, 60, 0.75), 0 4px 24px rgba(0, 0, 0, 0.95); margin-bottom: clamp(16px, 3vh, 30px); line-height: 1;">
+            THE NEXT MOVE
+          </h1>
+
+          <div style="display: inline-flex; align-items: center; gap: 12px; padding: 10px 26px; background: rgba(15, 6, 3, 0.65); border: 1px solid rgba(255, 180, 110, 0.5); border-radius: 999px; backdrop-filter: blur(8px); box-shadow: 0 4px 24px rgba(0, 0, 0, 0.75), 0 0 18px rgba(232, 77, 29, 0.3);">
+            <span style="width: 10px; height: 10px; border-radius: 50%; background: #ff7832; box-shadow: 0 0 10px #ff7832, 0 0 18px #ff4500; display: inline-block;"></span>
+            <span style="font-size: clamp(11px, 0.95vw, 13px); font-weight: 600; letter-spacing: 0.14em; color: #ffeedb; text-transform: uppercase;">
+              CHẠM VÀO ĐIỂM NÀO TRÊN MÀN HÌNH CŨNG CHUYỂN TRANG
             </span>
           </div>
-          <div class="card-body">
-            <h2 class="card-title"><span>Hệ sinh thái<br>tiện ích<br>All in One</span></h2>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           1. TRANG CHÍNH (HÀNH TINH SỐ CÁ NHÂN - HUB)
+           ==================================================================== -->
+      <section class="screen-view" id="screen-main" aria-label="Trang chính Hành tinh số cá nhân">
+
+        <!-- Khối tiêu đề bên trái -->
+        <header class="brand-heading">
+          <p class="sub-title">Hành tinh số cá nhân</p>
+          <div class="divider-line" aria-hidden="true"></div>
+          <h1 class="main-title">
+            <span>MSB</span>
+            <span>DIGITAL</span>
+            <span>BANK</span>
+          </h1>
+          <p class="sub-title">Vươn xa mọi hành trình</p>
+        </header>
+
+        <!-- Khối 4 thẻ tính năng bên phải -->
+        <div class="features-container" aria-label="Các giải pháp tính năng">
+
+          <!-- Thẻ 1: Cá nhân hoá dịch vụ (Dẫn đến 1.2) -->
+          <div class="feature-card card-personal" tabindex="0" role="button" data-target="screen-1-2">
+            <div class="card-header">
+              <span class="icon-badge">
+                <img src="images/icon-user.svg" alt="Cá nhân hoá" class="card-icon">
+              </span>
+              <span class="icon-badge arrow-badge">
+                <img src="images/icon-arrow-up-right.svg" alt="Mở rộng" class="card-arrow">
+              </span>
+            </div>
+            <div class="card-body">
+              <h2 class="card-title"><span>Cá nhân hoá<br>dịch vụ</span></h2>
+            </div>
           </div>
-        </a>
+
+          <!-- Thẻ 2: Tối ưu tài chính (Dẫn đến 1.3) -->
+          <div class="feature-card card-finance" tabindex="0" role="button" data-target="screen-1-3">
+            <div class="card-header">
+              <span class="icon-badge">
+                <img src="images/icon-finance.svg" alt="Tối ưu tài chính" class="card-icon">
+              </span>
+              <span class="icon-badge arrow-badge">
+                <img src="images/icon-arrow-up-right.svg" alt="Mở rộng" class="card-arrow">
+              </span>
+            </div>
+            <div class="card-body">
+              <h2 class="card-title"><span>Tối ưu<br>tài chính</span></h2>
+            </div>
+          </div>
+
+          <!-- Thẻ 3: Hiệu năng mạnh mẽ & An toàn bảo mật (Dẫn đến 1.1) -->
+          <div class="feature-card card-security" tabindex="0" role="button" data-target="screen-1-1">
+            <div class="card-header">
+              <span class="icon-badge">
+                <img src="images/icon-security.svg" alt="Hiệu năng & Bảo mật" class="card-icon">
+              </span>
+              <span class="icon-badge arrow-badge">
+                <img src="images/icon-arrow-up-right.svg" alt="Mở rộng" class="card-arrow">
+              </span>
+            </div>
+            <div class="card-body">
+              <h2 class="card-title"><span>Hiệu năng<br>mạnh mẽ &amp;<br>An toàn bảo mật</span></h2>
+            </div>
+          </div>
+
+          <!-- Thẻ 4: Hệ sinh thái tiện ích All in One (Dẫn đến 1.4) -->
+          <div class="feature-card card-ecosystem" tabindex="0" role="button" data-target="screen-1-4">
+            <div class="card-header">
+              <span class="icon-badge">
+                <img src="images/icon-ecosystem.svg" alt="Hệ sinh thái" class="card-icon">
+              </span>
+              <span class="icon-badge arrow-badge">
+                <img src="images/icon-arrow-up-right.svg" alt="Mở rộng" class="card-arrow">
+              </span>
+            </div>
+            <div class="card-body">
+              <h2 class="card-title"><span>Hệ sinh thái<br>tiện ích<br>All in One</span></h2>
+            </div>
+          </div>
+
+        </div>
 
       </section>
+
+      <!-- ====================================================================
+           1.1. HIỆU NĂNG MẠNH MẼ & AN TOÀN BẢO MẬT
+           ==================================================================== -->
+      <section class="screen-view screen-detail" id="screen-1-1" aria-label="Hiệu năng mạnh mẽ & An toàn bảo mật">
+        <header class="detail-heading ecosystem-heading">
+          <h1 class="main-title">
+            <span>HIỆU NĂNG MẠNH MẼ</span>
+            <span>&amp; AN TOÀN BẢO MẬT</span>
+          </h1>
+          <div class="divider-line" aria-hidden="true"></div>
+        </header>
+
+        <div class="detail-cards-container dual-column-container">
+          <!-- Cột 1: Bảo vệ đa lớp -->
+          <div class="feature-column">
+            <article class="detail-card" tabindex="0">
+              <div class="detail-card-icon">
+                <img src="images/icon-security-3d.png" alt="Bảo vệ đa lớp" class="img-icon-3d">
+              </div>
+              <div class="detail-card-body">
+                <p class="detail-card-desc">
+                  <span>Bảo vệ đa lớp</span>
+                </p>
+              </div>
+            </article>
+          </div>
+
+          <!-- Cột 2: Chủ động cảnh báo -->
+          <div class="feature-column">
+            <article class="detail-card" tabindex="0">
+              <div class="detail-card-icon">
+                <img src="images/icon-notifi-3d.png" alt="Chủ động cảnh báo" class="img-icon-3d">
+              </div>
+              <div class="detail-card-body">
+                <p class="detail-card-desc">
+                  <span>Chủ động cảnh báo</span>
+                </p>
+              </div>
+            </article>
+          </div>
+
+          <!-- Cột 3: Xác thực nâng cao -->
+          <div class="feature-column">
+            <article class="detail-card" tabindex="0">
+              <div class="detail-card-icon">
+                <img src="images/icon-check-3d.png" alt="Xác thực nâng cao" class="img-icon-3d">
+              </div>
+              <div class="detail-card-body">
+                <p class="detail-card-desc">
+                  <span>Xác thực nâng cao thông qua</span><br>
+                  <span>câu hỏi bảo mật</span>
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <footer class="detail-action-container" data-demo="true" role="button" tabindex="0">
+          <div class="chevron-indicator" aria-hidden="true">
+            <img src="images/icon-chevron-down.svg" alt="" class="icon-down">
+          </div>
+          <button class="btn-cta" role="button" data-demo="true">
+            Trung tâm bảo mật
+          </button>
+        </footer>
+      </section>
+
+      <!-- ====================================================================
+           1.2. CÁ NHÂN HÓA DỊCH VỤ
+           ==================================================================== -->
+      <section class="screen-view screen-detail" id="screen-1-2" aria-label="Cá nhân hóa dịch vụ">
+        <header class="detail-heading">
+          <h1 class="main-title">
+            <span>CÁ NHÂN HÓA DỊCH VỤ</span>
+          </h1>
+          <div class="divider-line" aria-hidden="true"></div>
+          <p class="sub-title">Cung cấp trải nghiệm cá nhân hóa</p>
+        </header>
+
+        <div class="detail-cards-container">
+          <!-- Thẻ 1: Đa dạng giao diện -->
+          <article class="detail-card" tabindex="0">
+            <div class="detail-card-icon">
+              <img src="images/icon-gallery-3d.png" alt="Đa dạng giao diện" class="img-icon-3d">
+            </div>
+            <div class="detail-card-body">
+              <p class="detail-card-desc">
+                Đa dạng giao diện,<br>
+                cá nhân hóa<br>
+                theo từng phong cách
+              </p>
+            </div>
+          </article>
+
+          <!-- Thẻ 2: Bộ theme riêng M-first -->
+          <article class="detail-card" tabindex="0">
+            <div class="detail-card-icon">
+              <img src="images/icon-theme-3d.png" alt="Bộ theme riêng" class="img-icon-3d">
+            </div>
+            <div class="detail-card-body">
+              <p class="detail-card-desc">
+                Bộ theme riêng<br>
+                dành cho<br>
+                khách hàng M-first
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <footer class="detail-action-container" data-demo="true" role="button" tabindex="0">
+          <div class="chevron-indicator" aria-hidden="true">
+            <img src="images/icon-chevron-down.svg" alt="" class="icon-down">
+          </div>
+          <button class="btn-cta" role="button" data-demo="true">
+            Thay đổi giao diện
+          </button>
+        </footer>
+      </section>
+
+      <!-- ====================================================================
+           1.3. TỐI ƯU TÀI CHÍNH (HUB 2 CỘT: M-SINH LỜI & M-TRIPLE)
+           ==================================================================== -->
+      <section class="screen-view screen-detail" id="screen-1-3" aria-label="Tối ưu tài chính">
+        <header class="detail-heading">
+          <h1 class="main-title">
+            <span>TỐI ƯU TÀI CHÍNH</span>
+          </h1>
+          <div class="divider-line" aria-hidden="true"></div>
+          <p class="sub-title">Tối đa hóa lợi ích từ các sản phẩm tài chính</p>
+        </header>
+
+        <div class="detail-cards-container dual-column-container">
+          <!-- Cột 1: M-Sinh lời -->
+          <div class="feature-column">
+            <article class="detail-card" tabindex="0" role="button" data-target="screen-1-3-1">
+              <div class="detail-card-icon">
+                <img src="images/icon-dongtien-3d.png" alt="Tối ưu dòng tiền" class="img-icon-3d">
+              </div>
+              <div class="detail-card-body">
+                <p class="detail-card-desc">
+                  <span>Tối ưu dòng tiền nhàn rỗi</span><br>
+                  <span>của khách hàng giúp KH</span><br>
+                  <span>sinh lời không ngừng</span>
+                </p>
+              </div>
+            </article>
+            <div class="column-action" data-target="screen-1-3-1" role="button">
+              <div class="chevron-indicator" aria-hidden="true">
+                <img src="images/icon-chevron-down.svg" alt="" class="icon-down">
+              </div>
+              <button class="btn-cta" role="button" data-target="screen-1-3-1">
+                M-Sinh lời
+              </button>
+            </div>
+          </div>
+
+          <!-- Cột 2: M-Triple -->
+          <div class="feature-column">
+            <article class="detail-card" tabindex="0" role="button" data-target="screen-1-3-2">
+              <div class="detail-card-icon">
+                <img src="images/icon-giaiphao-3d.png" alt="Giải pháp tín dụng" class="img-icon-3d">
+              </div>
+              <div class="detail-card-body">
+                <p class="detail-card-desc">
+                  <span>Mang đến trọn bộ</span><br>
+                  <span>giải pháp tín dụng, hành trình</span><br>
+                  <span>được 100% số hóa</span><br>
+                  <span>trên MSB Digital Bank</span>
+                </p>
+              </div>
+            </article>
+            <div class="column-action" data-target="screen-1-3-2" role="button">
+              <div class="chevron-indicator" aria-hidden="true">
+                <img src="images/icon-chevron-down.svg" alt="" class="icon-down">
+              </div>
+              <button class="btn-cta" role="button" data-target="screen-1-3-2">
+                M-Triple
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           1.3.1. M-SINH LỜI (3 THẺ SỐ + ĐẦU ĐIỆN THOẠI TRẢI NGHIỆM)
+           ==================================================================== -->
+      <section class="screen-view screen-rewards" id="screen-1-3-1" aria-label="M-Sinh Lời">
+        <header class="detail-heading rewards-heading">
+          <h1 class="main-title">
+            <span>M-SINH LỜI</span>
+          </h1>
+          <div class="divider-line" aria-hidden="true"></div>
+          <p class="sub-title">Tự động sinh lời trên dòng tiền trong tài khoản</p>
+          <p class="sub-title2">Giúp khách hàng tận dụng dòng tiền nhàn rỗi để sinh lời không ngừng</p>
+        </header>
+
+        <div class="rewards-cards-container">
+          <!-- Thẻ 1 -->
+          <article class="rewards-card" tabindex="0" data-demo="true" role="button">
+            <div class="rewards-card-num">1</div>
+            <div class="rewards-card-body">
+              <p class="rewards-card-desc">
+                Tối ưu dòng tiền<br>
+                &amp; Lợi suất hấp dẫn
+              </p>
+              <p class="rewards-card-desc2">
+                Tự động sinh lời mỗi ngày, lợi suất hấp dẫn lên tới 4%
+              </p>
+            </div>
+          </article>
+
+          <!-- Thẻ 2 -->
+          <article class="rewards-card" tabindex="0" data-demo="true" role="button">
+            <div class="rewards-card-num">2</div>
+            <div class="rewards-card-body">
+              <p class="rewards-card-desc">
+                Linh hoạt thanh khoản<br>
+                &amp; Quản trị tài khoản
+              </p>
+              <p class="rewards-card-desc2">
+                Tự động sinh lời mỗi ngày, lợi suất hấp dẫn lên tới 4%
+              </p>
+            </div>
+          </article>
+
+          <!-- Thẻ 3 -->
+          <article class="rewards-card" tabindex="0" data-demo="true" role="button">
+            <div class="rewards-card-num">3</div>
+            <div class="rewards-card-body">
+              <p class="rewards-card-desc">
+                Sinh lời<br>
+                an toàn
+              </p>
+              <p class="rewards-card-desc2">
+                Tự động sinh lời mỗi ngày, lợi suất hấp dẫn lên tới 4%
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <footer class="rewards-action-container" data-demo="true" role="button" tabindex="0">
+          <div class="chevron-indicator" aria-hidden="true">
+            <img src="images/icon-chevron-down.svg" alt="" class="icon-down">
+          </div>
+          <span class="rewards-action-label" data-demo="true">TRẢI NGHIỆM NGAY</span>
+          <div class="phone-mockup-wrapper phone-interactive-peek" data-demo="true" role="button" tabindex="0" title="Chạm để mở mô hình điện thoại">
+            <img src="images/phone_mockup.png" alt="Trải nghiệm ứng dụng MSB" class="img-phone-mockup">
+          </div>
+        </footer>
+      </section>
+
+      <!-- ====================================================================
+           1.3.2. M-TRIPLE (3 THẺ SỐ + ĐẦU ĐIỆN THOẠI TRẢI NGHIỆM)
+           ==================================================================== -->
+      <section class="screen-view screen-rewards" id="screen-1-3-2" aria-label="M-Triple">
+        <header class="detail-heading rewards-heading">
+          <h1 class="main-title">
+            <span>M-TRIPLE</span>
+          </h1>
+          <div class="divider-line" aria-hidden="true"></div>
+          <p class="sub-title2">
+            Giải pháp combo vay tín chấp - thấu chi - thẻ tín dụng online<br>
+            nhanh gọn, tiện lợi, và an toàn
+          </p>
+        </header>
+
+        <div class="rewards-cards-container">
+          <!-- Thẻ 1 -->
+          <article class="rewards-card" tabindex="0" data-demo="true" role="button">
+            <div class="rewards-card-num">1</div>
+            <div class="rewards-card-body">
+              <p class="rewards-card-desc">
+                Phê duyệt<br>
+                Nhanh chóng<br>
+                online
+              </p>
+            </div>
+          </article>
+
+          <!-- Thẻ 2 -->
+          <article class="rewards-card" tabindex="0" data-demo="true" role="button">
+            <div class="rewards-card-num">2</div>
+            <div class="rewards-card-body">
+              <p class="rewards-card-desc">
+                Linh hoạt<br>
+                lựa chọn hạn mức<br>
+                cho từng sản phẩm vay
+              </p>
+            </div>
+          </article>
+
+          <!-- Thẻ 3 -->
+          <article class="rewards-card" tabindex="0" data-demo="true" role="button">
+            <div class="rewards-card-num">3</div>
+            <div class="rewards-card-body">
+              <p class="rewards-card-desc">
+                Tích hợp ký số<br>
+                đảm bảo về bảo mật<br>
+                và pháp lý
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <footer class="rewards-action-container" data-demo="true" role="button" tabindex="0">
+          <div class="chevron-indicator" aria-hidden="true">
+            <img src="images/icon-chevron-down.svg" alt="" class="icon-down">
+          </div>
+          <span class="rewards-action-label" data-demo="true">TRẢI NGHIỆM NGAY</span>
+          <div class="phone-mockup-wrapper phone-interactive-peek" data-demo="true" role="button" tabindex="0" title="Chạm để mở mô hình điện thoại">
+            <img src="images/phone_mockup.png" alt="Trải nghiệm ứng dụng MSB" class="img-phone-mockup">
+          </div>
+        </footer>
+      </section>
+
+      <!-- ====================================================================
+           1.4. HỆ SINH THÁI TIỆN ÍCH ALL IN ONE (HUB 2 CỘT)
+           ==================================================================== -->
+      <section class="screen-view screen-detail" id="screen-1-4" aria-label="Hệ sinh thái tiện ích All In One">
+        <header class="detail-heading ecosystem-heading">
+          <h1 class="main-title">
+            <span>HỆ SINH THÁI TIỆN ÍCH</span>
+            <span>ALL IN ONE</span>
+          </h1>
+          <div class="divider-line" aria-hidden="true"></div>
+        </header>
+
+        <div class="detail-cards-container dual-column-container">
+          <!-- Cột 1: MSB Rewards -->
+          <div class="feature-column">
+            <article class="detail-card" tabindex="0" role="button" data-target="screen-1-4-1">
+              <div class="detail-card-icon">
+                <img src="images/icon-star-3d.png" alt="Tích điểm dễ dàng" class="img-icon-3d">
+              </div>
+              <div class="detail-card-body">
+                <p class="detail-card-desc">
+                  <span>Tích điểm dễ dàng,</span><br>
+                  <span>tận hưởng lợi ích thiết thực</span>
+                </p>
+              </div>
+            </article>
+            <div class="column-action" data-target="screen-1-4-1" role="button">
+              <div class="chevron-indicator" aria-hidden="true">
+                <img src="images/icon-chevron-down.svg" alt="" class="icon-down">
+              </div>
+              <button class="btn-cta" role="button" data-target="screen-1-4-1">
+                MSB Rewards
+              </button>
+            </div>
+          </div>
+
+          <!-- Cột 2: Marketplace (Nguyên bản tĩnh) -->
+          <div class="feature-column">
+            <article class="detail-card" tabindex="0">
+              <div class="detail-card-icon">
+                <img src="images/icon-hub-3d.png" alt="Kết nối hệ sinh thái tiện ích" class="img-icon-3d">
+              </div>
+              <div class="detail-card-body">
+                <p class="detail-card-desc">
+                  <span>Kết nối hệ sinh thái tiện ích</span><br>
+                  <span>ngay trên DigiBank</span>
+                </p>
+              </div>
+            </article>
+            <div class="column-action">
+              <div class="chevron-indicator" aria-hidden="true">
+                <img src="images/icon-chevron-down.svg" alt="" class="icon-down">
+              </div>
+              <a href="#" class="btn-cta" role="button">
+                Marketplace
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           1.4.1. MSB REWARDS (3 THẺ TÍCH ĐIỂM + ĐẦU ĐIỆN THOẠI TRẢI NGHIỆM)
+           ==================================================================== -->
+      <section class="screen-view screen-rewards" id="screen-1-4-1" aria-label="MSB Rewards">
+        <header class="detail-heading rewards-heading">
+          <h1 class="main-title">
+            <span>MSB REWARDS</span>
+          </h1>
+          <div class="divider-line" aria-hidden="true"></div>
+          <p class="sub-title">
+            Tối đa giá trị từ mỗi giao dịch<br>
+            với hệ sinh thái điểm thưởng MSB Rewards
+          </p>
+        </header>
+
+        <div class="rewards-cards-container">
+          <!-- Thẻ 1 -->
+          <article class="rewards-card" tabindex="0" data-demo="true" role="button">
+            <div class="rewards-card-num">1</div>
+            <div class="rewards-card-body">
+              <p class="rewards-card-desc">
+                Giao dịch càng nhiều,<br>
+                tích điểm<br>
+                càng nhiều
+              </p>
+            </div>
+          </article>
+
+          <!-- Thẻ 2 -->
+          <article class="rewards-card" tabindex="0" data-demo="true" role="button">
+            <div class="rewards-card-num">2</div>
+            <div class="rewards-card-body">
+              <p class="rewards-card-desc">
+                Chủ động<br>
+                sử dụng điểm<br>
+                theo nhu cầu
+              </p>
+            </div>
+          </article>
+
+          <!-- Thẻ 3 -->
+          <article class="rewards-card" tabindex="0" data-demo="true" role="button">
+            <div class="rewards-card-num">3</div>
+            <div class="rewards-card-body">
+              <p class="rewards-card-desc">
+                Đổi điểm<br>
+                thành những<br>
+                giá trị thiết thực
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <footer class="rewards-action-container" data-demo="true" role="button" tabindex="0">
+          <div class="chevron-indicator" aria-hidden="true">
+            <img src="images/icon-chevron-down.svg" alt="" class="icon-down">
+          </div>
+          <span class="rewards-action-label" data-demo="true">TRẢI NGHIỆM NGAY</span>
+          <div class="phone-mockup-wrapper phone-interactive-peek" data-demo="true" role="button" tabindex="0" title="Chạm để mở mô hình điện thoại">
+            <img src="images/phone_mockup.png" alt="Trải nghiệm ứng dụng MSB" class="img-phone-mockup">
+          </div>
+        </footer>
+      </section>
+
+      <!-- ====================================================================
+           DEMO SCREEN OVERLAY (MÔ HÌNH ĐIỆN THOẠI TRƯỢT LÊN TỪ DƯỚI)
+           ==================================================================== -->
+      <div class="demo-modal-layer" id="screen-demo" aria-hidden="true">
+        <div class="demo-backdrop" id="demoBackdrop"></div>
+        <div class="demo-phone-container" id="demoPhoneContainer">
+          <div class="my-phone-gold">
+            <img src="images/my-phone.png" alt="Mô hình điện thoại MSB DigiBank">
+          </div>
+        </div>
+      </div>
 
     </div>
 
   </main>
+
+  <!-- GSAP Animation Library (Offline Local) -->
+  <script src="js/gsap.min.js"></script>
+
+  <!-- Core State Controller & Router -->
+  <script type="module" src="js/app.js"></script>
 
 </body>
 

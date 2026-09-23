@@ -1,0 +1,723 @@
+/* ==========================================================================
+   DESIGN SYSTEM & TOKENS — HÀNH TINH SỐ CÁ NHÂN (MSB)
+   ĐỘ PHÂN GIẢI CHUẨN MÀN HÌNH LED: 1535 x 576 px (Tỷ lệ ~ 8:3 / 2.665:1)
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,700;14..32,800&display=swap');
+
+:root {
+  --bg-space: #070302;
+  --border-card: rgba(255, 255, 255, 0.18);
+  --border-card-hover: rgba(255, 195, 140, 0.65);
+  --text-primary: #F2E2D5;
+  --font-family: "Inter", sans-serif;
+  --ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-space);
+  font-family: var(--font-family);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   STAGE CONTAINER (KHUNG MÀN HÌNH LED 1535x576)
+   ========================================================================== */
+.stage-wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at 65% 50%, #2a1107 0%, #0c0402 60%, #050201 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.stage {
+  position: relative;
+  width: min(100vw, calc(100vh * (1535 / 576)));
+  aspect-ratio: 1535 / 576;
+  background-color: #0c0402;
+  background-image: url('../images/bg_globe.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+}
+
+/* Nền các trang chi tiết / tính năng */
+.stage.stage-detail,
+.stage.stage-rewards {
+  background-image: url('../images/bg_canhanhoa.jpg');
+}
+
+/* ==========================================================================
+   TYPOGRAPHY CHUNG
+   ========================================================================== */
+.main-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-family);
+  font-weight: 800;
+  font-size: clamp(28px, 3.7vw, 52px);
+  line-height: 1.22;
+  padding: 0.12em 0;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #f9eedf 0%, #d6b487 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.main-title span {
+  display: block;
+}
+
+/* Đường gạch phân cách vàng kim */
+.divider-line {
+  width: clamp(70px, 7.5vw, 115px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(212, 163, 115, 0.9) 50%, transparent 100%);
+  margin: clamp(7px, 1.4vh, 12px) auto 13px auto;
+  opacity: 0.95;
+}
+
+.sub-title {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: clamp(11px, 1.1vw, 15px);
+  letter-spacing: 0.1em;
+  color: #f9e7d0;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+}
+
+/* ==========================================================================
+   CẤU TRÚC CARD GLASSMORPHISM CHUNG & HIỆU ỨNG TƯƠNG TÁC
+   ========================================================================== */
+.feature-card,
+.detail-card,
+.rewards-card {
+  border: 1px solid var(--border-card);
+  background: rgba(77, 39, 17, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  cursor: pointer;
+  outline: none;
+  text-decoration: none;
+  user-select: none;
+  transition: transform 0.35s var(--ease-smooth), border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+}
+
+.feature-card:focus-visible,
+.detail-card:focus-visible,
+.rewards-card:focus-visible {
+  border-color: rgba(255, 200, 150, 0.9);
+  box-shadow: 0 0 0 2px rgba(255, 160, 80, 0.5), 0 16px 40px rgba(0, 0, 0, 0.7);
+}
+
+.feature-card:hover,
+.detail-card:hover,
+.rewards-card:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.75), 0 0 30px rgba(255, 120, 50, 0.38), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+}
+
+/* Hiệu ứng màu chữ chuyển sắc trên thẻ */
+.card-title span,
+.detail-card-desc,
+.rewards-card-desc {
+  background: linear-gradient(180deg, #f9e7d0 0%, #d8b78a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: color 0.3s ease;
+}
+
+.feature-card:hover .card-title span,
+.detail-card:hover .detail-card-desc,
+.rewards-card:hover .rewards-card-desc {
+  color: #FFFFFF;
+  -webkit-text-fill-color: #FFFFFF;
+}
+
+/* ==========================================================================
+   TRANG CHỦ (INDEX.HTML) — BRAND HEADING & 4 THẺ CHỨC NĂNG
+   ========================================================================== */
+.brand-heading {
+  position: absolute;
+  top: 50%;
+  left: 9%;
+  width: 39%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  z-index: 5;
+  user-select: none;
+}
+
+.features-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.feature-card {
+  position: absolute;
+  width: 13.48%;
+  height: 35.16%;
+  padding: clamp(12px, 2.6vh, 20px) clamp(12px, 1.1vw, 18px);
+  border-radius: clamp(16px, 1.6vw, 24px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.card-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icon-badge {
+  width: clamp(26px, 2.6vw, 40px);
+  height: clamp(26px, 2.6vw, 40px);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.icon-badge img {
+  width: clamp(13px, 1.25vw, 20px);
+  height: clamp(13px, 1.25vw, 20px);
+  display: block;
+  opacity: 1;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.icon-badge.arrow-badge img {
+  width: clamp(13px, 1.25vw, 15px);
+  height: clamp(13px, 1.25vw, 15px);
+}
+
+.feature-card:hover .icon-badge {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.feature-card:hover .arrow-badge img {
+  transform: translate(2px, -2px);
+}
+
+.card-body {
+  width: 100%;
+  text-align: center;
+  margin-top: auto;
+  padding-bottom: 30px;
+}
+
+.card-title {
+  font-family: var(--font-family);
+  font-weight: 700;
+  font-size: clamp(11.5px, 1.2vw, 24px);
+  line-height: 1.34;
+  color: var(--text-primary);
+}
+
+.card-title span {
+  display: block;
+}
+
+/* Tọa độ 4 khối card trên trang chủ */
+.card-personal {
+  left: 48.83%;
+  top: 7.03%;
+}
+
+.card-finance {
+  left: 69.34%;
+  top: 19.53%;
+}
+
+.card-security {
+  left: 44.14%;
+  top: 49.48%;
+}
+
+.card-ecosystem {
+  left: 64.26%;
+  top: 61.72%;
+}
+
+/* ==========================================================================
+   TIÊU ĐỀ CÁC TRANG CHI TIẾT (.detail-heading)
+   ========================================================================== */
+.detail-heading {
+  position: absolute;
+  top: 7%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  text-align: center;
+  z-index: 5;
+  user-select: none;
+}
+
+.detail-heading .main-title {
+  font-size: clamp(24px, 3.1vw, 48px);
+  letter-spacing: 0.04em;
+  padding: 0;
+}
+
+.detail-heading .sub-title {
+  text-transform: none;
+  font-size: clamp(12px, 1.15vw, 18px);
+  letter-spacing: 0.08em;
+  font-weight: 400;
+  color: #fff;
+}
+
+.detail-heading.rewards-heading .sub-title {
+  font-size: clamp(12px, 1.2vw, 18px);
+  letter-spacing: 0.04em;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.detail-heading .sub-title2 {
+  text-transform: none;
+  font-size: clamp(12px, 1vw, 14px);
+  margin-top: 15px;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #fff;
+}
+
+/* Biến thể tiêu đề hệ sinh thái & hiệu năng */
+.ecosystem-heading {
+  top: 6.5%;
+}
+
+.ecosystem-heading .main-title {
+  font-size: clamp(20px, 2.5vw, 38px);
+  line-height: 1.25;
+}
+
+/* ==========================================================================
+   KHỐI DETAIL CARDS (ICON 3D + NỘI DUNG)
+   ========================================================================== */
+.detail-cards-container {
+  position: absolute;
+  top: 32.5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(20px, 2.8vw, 42px);
+  z-index: 10;
+}
+
+.detail-card {
+  width: clamp(190px, 16.2vw, 250px);
+  height: stretch;
+  border-radius: clamp(18px, 1.8vw, 26px);
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 20px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  align-content: flex-start;
+  padding: clamp(16px, 2.5vh, 24px) clamp(14px, 1.2vw, 20px);
+}
+
+.detail-card-icon {
+  width: 100%;
+  height: clamp(55px, 4.5vw, 75px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.img-icon-3d {
+  max-width: clamp(55px, 4.2vw, 70px);
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.55));
+  transition: transform 0.35s var(--ease-smooth);
+}
+
+.detail-card:hover .img-icon-3d {
+  transform: scale(1.08) translateY(-2px);
+}
+
+.detail-card-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.detail-card-desc {
+  font-family: var(--font-family);
+  font-size: clamp(12px, 1.08vw, 17px);
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+
+/* Bố cục cột đa năng (he-sinh-thai2, hieu-nang, toi-uu3) */
+.feature-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: stretch;
+}
+
+.dual-column-container .detail-card {
+  width: clamp(230px, 18vw, 290px);
+}
+
+.dual-column-container .detail-card .detail-card-icon {
+  height: clamp(60px, 5.5vw, 85px);
+}
+
+.dual-column-container .detail-card .img-icon-3d {
+  max-width: clamp(55px, 5.2vw, 80px);
+  object-fit: contain;
+}
+
+/* ==========================================================================
+   KHỐI REWARDS CARDS (CÓ SỐ THỨ TỰ 1, 2, 3)
+   ========================================================================== */
+.rewards-cards-container {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(14px, 1.8vw, 28px);
+  z-index: 10;
+}
+
+.rewards-card {
+  width: clamp(190px, 16.2vw, 250px);
+  height: stretch;
+  border-radius: clamp(18px, 1.8vw, 26px);
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 20px;
+  align-items: center;
+  justify-content: left;
+  text-align: left;
+  padding: clamp(16px, 2.5vh, 24px) clamp(14px, 1.2vw, 20px);
+}
+
+.rewards-card-num {
+  font-family: var(--font-family);
+  font-weight: 700;
+  font-size: clamp(28px, 2.8vw, 44px);
+  line-height: 1;
+  color: #FFFFFF;
+  background: linear-gradient(180deg, #f9eedf 0%, #d6b487 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.rewards-card-body {
+  width: 100%;
+}
+
+.rewards-card-desc {
+  font-family: var(--font-family);
+  font-size: clamp(12px, 1.2vw, 18px);
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+
+.rewards-card-desc2 {
+  text-transform: none;
+  font-size: clamp(12px, 1vw, 13px);
+  margin-top: 10px;
+  letter-spacing: 0.04em;
+  font-weight: 400;
+  line-height: 1.45;
+  color: #fff;
+}
+
+/* ==========================================================================
+   KHỐI NÚT HÀNH ĐỘNG & ĐIỀU HƯỚNG DƯỚI CÙNG
+   ========================================================================== */
+.detail-action-container,
+.rewards-action-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+}
+
+.detail-action-container {
+  bottom: 11.5%;
+}
+
+.rewards-action-container {
+  bottom: 0;
+  width: 100%;
+}
+
+.chevron-indicator {
+  margin-bottom: clamp(8px, 2vh, 15px);
+}
+
+.icon-down {
+  width: clamp(14px, 1.2vw, 18px);
+  height: clamp(14px, 1.2vw, 18px);
+  display: block;
+  animation: bounceChevron 2s infinite ease-in-out;
+}
+
+@keyframes bounceChevron {
+
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.75;
+  }
+
+  50% {
+    transform: translateY(4px);
+    opacity: 1;
+  }
+}
+
+.btn-back {
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+}
+
+
+.btn-cta {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f78f4a 0%, #f27e41 50%, #e55729 100%);
+  color: #FFFFFF;
+  font-family: var(--font-family);
+  font-size: clamp(13px, 1.15vw, 20px);
+  font-weight: 600;
+  padding: clamp(9px, 2.5vh, 15px) clamp(28px, 3.5vw, 44px);
+  text-decoration: none;
+  box-shadow: 0 8px 25px rgba(232, 77, 29, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: transform 0.3s var(--ease-smooth), box-shadow 0.3s ease, filter 0.3s ease;
+  user-select: none;
+}
+
+.btn-cta:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 32px rgba(232, 77, 29, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  filter: brightness(1.06);
+}
+
+/* Nút bấm theo từng cột */
+.column-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: clamp(10px, 4vh, 25px);
+}
+
+.column-action .btn-cta {
+  min-width: clamp(145px, 12.2vw, 160px);
+  padding: clamp(8px, 1.6vh, 12px) clamp(22px, 2vw, 25px);
+  font-size: clamp(13px, 1vw, 18px);
+}
+
+/* Mô hình điện thoại */
+.rewards-action-label {
+  font-family: var(--font-family);
+  font-size: clamp(9px, 0.8vw, 12px);
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #D36C27;
+  margin-bottom: clamp(3px, 0.8vh, 6px);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+  user-select: none;
+}
+
+.phone-mockup-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  line-height: 0;
+}
+
+.img-phone-mockup {
+  width: clamp(160px, 16vw, 240px);
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 -4px 18px rgba(232, 77, 29, 0.3));
+  transition: transform 0.3s var(--ease-smooth);
+}
+
+.phone-mockup-wrapper:hover .img-phone-mockup {
+  transform: translateY(-3px);
+}
+
+/* ==========================================================================
+   TRANG MY-PHONE
+   ========================================================================== */
+.my-phone-gold {
+  position: absolute;
+  top: 2%;
+  bottom: 2%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(20px, 2.8vw, 42px);
+  z-index: 10;
+}
+
+.my-phone-gold img {
+  max-height: 100%;
+  height: auto;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* ==========================================================================
+   RESPONSIVE (Cho thiết bị di động)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .stage-wrapper {
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+
+  .stage {
+    width: 100vw;
+    aspect-ratio: auto;
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .brand-heading,
+  .detail-heading {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    transform: none;
+    margin-bottom: 24px;
+  }
+
+  .ecosystem-heading {
+    margin-bottom: 20px;
+  }
+
+  .features-container,
+  .detail-cards-container,
+  .rewards-cards-container {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+
+  .detail-cards-container.dual-column-container {
+    gap: 24px;
+  }
+
+  .feature-column {
+    width: 100%;
+  }
+
+  .feature-card {
+    position: relative;
+    left: auto !important;
+    top: auto !important;
+    width: 85%;
+    max-width: 320px;
+    height: auto;
+    min-height: 130px;
+  }
+
+  .detail-card,
+  .rewards-card {
+    width: 85%;
+    max-width: 300px;
+    height: auto;
+    min-height: 160px;
+  }
+
+  .detail-action-container,
+  .rewards-action-container {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    margin-top: 15px;
+  }
+}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Certificate Document -->
+  <rect x="3.5" y="4.5" width="22" height="16" rx="2.5" />
+  <line x1="7.5" y1="9" x2="16.5" y2="9" />
+  <line x1="7.5" y1="13" x2="12.5" y2="13" />
+  <!-- Rosette Seal with Ribbons at bottom right -->
+  <circle cx="21" cy="19.5" r="3.6" fill="#0c1d47" />
+  <circle cx="21" cy="19.5" r="3.6" />
+  <circle cx="21" cy="19.5" r="0.8" fill="#FFFFFF" />
+  <path d="M19 23v4.2l2-1.3 2 1.3V23" />
+</svg>

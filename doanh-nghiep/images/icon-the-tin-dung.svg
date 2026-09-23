@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Card Outline -->
+  <rect x="3" y="6.5" width="26" height="19" rx="3.5" />
+  <!-- Magnetic Stripe -->
+  <line x1="3" y1="12.5" x2="29" y2="12.5" />
+  <!-- Small Chip / Notch in bottom right -->
+  <rect x="18.5" y="17.5" width="5.5" height="3.8" rx="0.9" fill="#FFFFFF" />
+</svg>

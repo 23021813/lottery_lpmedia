@@ -14,6 +14,20 @@ class AppMotionController {
 
     this.isAnimating = false;
     this.isDemoOpen = false;
+    this.isScrubbing = false;
+    this.isAdjustingVolume = false;
+    this.controlsDimTimer = null;
+    this.lastVolume = 1.0;
+
+    // Bản đồ video ánh xạ trực tiếp theo ID màn hình con
+    this.screenVideoMap = {
+      'screen-1-1': 'video/security.webm',
+      'screen-1-2': 'video/thay-doi-giao-dien.webm',
+      'screen-1-3-1': 'video/m-sinh-loi.webm',
+      'screen-1-3-2': 'video/m-triple.webm',
+      'screen-1-4-1': 'video/m-rewards.webm',
+      'screen-1-4-2': 'video/marketplace.webm'
+    };
 
     // DOM Elements Cache
     this.dom = {
@@ -25,6 +39,28 @@ class AppMotionController {
       demoBackdrop: document.getElementById('demoBackdrop'),
       demoPhoneContainer: document.getElementById('demoPhoneContainer'),
       btnBack: document.getElementById('btnGlobalBack'),
+
+      // Video Presentation Modal Elements
+      demoVideoModal: document.getElementById('screenDemoVideo'),
+      video: document.getElementById('presentationVideo'),
+      videoControls: document.getElementById('videoTouchControls'),
+      btnPlayToggle: document.getElementById('btnPlayToggle'),
+      iconPlay: document.querySelector('#btnPlayToggle .icon-play'),
+      iconPause: document.querySelector('#btnPlayToggle .icon-pause'),
+      videoScrubBar: document.getElementById('videoScrubBar'),
+      videoScrubProgress: document.getElementById('videoScrubProgress'),
+      videoScrubBuffer: document.getElementById('videoScrubBuffer'),
+      videoScrubThumb: document.getElementById('videoScrubThumb'),
+      currentTimeEl: document.getElementById('videoCurrentTime'),
+      totalTimeEl: document.getElementById('videoTotalTime'),
+      btnVolumeToggle: document.getElementById('btnVolumeToggle'),
+      iconVolHigh: document.querySelector('#btnVolumeToggle .icon-vol-high'),
+      iconVolMute: document.querySelector('#btnVolumeToggle .icon-vol-mute'),
+      volumeTrackWrapper: document.getElementById('volumeTrackWrapper'),
+      volumeFill: document.getElementById('volumeFill'),
+      volumeThumb: document.getElementById('volumeThumb'),
+      btnVideoBack: document.getElementById('btnVideoBack'),
+
       screens: new Map()
     };
 
@@ -38,6 +74,7 @@ class AppMotionController {
 
   init() {
     this.setupEventListeners();
+    this.setupVideoControls();
     this.applyInitialState();
   }
 
@@ -59,9 +96,21 @@ class AppMotionController {
     gsap.set(this.dom.bgDetail, { opacity: 0, scale: 1, transformOrigin: '50% 50%', filter: 'blur(0px)' });
 
     // Demo phone modal initial state (Hoàn toàn ẩn và không cản trở tương tác)
-    gsap.set(this.dom.demoModal, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
-    gsap.set(this.dom.demoBackdrop, { opacity: 0 });
-    gsap.set(this.dom.demoPhoneContainer, { y: '100%' });
+    if (this.dom.demoModal) {
+      gsap.set(this.dom.demoModal, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
+    }
+    if (this.dom.demoBackdrop) {
+      gsap.set(this.dom.demoBackdrop, { opacity: 0 });
+    }
+    if (this.dom.demoPhoneContainer) {
+      gsap.set(this.dom.demoPhoneContainer, { y: '100%' });
+    }
+
+    // Modal video trình chiếu full màn hình
+    if (this.dom.demoVideoModal) {
+      this.dom.demoVideoModal.classList.remove('is-active', 'active');
+      gsap.set(this.dom.demoVideoModal, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
+    }
 
     // Trạng thái nút Back ban đầu (ẩn ở trang chờ / trang chính)
     this.updateBackButtonVisibility();
@@ -125,12 +174,13 @@ class AppMotionController {
         return;
       }
 
-      // Xử lý nút/vùng mở Demo Phone (1.1, 1.2, 1.3.1, 1.3.2, 1.4.1)
+      // Xử lý nút/vùng mở Demo Phone / Video
       const demoTrigger = e.target.closest('[data-demo="true"]');
       if (demoTrigger) {
         e.preventDefault();
         e.stopPropagation();
-        this.openDemo();
+        const videoSrc = demoTrigger.getAttribute('data-video') || demoTrigger.getAttribute('data-demo-video') || null;
+        this.openDemo(videoSrc);
         return;
       }
 
@@ -604,10 +654,231 @@ class AppMotionController {
   }
 
   /**
-   * 6. Mở màn hình Demo (Mô hình Điện thoại trượt từ dưới lên vào vị trí giữa màn hình)
-   * Kích hoạt từ 1.1 CTA, 1.2 CTA, 1.3.1 (card 1-2-3 & cta), 1.3.2 (card 1-2-3 & cta), 1.4.1 (card 1-2-3 & cta)
+   * BỘ ĐIỀU KHIỂN CHẠM DẠNG PHẲNG (FLAT TOUCH VIDEO CONTROLS)
    */
-  openDemo() {
+  setupVideoControls() {
+    const {
+      video,
+      demoVideoModal,
+      videoControls,
+      btnPlayToggle,
+      videoScrubBar,
+      videoScrubProgress,
+      videoScrubBuffer,
+      videoScrubThumb,
+      currentTimeEl,
+      totalTimeEl,
+      btnVolumeToggle,
+      volumeTrackWrapper,
+      btnVideoBack
+    } = this.dom;
+
+    if (!video || !demoVideoModal) return;
+
+    const formatTime = (seconds) => {
+      if (!seconds || isNaN(seconds)) return '00:00';
+      const m = Math.floor(seconds / 60);
+      const s = Math.floor(seconds % 60);
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    };
+
+    const togglePlay = () => {
+      if (video.paused || video.ended) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    };
+
+    if (btnPlayToggle) {
+      btnPlayToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        togglePlay();
+        this.resetControlsAutoDim();
+      });
+    }
+
+    // Bấm vào video để Play / Pause
+    video.addEventListener('click', (e) => {
+      e.stopPropagation();
+      togglePlay();
+      this.resetControlsAutoDim();
+    });
+
+    video.addEventListener('play', () => this.updatePlayPauseUI(false));
+    video.addEventListener('pause', () => this.updatePlayPauseUI(true));
+    video.addEventListener('ended', () => {
+      this.updatePlayPauseUI(true);
+      if (videoControls) videoControls.classList.remove('is-dimmed');
+    });
+
+    video.addEventListener('loadedmetadata', () => {
+      if (totalTimeEl) totalTimeEl.textContent = formatTime(video.duration);
+      if (currentTimeEl) currentTimeEl.textContent = formatTime(video.currentTime);
+    });
+
+    video.addEventListener('timeupdate', () => {
+      if (this.isScrubbing) return;
+      if (currentTimeEl) currentTimeEl.textContent = formatTime(video.currentTime);
+      const pct = video.duration ? (video.currentTime / video.duration) * 100 : 0;
+      if (videoScrubProgress) videoScrubProgress.style.width = `${pct}%`;
+      if (videoScrubThumb) videoScrubThumb.style.left = `${pct}%`;
+      if (videoScrubBar) videoScrubBar.setAttribute('aria-valuenow', Math.round(pct));
+    });
+
+    video.addEventListener('progress', () => {
+      if (video.buffered.length > 0 && video.duration) {
+        const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+        const pct = (bufferedEnd / video.duration) * 100;
+        if (videoScrubBuffer) videoScrubBuffer.style.width = `${pct}%`;
+      }
+    });
+
+    // Thanh tua tiến độ cảm ứng (Scrub Bar)
+    if (videoScrubBar) {
+      const updateScrub = (clientX) => {
+        const rect = videoScrubBar.getBoundingClientRect();
+        const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        if (videoScrubProgress) videoScrubProgress.style.width = `${ratio * 100}%`;
+        if (videoScrubThumb) videoScrubThumb.style.left = `${ratio * 100}%`;
+        if (video.duration) {
+          video.currentTime = ratio * video.duration;
+          if (currentTimeEl) currentTimeEl.textContent = formatTime(video.currentTime);
+        }
+      };
+
+      videoScrubBar.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        this.isScrubbing = true;
+        videoScrubBar.setPointerCapture(e.pointerId);
+        updateScrub(e.clientX);
+        this.resetControlsAutoDim();
+      });
+
+      videoScrubBar.addEventListener('pointermove', (e) => {
+        if (!this.isScrubbing) return;
+        e.stopPropagation();
+        updateScrub(e.clientX);
+        this.resetControlsAutoDim();
+      });
+
+      const endScrub = (e) => {
+        if (!this.isScrubbing) return;
+        this.isScrubbing = false;
+        try { videoScrubBar.releasePointerCapture(e.pointerId); } catch (_) {}
+        this.resetControlsAutoDim();
+      };
+
+      videoScrubBar.addEventListener('pointerup', endScrub);
+      videoScrubBar.addEventListener('pointercancel', endScrub);
+    }
+
+    // Thanh trượt âm lượng to/nhỏ cảm ứng (Volume Slider)
+    const setVolume = (val) => {
+      const vol = Math.max(0, Math.min(1, val));
+      video.volume = vol;
+      video.muted = (vol === 0);
+      const pct = vol * 100;
+      if (this.dom.volumeFill) this.dom.volumeFill.style.width = `${pct}%`;
+      if (this.dom.volumeThumb) this.dom.volumeThumb.style.left = `${pct}%`;
+      if (volumeTrackWrapper) volumeTrackWrapper.setAttribute('aria-valuenow', Math.round(pct));
+      if (this.dom.iconVolHigh && this.dom.iconVolMute) {
+        this.dom.iconVolHigh.style.display = (vol === 0 || video.muted) ? 'none' : 'block';
+        this.dom.iconVolMute.style.display = (vol === 0 || video.muted) ? 'block' : 'none';
+      }
+    };
+
+    if (btnVolumeToggle) {
+      btnVolumeToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (video.muted || video.volume === 0) {
+          video.muted = false;
+          setVolume(this.lastVolume || 1.0);
+        } else {
+          this.lastVolume = video.volume;
+          video.muted = true;
+          setVolume(0);
+        }
+        this.resetControlsAutoDim();
+      });
+    }
+
+    if (volumeTrackWrapper) {
+      const updateVolumeTouch = (clientX) => {
+        const rect = volumeTrackWrapper.getBoundingClientRect();
+        const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        setVolume(ratio);
+      };
+
+      volumeTrackWrapper.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        this.isAdjustingVolume = true;
+        volumeTrackWrapper.setPointerCapture(e.pointerId);
+        updateVolumeTouch(e.clientX);
+        this.resetControlsAutoDim();
+      });
+
+      volumeTrackWrapper.addEventListener('pointermove', (e) => {
+        if (!this.isAdjustingVolume) return;
+        e.stopPropagation();
+        updateVolumeTouch(e.clientX);
+        this.resetControlsAutoDim();
+      });
+
+      const endVolume = (e) => {
+        if (!this.isAdjustingVolume) return;
+        this.isAdjustingVolume = false;
+        try { volumeTrackWrapper.releasePointerCapture(e.pointerId); } catch (_) {}
+        this.resetControlsAutoDim();
+      };
+
+      volumeTrackWrapper.addEventListener('pointerup', endVolume);
+      volumeTrackWrapper.addEventListener('pointercancel', endVolume);
+    }
+
+    // Nút Quay lại trong player
+    if (btnVideoBack) {
+      btnVideoBack.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.closeDemo();
+      });
+    }
+
+    // Tự động mờ thanh điều khiển sau 4s khi video đang phát
+    demoVideoModal.addEventListener('pointermove', () => this.resetControlsAutoDim());
+    demoVideoModal.addEventListener('touchstart', () => this.resetControlsAutoDim(), { passive: true });
+  }
+
+  updatePlayPauseUI(isPaused) {
+    if (this.dom.iconPlay && this.dom.iconPause) {
+      this.dom.iconPlay.style.display = isPaused ? 'block' : 'none';
+      this.dom.iconPause.style.display = isPaused ? 'none' : 'block';
+    }
+  }
+
+  resetControlsAutoDim() {
+    if (!this.dom.videoControls) return;
+    this.dom.videoControls.classList.remove('is-dimmed');
+
+    if (this.controlsDimTimer) {
+      clearTimeout(this.controlsDimTimer);
+      this.controlsDimTimer = null;
+    }
+
+    // Chỉ tự động mờ khi video đang phát thực sự và không đang thao tác tua/âm lượng
+    if (this.dom.video && !this.dom.video.paused && !this.dom.video.ended && !this.isScrubbing && !this.isAdjustingVolume) {
+      this.controlsDimTimer = setTimeout(() => {
+        if (this.isDemoOpen && this.dom.video && !this.dom.video.paused && !this.isScrubbing && !this.isAdjustingVolume) {
+          this.dom.videoControls.classList.add('is-dimmed');
+        }
+      }, 4000);
+    }
+  }
+
+  /**
+   * 6. Mở màn hình Demo (Trình chiếu video full màn hình kèm bộ điều khiển cảm ứng phẳng)
+   */
+  openDemo(videoSrc = null) {
     if (this.isDemoOpen) return;
     this.isDemoOpen = true;
 
@@ -616,59 +887,81 @@ class AppMotionController {
       document.activeElement.blur();
     }
 
-    // Kích hoạt layer modal: Hiển thị rõ ràng (opacity: 1), nhận pointer-events
-    this.dom.demoModal.classList.add('is-active');
-    gsap.set(this.dom.demoModal, { opacity: 1, visibility: 'visible', pointerEvents: 'auto' });
-    this.updateBackButtonVisibility();
+    const targetVideo = videoSrc || this.screenVideoMap[this.state.currentScreen] || 'video/security.webm';
 
-    const tl = gsap.timeline();
+    if (this.dom.demoVideoModal && this.dom.video) {
+      this.dom.demoVideoModal.classList.add('is-active');
+      gsap.set(this.dom.demoVideoModal, { opacity: 1, visibility: 'visible', pointerEvents: 'auto' });
+      this.updateBackButtonVisibility();
 
-    // 1. Làm mờ nền backdrop phía sau
-    tl.fromTo(this.dom.demoBackdrop,
-      { opacity: 0 },
-      { opacity: 1, duration: 0.4, ease: 'power2.out' },
-      0
-    );
+      this.dom.video.src = targetVideo;
+      this.dom.video.currentTime = 0;
+      this.dom.video.play().catch(() => {});
+      this.updatePlayPauseUI(false);
+      this.resetControlsAutoDim();
+      return;
+    }
 
-    // 2. Điện thoại trượt từ dưới đáy lên chiếm trọn trung tâm màn hình
-    tl.fromTo(this.dom.demoPhoneContainer,
-      { y: '130%', scale: 0.88 },
-      { y: '0%', scale: 1, duration: 0.8, ease: 'power3.out' },
-      0.05
-    );
+    // Fallback modal cũ nếu có
+    if (this.dom.demoModal) {
+      this.dom.demoModal.classList.add('is-active');
+      gsap.set(this.dom.demoModal, { opacity: 1, visibility: 'visible', pointerEvents: 'auto' });
+      this.updateBackButtonVisibility();
+
+      const tl = gsap.timeline();
+      tl.fromTo(this.dom.demoBackdrop,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.4, ease: 'power2.out' },
+        0
+      );
+      tl.fromTo(this.dom.demoPhoneContainer,
+        { y: '130%', scale: 0.88 },
+        { y: '0%', scale: 1, duration: 0.8, ease: 'power3.out' },
+        0.05
+      );
+    }
   }
 
   /**
-   * 7. Đóng màn hình Demo (Điện thoại trượt xuống lại đáy)
+   * 7. Đóng màn hình Demo
    */
   closeDemo() {
     if (!this.isDemoOpen) return;
 
-    // Xóa trạng thái focus của bất kỳ phần tử nào
     if (document.activeElement && typeof document.activeElement.blur === 'function') {
       document.activeElement.blur();
     }
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        this.dom.demoModal.classList.remove('is-active');
-        gsap.set(this.dom.demoModal, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
+    if (this.dom.video) {
+      this.dom.video.pause();
+      this.dom.video.removeAttribute('src');
+      this.dom.video.load();
+    }
+
+    if (this.controlsDimTimer) {
+      clearTimeout(this.controlsDimTimer);
+      this.controlsDimTimer = null;
+    }
+
+    if (this.dom.videoControls) {
+      this.dom.videoControls.classList.remove('is-dimmed');
+    }
+
+    if (this.dom.demoVideoModal) {
+      this.dom.demoVideoModal.classList.remove('is-active');
+      gsap.set(this.dom.demoVideoModal, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
+    }
+
+    if (this.dom.demoModal) {
+      this.dom.demoModal.classList.remove('is-active');
+      gsap.set(this.dom.demoModal, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
+      if (this.dom.demoPhoneContainer) {
         gsap.set(this.dom.demoPhoneContainer, { y: '130%' });
-        this.isDemoOpen = false;
-        this.updateBackButtonVisibility();
       }
-    });
+    }
 
-    // 1. Điện thoại trượt sâu xuống hẳn bên dưới đáy màn hình (130%)
-    tl.to(this.dom.demoPhoneContainer, {
-      y: '130%',
-      scale: 0.9,
-      duration: 0.5,
-      ease: 'power2.in'
-    }, 0);
-
-    // 2. Backdrop mờ dần
-    tl.to(this.dom.demoBackdrop, { opacity: 0, duration: 0.35, ease: 'power2.in' }, 0.15);
+    this.isDemoOpen = false;
+    this.updateBackButtonVisibility();
   }
 }
 

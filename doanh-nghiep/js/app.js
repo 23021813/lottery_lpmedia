@@ -1,0 +1,677 @@
+/**
+ * MSB Digital Universe - Interactive LED Single Page Application (Doanh Nghiệp)
+ * Motion Engine powered by GSAP 3.x & DoanhNghiepStateManager
+ * LED Kiosk Resolution: 1535 x 576 px
+ */
+
+import { DoanhNghiepStateManager } from './state-manager.js';
+
+class DoanhNghiepMotionController {
+  constructor() {
+    // Khởi tạo state manager không có idle timeout (idleTimeoutMs = 0)
+    this.state = new DoanhNghiepStateManager({
+      initialScreen: 'screen-idle',
+      idleTimeoutMs: 0
+    });
+
+    this.isAnimating = false;
+    this.isDemoOpen = false;
+    this.activeDemoModal = null;
+
+    // Cache các phần tử DOM chính
+    this.dom = {
+      stage: document.getElementById('screenStage'),
+      bgMain: document.getElementById('bgLayerMain'),
+      bgDetail: document.getElementById('bgLayerDetail'),
+      bgDetail2: document.getElementById('bgLayerDetail2'),
+      btnBack: document.getElementById('btnGlobalBack'),
+      modalDesktop: document.getElementById('screen-demo-desktop'),
+      modalPhone: document.getElementById('screen-demo-phone'),
+      modalDesktopTitle: document.getElementById('demoDesktopTitle'),
+      modalPhoneTitle: document.getElementById('demoPhoneTitle'),
+      btnDemoDesktopClose: document.getElementById('btnDemoDesktopClose'),
+      btnDemoPhoneClose: document.getElementById('btnDemoPhoneClose'),
+      screens: new Map()
+    };
+
+    // Thu thập tất cả 10 screen views
+    document.querySelectorAll('.screen-view').forEach(screen => {
+      this.dom.screens.set(screen.id, screen);
+    });
+
+    this.init();
+  }
+
+  init() {
+    this.setupEventListeners();
+    this.applyInitialState();
+  }
+
+  applyInitialState() {
+    // Thiết lập hiển thị ban đầu: chỉ có screen-idle active
+    this.dom.screens.forEach((el, id) => {
+      if (id === 'screen-idle') {
+        el.classList.add('active');
+        gsap.set(el, { opacity: 1, visibility: 'visible', pointerEvents: 'auto' });
+      } else {
+        el.classList.remove('active');
+        gsap.set(el, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
+      }
+    });
+
+    // Các layer nền
+    gsap.set(this.dom.bgMain, {
+      opacity: 1,
+      scale: 1,
+      x: '0%',
+      transformOrigin: '62.7% center',
+      filter: 'blur(0px)'
+    });
+    gsap.set(this.dom.bgDetail, {
+      opacity: 0,
+      scale: 1,
+      transformOrigin: '50% 50%',
+      filter: 'blur(0px)'
+    });
+    gsap.set(this.dom.bgDetail2, {
+      opacity: 0,
+      scale: 1,
+      filter: 'blur(0px)'
+    });
+
+    // Các modal demo
+    if (this.dom.modalDesktop) {
+      this.dom.modalDesktop.classList.remove('active');
+      gsap.set(this.dom.modalDesktop, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
+    }
+    if (this.dom.modalPhone) {
+      this.dom.modalPhone.classList.remove('active');
+      gsap.set(this.dom.modalPhone, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
+    }
+
+    // Nút Back
+    this.updateBackButtonVisibility();
+  }
+
+  updateBackButtonVisibility() {
+    if (!this.dom.btnBack) return;
+    const shouldShow = this.isDemoOpen || (typeof this.state.canGoBack === 'function' && this.state.canGoBack());
+    if (shouldShow) {
+      this.dom.btnBack.classList.add('is-visible');
+    } else {
+      this.dom.btnBack.classList.remove('is-visible');
+    }
+  }
+
+  handleBackAction() {
+    if (this.isDemoOpen) {
+      this.closeDemo();
+    } else {
+      this.goBack();
+    }
+  }
+
+  setupEventListeners() {
+    // Chặn menu chuột phải và kéo thả trên Kiosk
+    window.addEventListener('contextmenu', (e) => e.preventDefault());
+    window.addEventListener('dragstart', (e) => e.preventDefault());
+
+    // Nút quay lại toàn cục
+    if (this.dom.btnBack) {
+      this.dom.btnBack.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.handleBackAction();
+      });
+    }
+
+    // Chạm vào trang chờ -> Chuyển sang trang chính
+    const idleScreen = this.dom.screens.get('screen-idle');
+    if (idleScreen) {
+      idleScreen.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.navigateTo('screen-main');
+      });
+    }
+
+    // Lắng nghe click / touch trên stage
+    this.dom.stage.addEventListener('click', (e) => {
+      // Nếu đang ở trang chờ mà chạm bất kỳ đâu -> vào trang chính
+      if (this.state.currentScreen === 'screen-idle') {
+        e.preventDefault();
+        this.navigateTo('screen-main');
+        return;
+      }
+
+      // Xử lý nút kích hoạt Demo modal (Trải nghiệm ngay)
+      const demoTrigger = e.target.closest('[data-demo-target]');
+      if (demoTrigger) {
+        e.preventDefault();
+        e.stopPropagation();
+        const demoType = demoTrigger.getAttribute('data-demo-target') || 'desktop';
+        const demoTitle = demoTrigger.getAttribute('data-demo-title') || 'Trải nghiệm dịch vụ';
+        this.openDemo(demoType, demoTitle);
+        return;
+      }
+
+      // Xử lý nút điều hướng (data-screen)
+      const screenTrigger = e.target.closest('[data-screen]');
+      if (screenTrigger) {
+        e.preventDefault();
+        const targetScreen = screenTrigger.getAttribute('data-screen');
+        if (targetScreen) {
+          this.navigateTo(targetScreen);
+        }
+      }
+    });
+
+    // Nút đóng demo
+    if (this.dom.btnDemoDesktopClose) {
+      this.dom.btnDemoDesktopClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.closeDemo();
+      });
+    }
+    if (this.dom.btnDemoPhoneClose) {
+      this.dom.btnDemoPhoneClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.closeDemo();
+      });
+    }
+
+    // Đóng demo khi click vào vùng tối mờ bên ngoài
+    if (this.dom.modalDesktop) {
+      this.dom.modalDesktop.addEventListener('click', (e) => {
+        if (!e.target.closest('.demo-modal-container')) {
+          this.closeDemo();
+        }
+      });
+    }
+    if (this.dom.modalPhone) {
+      this.dom.modalPhone.addEventListener('click', (e) => {
+        if (!e.target.closest('.demo-modal-container')) {
+          this.closeDemo();
+        }
+      });
+    }
+
+    // Phím Escape để quay lại
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.handleBackAction();
+      }
+    });
+
+    // Cử chỉ vuốt cảm ứng (Swipe Back)
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
+    const onSwipeStart = (x, y) => {
+      touchStartX = x;
+      touchStartY = y;
+      touchStartTime = Date.now();
+    };
+
+    const onSwipeEnd = (x, y) => {
+      const deltaX = x - touchStartX;
+      const deltaY = y - touchStartY;
+      const elapsed = Date.now() - touchStartTime;
+
+      if (elapsed > 700) return;
+
+      // Đang mở demo modal: vuốt xuống hoặc vuốt phải -> đóng demo
+      if (this.isDemoOpen) {
+        if (deltaY > 60 || deltaX > 80) {
+          this.closeDemo();
+        }
+        return;
+      }
+
+      // Đang ở màn hình con: vuốt từ trái sang phải (> 70px) -> Back
+      if (deltaX > 70 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
+        this.goBack();
+      }
+    };
+
+    this.dom.stage.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        onSwipeStart(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    this.dom.stage.addEventListener('touchend', (e) => {
+      if (e.changedTouches.length === 1) {
+        onSwipeEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+      }
+    }, { passive: true });
+
+    // Hỗ trợ chuột kéo swipe khi test trên Desktop
+    let isMouseDown = false;
+    this.dom.stage.addEventListener('mousedown', (e) => {
+      if (e.target.closest('[data-screen], [data-demo-target], button, a')) return;
+      isMouseDown = true;
+      onSwipeStart(e.clientX, e.clientY);
+    });
+
+    window.addEventListener('mouseup', (e) => {
+      if (isMouseDown) {
+        isMouseDown = false;
+        onSwipeEnd(e.clientX, e.clientY);
+      }
+    });
+  }
+
+  /* ========================================================================
+     ROUTING & ANIMATION DISPATCHER
+     ======================================================================== */
+  navigateTo(targetId) {
+    if (this.isAnimating) return;
+    const currentId = this.state.currentScreen;
+    if (currentId === targetId) return;
+
+    if (!this.state.isValidScreen(targetId)) {
+      console.warn(`[Router] Invalid screen target: ${targetId}`);
+      return;
+    }
+
+    const currentEl = this.dom.screens.get(currentId);
+    const targetEl = this.dom.screens.get(targetId);
+
+    if (!targetEl) return;
+
+    this.state.navigateTo(targetId);
+    this.updateBackButtonVisibility();
+
+    // Chọn hiệu ứng chuyển cảnh phù hợp
+    if (currentId === 'screen-idle' && targetId === 'screen-main') {
+      this.animIdleToMain(currentEl, targetEl);
+    } else if (currentId === 'screen-main' && targetId.startsWith('screen-1-')) {
+      this.animMainToLevel1(currentEl, targetEl);
+    } else if (this.isLevel2Transition(currentId, targetId)) {
+      this.animPanHorizontal(currentEl, targetEl, 'next');
+    } else {
+      this.animDefaultCrossfade(currentEl, targetEl);
+    }
+  }
+
+  goBack() {
+    if (this.isDemoOpen) {
+      this.closeDemo();
+      return;
+    }
+
+    if (this.isAnimating) return;
+
+    const currentId = this.state.currentScreen;
+    const prevId = this.state.goBack();
+    this.updateBackButtonVisibility();
+
+    if (!prevId) return;
+
+    const currentEl = this.dom.screens.get(currentId);
+    const prevEl = this.dom.screens.get(prevId);
+
+    if (!currentEl || !prevEl) return;
+
+    if (currentId.startsWith('screen-1-') && !currentId.startsWith('screen-1-3-') && prevId === 'screen-main') {
+      this.animLevel1ToMain(currentEl, prevEl);
+    } else if (currentId === 'screen-1-3' && prevId === 'screen-main') {
+      this.animLevel1ToMain(currentEl, prevEl);
+    } else if (currentId.startsWith('screen-1-3-') && prevId === 'screen-1-3') {
+      this.animPanHorizontal(currentEl, prevEl, 'prev');
+    } else {
+      this.animDefaultCrossfade(currentEl, prevEl);
+    }
+  }
+
+  isLevel2Transition(fromId, toId) {
+    return fromId === 'screen-1-3' && toId.startsWith('screen-1-3-');
+  }
+
+  /* ========================================================================
+     GSAP TIMELINES
+     ======================================================================== */
+
+  /**
+   * 1. animIdleToMain
+   * Note specs: "Từ trang chờ sang trang chính hiện nền và tiêu đề trước, 3 textbox pop-up sau"
+   */
+  animIdleToMain(fromEl, toEl) {
+    this.isAnimating = true;
+    const tl = gsap.timeline({
+      onComplete: () => {
+        fromEl.classList.remove('active');
+        gsap.set(fromEl, { pointerEvents: 'none' });
+        toEl.classList.add('active');
+        gsap.set(toEl, { pointerEvents: 'auto' });
+        this.isAnimating = false;
+      }
+    });
+
+    // Mờ dần trang chờ
+    tl.to(fromEl, { opacity: 0, duration: 0.5, ease: 'power2.out' }, 0);
+
+    // Kích hoạt trang chính
+    toEl.classList.add('active');
+    gsap.set(toEl, { opacity: 0, visibility: 'visible' });
+
+    // Nền hiện rõ và tiêu đề thương hiệu trượt nhẹ vào trước
+    tl.set(this.dom.bgMain, { x: '0%', scale: 1, transformOrigin: '62.7% center', filter: 'blur(0px)' }, 0);
+    tl.to(this.dom.bgMain, { opacity: 1, duration: 0.7, ease: 'power2.out' }, 0.1);
+    tl.to(toEl, { opacity: 1, duration: 0.6, ease: 'power2.out' }, 0.15);
+
+    const brandHeading = toEl.querySelector('.brand-heading');
+    if (brandHeading) {
+      tl.fromTo(brandHeading,
+        { opacity: 0, x: -30 },
+        { opacity: 1, x: 0, duration: 0.65, ease: 'power2.out' },
+        0.2
+      );
+    }
+
+    // 3 textbox (feature cards) pop-up sau nhịp nhàng
+    const cards = toEl.querySelectorAll('.feature-card');
+    if (cards.length > 0) {
+      tl.fromTo(cards,
+        { opacity: 0, scale: 0.6, y: 35 },
+        {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          stagger: 0.14,
+          duration: 0.65,
+          ease: 'back.out(1.8)'
+        },
+        0.45
+      );
+    }
+  }
+
+  /**
+   * 2. animMainToLevel1
+   * Note specs: "Quả địa cầu zoom về chính giữa màn hình rồi khi zoom out là vào đúng vị trí của trang sau"
+   */
+  animMainToLevel1(fromEl, toEl) {
+    this.isAnimating = true;
+    const tl = gsap.timeline({
+      onComplete: () => {
+        fromEl.classList.remove('active');
+        gsap.set(fromEl, { pointerEvents: 'none' });
+        toEl.classList.add('active');
+        gsap.set(toEl, { pointerEvents: 'auto' });
+        this.isAnimating = false;
+      }
+    });
+
+    // Mờ nhanh nội dung trang chính
+    tl.to(fromEl, { opacity: 0, scale: 0.96, duration: 0.35, ease: 'power2.out' }, 0);
+
+    // Quả cầu từ vị trí 62.7% zoom in và lướt tâm về chính giữa 50%
+    gsap.set(this.dom.bgMain, { transformOrigin: '62.7% center' });
+    tl.to(this.dom.bgMain, {
+      scale: 1.55,
+      x: '-12.7%',
+      opacity: 0,
+      filter: 'blur(3px) brightness(1.15)',
+      duration: 1.0,
+      ease: 'power2.inOut'
+    }, 0);
+
+    // Nền chi tiết (bgDetail ở giữa 50%) cross-fade gối đầu và bắt nét
+    toEl.classList.add('active');
+    gsap.set(toEl, { opacity: 0, visibility: 'visible' });
+
+    gsap.set(this.dom.bgDetail, { transformOrigin: '50% 50%' });
+    tl.set(this.dom.bgDetail, { scale: 1.18, opacity: 0, filter: 'blur(2px)' }, 0.28);
+    tl.to(this.dom.bgDetail, {
+      scale: 1.0,
+      opacity: 1,
+      filter: 'blur(0px)',
+      duration: 0.85,
+      ease: 'power3.out'
+    }, 0.35);
+
+    // Tiêu đề, thẻ và nút CTA trôi vào êm ái
+    const heading = toEl.querySelector('.detail-heading');
+    const cards = toEl.querySelectorAll('.toiuu-card');
+    const action = toEl.querySelector('.rewards-action-container');
+
+    tl.to(toEl, { opacity: 1, duration: 0.35 }, 0.5);
+
+    if (heading) {
+      tl.fromTo(heading,
+        { opacity: 0, y: -20 },
+        { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
+        0.55
+      );
+    }
+
+    if (cards.length > 0) {
+      tl.fromTo(cards,
+        { opacity: 0, y: 24, scale: 0.96 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          stagger: 0.08,
+          duration: 0.6,
+          ease: 'power2.out',
+          clearProps: 'transform'
+        },
+        0.65
+      );
+    }
+
+    if (action) {
+      tl.fromTo(action,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' },
+        0.8
+      );
+    }
+  }
+
+  /**
+   * 3. animLevel1ToMain
+   * Reverse Zoom mượt mà về lại Trang Chính
+   */
+  animLevel1ToMain(fromEl, toEl) {
+    this.isAnimating = true;
+    const tl = gsap.timeline({
+      onComplete: () => {
+        fromEl.classList.remove('active');
+        gsap.set(fromEl, { pointerEvents: 'none', y: 0 });
+        toEl.classList.add('active');
+        gsap.set(toEl, { pointerEvents: 'auto' });
+        this.isAnimating = false;
+      }
+    });
+
+    // Mờ nội dung trang con
+    tl.to(fromEl, { opacity: 0, y: 18, duration: 0.35, ease: 'power2.in' }, 0);
+
+    toEl.classList.add('active');
+    gsap.set(toEl, { opacity: 0, visibility: 'visible' });
+
+    // Nền chi tiết mờ đi
+    gsap.set(this.dom.bgDetail, { transformOrigin: '50% 50%' });
+    tl.to(this.dom.bgDetail, {
+      opacity: 0,
+      scale: 1.12,
+      duration: 0.65,
+      ease: 'power2.inOut'
+    }, 0.05);
+
+    // Nền chính từ giữa thu nhỏ sắc nét và lướt về lại vị trí bên phải
+    gsap.set(this.dom.bgMain, { transformOrigin: '62.7% center' });
+    tl.set(this.dom.bgMain, { scale: 1.5, x: '-12.7%', opacity: 0 }, 0.05);
+    tl.to(this.dom.bgMain, {
+      scale: 1.0,
+      x: '0%',
+      opacity: 1,
+      filter: 'blur(0px) brightness(1)',
+      duration: 0.85,
+      ease: 'power2.out'
+    }, 0.15);
+
+    tl.to(toEl, { opacity: 1, duration: 0.4 }, 0.35);
+
+    const cards = toEl.querySelectorAll('.feature-card');
+    if (cards.length > 0) {
+      tl.fromTo(cards,
+        { opacity: 0.4, scale: 0.95 },
+        { opacity: 1, scale: 1, stagger: 0.06, duration: 0.5, ease: 'power2.out' },
+        0.4
+      );
+    }
+  }
+
+  /**
+   * 4. animPanHorizontal
+   * Note specs: "Pan text ngang" giữa 1.3 và 1.3.x
+   */
+  animPanHorizontal(fromEl, toEl, direction = 'next') {
+    this.isAnimating = true;
+    const moveOutX = direction === 'next' ? -80 : 80;
+    const moveInX = direction === 'next' ? 80 : -80;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        fromEl.classList.remove('active');
+        gsap.set(fromEl, { x: 0, pointerEvents: 'none' });
+        toEl.classList.add('active');
+        gsap.set(toEl, { pointerEvents: 'auto' });
+        this.isAnimating = false;
+      }
+    });
+
+    // Trượt màn hình hiện tại ra
+    tl.to(fromEl, {
+      opacity: 0,
+      x: moveOutX,
+      duration: 0.45,
+      ease: 'power2.in'
+    }, 0);
+
+    // Trượt màn hình mới vào
+    toEl.classList.add('active');
+    gsap.set(toEl, { opacity: 0, x: moveInX, visibility: 'visible' });
+
+    tl.to(toEl, {
+      opacity: 1,
+      x: 0,
+      duration: 0.6,
+      ease: 'power2.out'
+    }, 0.15);
+
+    // Stagger các thẻ
+    const cards = toEl.querySelectorAll('.toiuu-card');
+    if (cards.length > 0) {
+      tl.fromTo(cards,
+        { opacity: 0, y: 25 },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.08,
+          duration: 0.55,
+          ease: 'back.out(1.2)',
+          clearProps: 'transform'
+        },
+        0.3
+      );
+    }
+
+    const action = toEl.querySelector('.rewards-action-container');
+    if (action) {
+      tl.fromTo(action,
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+        0.45
+      );
+    }
+  }
+
+  /**
+   * 5. animDefaultCrossfade
+   */
+  animDefaultCrossfade(fromEl, toEl) {
+    this.isAnimating = true;
+    const tl = gsap.timeline({
+      onComplete: () => {
+        fromEl.classList.remove('active');
+        gsap.set(fromEl, { pointerEvents: 'none' });
+        toEl.classList.add('active');
+        gsap.set(toEl, { pointerEvents: 'auto' });
+        this.isAnimating = false;
+      }
+    });
+
+    tl.to(fromEl, { opacity: 0, duration: 0.35 }, 0);
+    toEl.classList.add('active');
+    gsap.set(toEl, { opacity: 0, visibility: 'visible' });
+    tl.to(toEl, { opacity: 1, duration: 0.45 }, 0.15);
+  }
+
+  /**
+   * 6. openDemo(demoType, title)
+   * Hiển thị Desktop Screen (man-hinh.png) hoặc Phone Mockup (my-phone.png)
+   */
+  openDemo(demoType = 'desktop', title = 'Trải nghiệm dịch vụ') {
+    if (this.isDemoOpen) return;
+    this.isDemoOpen = true;
+
+    const modal = demoType === 'phone' ? this.dom.modalPhone : this.dom.modalDesktop;
+    const titleEl = demoType === 'phone' ? this.dom.modalPhoneTitle : this.dom.modalDesktopTitle;
+
+    if (!modal) return;
+    this.activeDemoModal = modal;
+
+    if (titleEl && title) {
+      titleEl.textContent = title;
+    }
+
+    modal.classList.add('active');
+    gsap.set(modal, { opacity: 1, visibility: 'visible', pointerEvents: 'auto' });
+    this.updateBackButtonVisibility();
+
+    const container = modal.querySelector('.demo-modal-container');
+    if (container) {
+      gsap.fromTo(container,
+        { opacity: 0, scale: 0.94, y: 35 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: 'power3.out' }
+      );
+    }
+  }
+
+  /**
+   * 7. closeDemo()
+   */
+  closeDemo() {
+    if (!this.isDemoOpen || !this.activeDemoModal) return;
+
+    const modal = this.activeDemoModal;
+    const container = modal.querySelector('.demo-modal-container');
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        modal.classList.remove('active');
+        gsap.set(modal, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
+        this.isDemoOpen = false;
+        this.activeDemoModal = null;
+        this.updateBackButtonVisibility();
+      }
+    });
+
+    if (container) {
+      tl.to(container, { opacity: 0, scale: 0.94, y: 30, duration: 0.35, ease: 'power2.in' }, 0);
+    }
+    tl.to(modal, { opacity: 0, duration: 0.35, ease: 'power2.in' }, 0.1);
+  }
+}
+
+// Khởi chạy ứng dụng khi DOM sẵn sàng
+document.addEventListener('DOMContentLoaded', () => {
+  window.appController = new DoanhNghiepMotionController();
+  console.log('MSB Doanh Nghiệp Interactive LED SPA initialized.');
+});

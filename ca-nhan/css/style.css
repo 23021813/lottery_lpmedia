@@ -129,11 +129,21 @@ body {
   background: rgba(77, 39, 17, 0.5);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  cursor: pointer;
   outline: none;
   text-decoration: none;
   user-select: none;
   transition: transform 0.35s var(--ease-smooth), border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+}
+
+/* Thẻ ở trang chính là nút điều hướng -> cursor pointer */
+.feature-card {
+  cursor: pointer;
+}
+
+/* Thẻ ở các trang nội dung chi tiết là thẻ thông tin -> cursor default */
+.detail-card,
+.rewards-card {
+  cursor: default;
 }
 
 /* Hiệu ứng màu chữ chuyển sắc trên thẻ */
@@ -148,26 +158,21 @@ body {
 
 /* Desktop Hover States - Chỉ áp dụng khi có chuột thật, không dính trên cảm ứng LED */
 @media (hover: hover) and (pointer: fine) {
-  .feature-card:hover,
-  .detail-card:hover,
-  .rewards-card:hover {
+  .feature-card:hover {
     transform: translateY(-5px) scale(1.03);
     box-shadow: 0 18px 42px rgba(0, 0, 0, 0.75), 0 0 30px rgba(255, 120, 50, 0.38), inset 0 1px 1px rgba(255, 255, 255, 0.35);
   }
 
-  .feature-card:hover .card-title span,
-  .detail-card:hover .detail-card-desc,
-  .rewards-card:hover .rewards-card-desc {
+  .feature-card:hover .card-title span {
     color: #FFFFFF;
     -webkit-text-fill-color: #FFFFFF;
   }
 }
 
-/* Phản hồi chạm tức thì cho Màn hình LED Cảm ứng (Kiosk Touch) */
+/* Phản hồi chạm tức thì cho các nút tương tác trên Màn hình LED Cảm ứng (Kiosk Touch) */
 .feature-card:active,
-.detail-card:active,
-.rewards-card:active,
 .btn-cta:active,
+.btn-back:active,
 .phone-interactive-peek:active,
 .column-action:active {
   transform: scale(0.97) !important;

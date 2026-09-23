@@ -55,8 +55,8 @@ class AppMotionController {
 
     // Background layers initial state
     gsap.set(this.dom.bgIdle, { opacity: 1, scale: 1 });
-    gsap.set(this.dom.bgMain, { opacity: 0, scale: 1 });
-    gsap.set(this.dom.bgDetail, { opacity: 0, scale: 1 });
+    gsap.set(this.dom.bgMain, { opacity: 0, scale: 1, x: '0%', transformOrigin: '62.7% 47%', filter: 'blur(0px)' });
+    gsap.set(this.dom.bgDetail, { opacity: 0, scale: 1, transformOrigin: '50% 50%', filter: 'blur(0px)' });
 
     // Demo phone modal initial state (Hoàn toàn ẩn và không cản trở tương tác)
     gsap.set(this.dom.demoModal, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
@@ -336,7 +336,8 @@ class AppMotionController {
     // 2. Fade in Trang Chính & Nền Địa Cầu
     toEl.classList.add('is-active');
     gsap.set(toEl, { opacity: 0, visibility: 'visible' });
-    tl.to(this.dom.bgMain, { opacity: 1, scale: 1, duration: 0.9, ease: 'power2.out' }, 0.2);
+    tl.set(this.dom.bgMain, { x: '0%', scale: 1, transformOrigin: '62.7% 47%', filter: 'blur(0px)' }, 0);
+    tl.to(this.dom.bgMain, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.9, ease: 'power2.out' }, 0.2);
     tl.to(toEl, { opacity: 1, duration: 0.7, ease: 'power2.out' }, 0.25);
 
     // 3. Tiêu đề thương hiệu trượt nhẹ vào
@@ -385,70 +386,74 @@ class AppMotionController {
       }
     });
 
-    // Giai đoạn 1: Fade out toàn bộ text Trang Chính & Quả cầu xanh zoom in về giữa màn hình
-    tl.to(fromEl, { opacity: 0, scale: 0.94, duration: 0.65, ease: 'power2.in' }, 0);
+    // Giai đoạn 1: Mờ nội dung Trang Chính & Quả cầu xanh zoom in lướt tâm về chính giữa (từ 62.7% về 50%), out nét & transparent
+    tl.to(fromEl, { opacity: 0, scale: 0.92, duration: 0.6, ease: 'power2.in' }, 0);
+    
+    gsap.set(this.dom.bgMain, { transformOrigin: '62.7% 47%' });
     tl.to(this.dom.bgMain, {
-      scale: 1.48,
-      filter: 'brightness(1.28)',
-      duration: 1.15,
-      ease: 'power1.inOut'
+      scale: 1.6,
+      x: '-12.7%',
+      opacity: 0,
+      filter: 'blur(8px) brightness(1.25)',
+      duration: 1.35,
+      ease: 'power2.inOut'
     }, 0);
 
-    // Giai đoạn 2: Quả cầu nâu zoom out từ 1.35 về 1.0 và mờ dần vào vị trí trang sau
+    // Giai đoạn 2: Nền chi tiết (bgDetail tại tâm giữa 50%) giật về nét 100% opacity (Snap Focus)
     toEl.classList.add('is-active');
     gsap.set(toEl, { opacity: 0, visibility: 'visible' });
 
-    tl.set(this.dom.bgDetail, { scale: 1.35, opacity: 0 }, 0.6);
+    gsap.set(this.dom.bgDetail, { transformOrigin: '50% 50%' });
+    tl.set(this.dom.bgDetail, { scale: 1.25, opacity: 0, filter: 'blur(4px)' }, 0.55);
     tl.to(this.dom.bgDetail, {
       scale: 1.0,
       opacity: 1,
+      filter: 'blur(0px)',
       duration: 1.15,
-      ease: 'power2.out'
-    }, 0.7);
+      ease: 'back.out(1.15)'
+    }, 0.65);
 
-    tl.to(this.dom.bgMain, { opacity: 0, duration: 0.65 }, 0.75);
-
-    // Giai đoạn 3: Hiện title + textbox + Touchpoint của trang cấp 1
+    // Giai đoạn 3: "Mấy cái này tĩnh" - Tiêu đề, Card, Nút CTA trôi vào trễ sau khi quả cầu đã nét ở giữa
     const heading = toEl.querySelector('.detail-heading');
     const cards = toEl.querySelectorAll('.detail-card, .rewards-card');
-    const action = toEl.querySelector('.detail-action-container, .rewards-action-container');
+    const action = toEl.querySelector('.detail-action-container, .rewards-action-container, .feature-column .column-action');
 
-    tl.to(toEl, { opacity: 1, duration: 0.5 }, 1.1);
+    tl.to(toEl, { opacity: 1, duration: 0.4 }, 1.15);
 
     if (heading) {
       tl.fromTo(heading,
         { opacity: 0, y: -25 },
         { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
-        1.15
+        1.2
       );
     }
 
     if (cards.length > 0) {
       tl.fromTo(cards,
-        { opacity: 0, y: 40, scale: 0.9 },
+        { opacity: 0, y: 35, scale: 0.92 },
         {
           opacity: 1,
           y: 0,
           scale: 1,
           stagger: 0.12,
-          duration: 0.75,
-          ease: 'back.out(1.3)'
+          duration: 0.7,
+          ease: 'power2.out'
         },
-        1.25
+        1.3
       );
     }
 
     if (action) {
       tl.fromTo(action,
-        { opacity: 0, y: 25 },
+        { opacity: 0, y: 20 },
         { opacity: 1, y: 0, duration: 0.65, ease: 'power2.out' },
-        1.45
+        1.5
       );
     }
   }
 
   /**
-   * 3. Chuyển cảnh ngược từ Màn hình Cấp 1 -> Trang Chính (Slower & Majestic)
+   * 3. Chuyển cảnh ngược từ Màn hình Cấp 1 -> Trang Chính (Reverse Cinematic Focus)
    */
   animLevel1ToMain(fromEl, toEl) {
     this.isAnimating = true;
@@ -465,28 +470,39 @@ class AppMotionController {
     // 1. Thu nhỏ và mờ nội dung trang con
     tl.to(fromEl, { opacity: 0, y: 25, duration: 0.55, ease: 'power2.in' }, 0);
 
-    // 2. Quả cầu đổi chiều: Nền chi tiết mờ đi, Nền chính zoom từ 1.4 về 1.0
+    // 2. Quả cầu đổi chiều: Nền chi tiết mờ đi và out nét tại giữa
     toEl.classList.add('is-active');
     gsap.set(toEl, { opacity: 0, visibility: 'visible' });
 
-    tl.to(this.dom.bgDetail, { opacity: 0, scale: 1.2, duration: 0.85, ease: 'power2.inOut' }, 0.1);
-    tl.set(this.dom.bgMain, { scale: 1.38, opacity: 0 }, 0.1);
+    gsap.set(this.dom.bgDetail, { transformOrigin: '50% 50%' });
+    tl.to(this.dom.bgDetail, {
+      opacity: 0,
+      scale: 1.2,
+      filter: 'blur(6px)',
+      duration: 0.85,
+      ease: 'power2.inOut'
+    }, 0.1);
+
+    // Nền chính từ giữa thu nhỏ sắc nét và lướt về lại vị trí bên phải
+    gsap.set(this.dom.bgMain, { transformOrigin: '62.7% 47%' });
+    tl.set(this.dom.bgMain, { scale: 1.6, x: '-12.7%', filter: 'blur(6px)', opacity: 0 }, 0.1);
     tl.to(this.dom.bgMain, {
       scale: 1.0,
+      x: '0%',
       opacity: 1,
-      filter: 'brightness(1)',
-      duration: 1.05,
+      filter: 'blur(0px) brightness(1)',
+      duration: 1.2,
       ease: 'power2.out'
     }, 0.25);
 
-    tl.to(toEl, { opacity: 1, duration: 0.6 }, 0.4);
+    tl.to(toEl, { opacity: 1, duration: 0.6 }, 0.55);
 
     const cards = toEl.querySelectorAll('.feature-card');
     if (cards.length > 0) {
       tl.fromTo(cards,
         { opacity: 0.4, scale: 0.92 },
-        { opacity: 1, scale: 1, stagger: 0.09, duration: 0.6, ease: 'power2.out' },
-        0.5
+        { opacity: 1, scale: 1, stagger: 0.09, duration: 0.65, ease: 'power2.out' },
+        0.65
       );
     }
   }

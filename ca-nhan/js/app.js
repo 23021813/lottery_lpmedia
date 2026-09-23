@@ -9,12 +9,11 @@ import { AppStateManager } from './state-manager.js';
 class AppMotionController {
   constructor() {
     this.state = new AppStateManager({
-      initialScreen: 'screen-idle',
-      idleTimeoutMs: 60000 // 60 giây tự động trở về Trang Chờ
+      initialScreen: 'screen-idle'
     });
 
     this.isAnimating = false;
-    this.idleTimer = null;
+    this.isDemoOpen = false;
 
     // DOM Elements Cache
     this.dom = {
@@ -38,7 +37,6 @@ class AppMotionController {
 
   init() {
     this.setupEventListeners();
-    this.setupIdleTimer();
     this.applyInitialState();
   }
 
@@ -47,10 +45,10 @@ class AppMotionController {
     this.dom.screens.forEach((el, id) => {
       if (id === 'screen-idle') {
         el.classList.add('is-active');
-        gsap.set(el, { opacity: 1, visibility: 'visible' });
+        gsap.set(el, { opacity: 1, visibility: 'visible', pointerEvents: 'auto' });
       } else {
         el.classList.remove('is-active');
-        gsap.set(el, { opacity: 0, visibility: 'hidden' });
+        gsap.set(el, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
       }
     });
 
@@ -58,7 +56,10 @@ class AppMotionController {
     gsap.set(this.dom.bgIdle, { opacity: 1, scale: 1 });
     gsap.set(this.dom.bgMain, { opacity: 0, scale: 1 });
     gsap.set(this.dom.bgDetail, { opacity: 0, scale: 1 });
-    gsap.set(this.dom.demoModal, { opacity: 0, visibility: 'hidden' });
+
+    // Demo phone modal initial state (Hoàn toàn ẩn và không cản trở tương tác)
+    gsap.set(this.dom.demoModal, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
+    gsap.set(this.dom.demoBackdrop, { opacity: 0 });
     gsap.set(this.dom.demoPhoneContainer, { y: '100%' });
   }
 
@@ -68,15 +69,12 @@ class AppMotionController {
     if (idleScreen) {
       idleScreen.addEventListener('click', (e) => {
         e.stopPropagation();
-        this.resetIdleTimer();
         this.navigateTo('screen-main');
       });
     }
 
     // 2. Lắng nghe click / touch trên toàn bộ container stage
     this.dom.stage.addEventListener('click', (e) => {
-      this.resetIdleTimer();
-
       // Nếu đang ở Trang Chờ mà click vào stage -> Chuyển sang Trang Chính
       if (this.state.currentScreen === 'screen-idle') {
         e.preventDefault();
@@ -88,6 +86,7 @@ class AppMotionController {
       const demoTrigger = e.target.closest('[data-demo="true"]');
       if (demoTrigger) {
         e.preventDefault();
+        e.stopPropagation();
         this.openDemo();
         return;
       }
@@ -103,7 +102,7 @@ class AppMotionController {
       }
     });
 
-    // 3. Đóng Demo Phone khi chạm vào nền tối (Backdrop)
+    // 3. Đóng Demo Phone khi chạm vào nền tối (Backdrop hoặc khoảng trống ngoài điện thoại)
     if (this.dom.demoBackdrop) {
       this.dom.demoBackdrop.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -111,11 +110,19 @@ class AppMotionController {
       });
     }
 
+    if (this.dom.demoPhoneContainer) {
+      this.dom.demoPhoneContainer.addEventListener('click', (e) => {
+        if (!e.target.closest('.my-phone-gold')) {
+          e.stopPropagation();
+          this.closeDemo();
+        }
+      });
+    }
+
     // 4. Bàn phím điều khiển (ESC để Back hoặc đóng Demo)
     window.addEventListener('keydown', (e) => {
-      this.resetIdleTimer();
       if (e.key === 'Escape') {
-        if (this.dom.demoModal.classList.contains('is-active')) {
+        if (this.isDemoOpen) {
           this.closeDemo();
         } else {
           this.goBack();
@@ -143,7 +150,7 @@ class AppMotionController {
       if (elapsedTime > 800) return;
 
       // Nếu đang mở Demo Phone: Vuốt xuống (deltaY > 60) hoặc vuốt sang phải (deltaX > 80) -> Đóng Demo
-      if (this.dom.demoModal.classList.contains('is-active')) {
+      if (this.isDemoOpen) {
         if (deltaY > 60 || deltaX > 80) {
           this.closeDemo();
         }
@@ -172,6 +179,10 @@ class AppMotionController {
     // Hỗ trợ chuột kéo lướt (Mouse Drag Swipe) để tiện kiểm thử trên máy tính
     let isMouseDown = false;
     this.dom.stage.addEventListener('mousedown', (e) => {
+      // Chỉ nhận mousedown nếu không phải là click trực tiếp vào nút CTA hoặc demo
+      if (e.target.closest('[data-demo="true"], [data-target]')) {
+        return;
+      }
       isMouseDown = true;
       handleSwipeStart(e.clientX, e.clientY);
     });
@@ -181,11 +192,6 @@ class AppMotionController {
         isMouseDown = false;
         handleSwipeEnd(e.clientX, e.clientY);
       }
-    });
-
-    // 6. Đặt lại idle timer khi có thao tác người dùng
-    ['pointerdown', 'touchstart', 'mousemove'].forEach(evt => {
-      window.addEventListener(evt, () => this.resetIdleTimer(), { passive: true });
     });
   }
 
@@ -224,7 +230,7 @@ class AppMotionController {
 
   goBack() {
     // Nếu đang mở Demo phone thì ưu tiên đóng demo trước
-    if (this.dom.demoModal.classList.contains('is-active')) {
+    if (this.isDemoOpen) {
       this.closeDemo();
       return;
     }
@@ -255,10 +261,10 @@ class AppMotionController {
   }
 
   isLevel2Transition(fromId, toId) {
-    // 1.3 -> 1.3.1 / 1.3.2 hoặc 1.4 -> 1.4.1
+    // 1.3 -> 1.3.1 / 1.3.2 hoặc 1.4 -> 1.4.1 / 1.4.2
     return (
       (fromId === 'screen-1-3' && (toId === 'screen-1-3-1' || toId === 'screen-1-3-2')) ||
-      (fromId === 'screen-1-4' && toId === 'screen-1-4-1')
+      (fromId === 'screen-1-4' && (toId === 'screen-1-4-1' || toId === 'screen-1-4-2'))
     );
   }
 
@@ -275,7 +281,9 @@ class AppMotionController {
     const tl = gsap.timeline({
       onComplete: () => {
         fromEl.classList.remove('is-active');
+        gsap.set(fromEl, { pointerEvents: 'none' });
         toEl.classList.add('is-active');
+        gsap.set(toEl, { pointerEvents: 'auto' });
         this.isAnimating = false;
       }
     });
@@ -300,8 +308,7 @@ class AppMotionController {
       );
     }
 
-    // 4. Pop-up 4 thẻ touchpoints lần lượt theo brief:
-    // "Hiện ra trang xong thì 4 textbox (touchpoint) mới pop-up lên"
+    // 4. Pop-up 4 thẻ touchpoints lần lượt theo brief
     const cards = toEl.querySelectorAll('.feature-card');
     if (cards.length > 0) {
       tl.fromTo(cards,
@@ -330,7 +337,9 @@ class AppMotionController {
     const tl = gsap.timeline({
       onComplete: () => {
         fromEl.classList.remove('is-active');
+        gsap.set(fromEl, { pointerEvents: 'none' });
         toEl.classList.add('is-active');
+        gsap.set(toEl, { pointerEvents: 'auto' });
         this.isAnimating = false;
       }
     });
@@ -405,7 +414,9 @@ class AppMotionController {
     const tl = gsap.timeline({
       onComplete: () => {
         fromEl.classList.remove('is-active');
+        gsap.set(fromEl, { pointerEvents: 'none' });
         toEl.classList.add('is-active');
+        gsap.set(toEl, { pointerEvents: 'auto' });
         this.isAnimating = false;
       }
     });
@@ -440,7 +451,7 @@ class AppMotionController {
   }
 
   /**
-   * 4. Chuyển cảnh Pan ngang (Transition Pan text) giữa Cấp 1 và Cấp 2 (1.3 -> 1.3.1 / 1.3.2)
+   * 4. Chuyển cảnh Pan ngang (Transition Pan text) giữa Cấp 1 và Cấp 2 (1.3 -> 1.3.1 / 1.3.2 hoặc 1.4 -> 1.4.1 / 1.4.2)
    */
   animPanHorizontal(fromEl, toEl, direction = 'next') {
     this.isAnimating = true;
@@ -450,8 +461,9 @@ class AppMotionController {
     const tl = gsap.timeline({
       onComplete: () => {
         fromEl.classList.remove('is-active');
+        gsap.set(fromEl, { x: 0, pointerEvents: 'none' });
         toEl.classList.add('is-active');
-        gsap.set(fromEl, { x: 0 });
+        gsap.set(toEl, { pointerEvents: 'auto' });
         this.isAnimating = false;
       }
     });
@@ -475,12 +487,22 @@ class AppMotionController {
       ease: 'power2.out'
     }, 0.2);
 
-    // Stagger các thẻ số 1 2 3
+    // Stagger các thẻ số 1 2 3 (nếu là trang rewards 1.3.1, 1.3.2, 1.4.1)
     const rewardCards = toEl.querySelectorAll('.rewards-card');
     if (rewardCards.length > 0) {
       tl.fromTo(rewardCards,
         { opacity: 0, y: 30 },
         { opacity: 1, y: 0, stagger: 0.1, duration: 0.55, ease: 'back.out(1.2)' },
+        0.35
+      );
+    }
+
+    // Hiệu ứng container TBU (nếu là màn hình 1.4.2)
+    const tbuBox = toEl.querySelector('.tbu-container');
+    if (tbuBox) {
+      tl.fromTo(tbuBox,
+        { opacity: 0, scale: 0.9, y: 25 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.65, ease: 'back.out(1.4)' },
         0.35
       );
     }
@@ -504,7 +526,9 @@ class AppMotionController {
     const tl = gsap.timeline({
       onComplete: () => {
         fromEl.classList.remove('is-active');
+        gsap.set(fromEl, { pointerEvents: 'none' });
         toEl.classList.add('is-active');
+        gsap.set(toEl, { pointerEvents: 'auto' });
         this.isAnimating = false;
       }
     });
@@ -517,28 +541,29 @@ class AppMotionController {
 
   /**
    * 6. Mở màn hình Demo (Mô hình Điện thoại trượt từ dưới lên vào vị trí giữa màn hình)
-   * Theo brief:
-   * "Điện thoại đi từ dưới lên vào vị trí giữa màn hình"
+   * Kích hoạt từ 1.1 CTA, 1.2 CTA, 1.3.1 (card 1-2-3 & cta), 1.3.2 (card 1-2-3 & cta), 1.4.1 (card 1-2-3 & cta)
    */
   openDemo() {
-    if (this.dom.demoModal.classList.contains('is-active')) return;
+    if (this.isDemoOpen) return;
+    this.isDemoOpen = true;
 
+    // Kích hoạt layer modal: Hiển thị rõ ràng (opacity: 1), nhận pointer-events
     this.dom.demoModal.classList.add('is-active');
-    gsap.set(this.dom.demoModal, { visibility: 'visible' });
+    gsap.set(this.dom.demoModal, { opacity: 1, visibility: 'visible', pointerEvents: 'auto' });
 
     const tl = gsap.timeline();
 
-    // 1. Làm mờ nền backdrop
+    // 1. Làm mờ nền backdrop phía sau
     tl.fromTo(this.dom.demoBackdrop,
       { opacity: 0 },
-      { opacity: 1, duration: 0.45, ease: 'power2.out' },
+      { opacity: 1, duration: 0.4, ease: 'power2.out' },
       0
     );
 
-    // 2. Điện thoại trượt từ dưới lên chiếm vị trí giữa màn hình
+    // 2. Điện thoại trượt từ dưới đáy lên chiếm trọn trung tâm màn hình
     tl.fromTo(this.dom.demoPhoneContainer,
       { y: '100%', scale: 0.88 },
-      { y: '0%', scale: 1, duration: 0.85, ease: 'power3.out' },
+      { y: '0%', scale: 1, duration: 0.8, ease: 'power3.out' },
       0.05
     );
   }
@@ -547,81 +572,26 @@ class AppMotionController {
    * 7. Đóng màn hình Demo (Điện thoại trượt xuống lại đáy)
    */
   closeDemo() {
-    if (!this.dom.demoModal.classList.contains('is-active')) return;
+    if (!this.isDemoOpen) return;
 
     const tl = gsap.timeline({
       onComplete: () => {
         this.dom.demoModal.classList.remove('is-active');
-        gsap.set(this.dom.demoModal, { visibility: 'hidden' });
+        gsap.set(this.dom.demoModal, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
+        this.isDemoOpen = false;
       }
     });
 
+    // 1. Điện thoại trượt xuống đáy
     tl.to(this.dom.demoPhoneContainer, {
       y: '100%',
-      scale: 0.92,
-      duration: 0.55,
+      scale: 0.9,
+      duration: 0.5,
       ease: 'power2.in'
     }, 0);
-    tl.to(this.dom.demoBackdrop, { opacity: 0, duration: 0.4 }, 0.15);
-  }
 
-  /* ========================================================================
-     KIOSK IDLE TIMER (Tự động quay về Trang Chờ sau thời gian không tương tác)
-     ======================================================================== */
-  setupIdleTimer() {
-    this.resetIdleTimer();
-  }
-
-  resetIdleTimer() {
-    if (this.idleTimer) {
-      clearTimeout(this.idleTimer);
-    }
-
-    this.idleTimer = setTimeout(() => {
-      this.triggerIdleTimeout();
-    }, this.state.idleTimeoutMs);
-  }
-
-  triggerIdleTimeout() {
-    if (this.state.currentScreen === 'screen-idle') {
-      return;
-    }
-
-    console.log('[Kiosk] Idle timeout reached. Returning to screen-idle...');
-
-    // Đóng demo nếu đang mở
-    if (this.dom.demoModal.classList.contains('is-active')) {
-      gsap.set(this.dom.demoPhoneContainer, { y: '100%' });
-      gsap.set(this.dom.demoBackdrop, { opacity: 0 });
-      this.dom.demoModal.classList.remove('is-active');
-      gsap.set(this.dom.demoModal, { visibility: 'hidden' });
-    }
-
-    const currentScreenEl = this.dom.screens.get(this.state.currentScreen);
-    const idleScreenEl = this.dom.screens.get('screen-idle');
-
-    this.state.resetToIdle();
-
-    if (!currentScreenEl || !idleScreenEl) return;
-
-    this.isAnimating = true;
-    const tl = gsap.timeline({
-      onComplete: () => {
-        currentScreenEl.classList.remove('is-active');
-        idleScreenEl.classList.add('is-active');
-        this.isAnimating = false;
-      }
-    });
-
-    tl.to(currentScreenEl, { opacity: 0, duration: 0.6, ease: 'power2.out' }, 0);
-    tl.to(this.dom.bgMain, { opacity: 0, duration: 0.6 }, 0);
-    tl.to(this.dom.bgDetail, { opacity: 0, duration: 0.6 }, 0);
-
-    idleScreenEl.classList.add('is-active');
-    gsap.set(idleScreenEl, { opacity: 0, visibility: 'visible' });
-
-    tl.to(this.dom.bgIdle, { opacity: 1, duration: 0.8, ease: 'power2.out' }, 0.2);
-    tl.to(idleScreenEl, { opacity: 1, duration: 0.6 }, 0.3);
+    // 2. Backdrop mờ dần
+    tl.to(this.dom.demoBackdrop, { opacity: 0, duration: 0.35, ease: 'power2.in' }, 0.15);
   }
 }
 

@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Hành Tinh Số Doanh Nghiệp - MSB BUSINESS BANKING</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Khung bao toàn màn hình LED 1535x576 -->
+  <main class="stage-wrapper">
+    <div class="stage stage-home" id="screenStage">
+
+      <!-- Multi-layer Background Layers cho GSAP Transitions -->
+      <div class="bg-layer bg-main" id="bgLayerMain"></div>
+      <div class="bg-layer bg-detail" id="bgLayerDetail"></div>
+      <div class="bg-layer bg-detail-2" id="bgLayerDetail2"></div>
+
+      <!-- Nút quay lại toàn cục chuẩn Kiosk MSB (Ảnh gốc icon-back2.png đặt ở góc dưới) -->
+      <a href="javascript:;" class="btn-back" id="btnGlobalBack" role="button" aria-label="Quay lại">
+        <img src="images/icon-back2.png" alt="Quay lại" class="img-back" draggable="false">
+      </a>
+
+      <!-- ==============================================
+           SCREEN 0: SCREEN-IDLE (Màn hình chờ Kiosk)
+           ============================================== -->
+      <section class="screen-view active" id="screen-idle" aria-label="Màn hình chờ">
+        <div class="idle-content">
+          <div class="idle-brand">
+            <p class="idle-sub-title">Hành tinh số doanh nghiệp</p>
+            <div class="divider-line" aria-hidden="true"></div>
+            <h1 class="idle-main-title">
+              <span>MSB</span>
+              <span>BUSINESS</span>
+              <span>BANKING</span>
+            </h1>
+            <p class="idle-tagline">Ngân hàng số vận hành cùng doanh nghiệp</p>
+          </div>
+          <div class="idle-cta-pulse">
+            <span class="pulse-ring"></span>
+            <span class="idle-cta-text">CHẠM VÀO MÀN HÌNH ĐỂ KHÁM PHÁ</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================
+           SCREEN 1: SCREEN-MAIN (Hành tinh số Doanh nghiệp)
+           ============================================== -->
+      <section class="screen-view" id="screen-main" aria-label="Trang chủ doanh nghiệp">
+        <!-- Khối tiêu đề bên trái -->
+        <header class="brand-heading">
+          <p class="sub-title">Hành tinh số doanh nghiệp</p>
+          <div class="divider-line" aria-hidden="true"></div>
+          <h1 class="main-title">
+            <span>MSB</span>
+            <span>BUSINESS</span>
+            <span>BANKING</span>
+          </h1>
+          <p class="sub-title sub-title-bottom">Ngân hàng số vận hành cùng doanh nghiệp</p>
+        </header>
+
+        <!-- Khối 3 thẻ tính năng bên phải -->
+        <div class="features-container" aria-label="Các giải pháp tính năng doanh nghiệp">
+          <!-- Thẻ 1: Tối ưu -> 1.3 -->
+          <button type="button" class="feature-card card-toiuu" data-screen="screen-1-3">
+            <div class="card-header">
+              <img src="images/icon-finance.svg" alt="Tối ưu tài chính" class="card-icon" draggable="false">
+            </div>
+            <div class="card-body">
+              <h2 class="card-title"><span>TỐI ƯU</span></h2>
+              <p class="card-desc">Tối ưu tài chính<br>Tối đa hiệu quả</p>
+            </div>
+          </button>
+
+          <!-- Thẻ 2: Linh hoạt -> 1.1 -->
+          <button type="button" class="feature-card card-linhhoat" data-screen="screen-1-1">
+            <div class="card-header">
+              <img src="images/icon-linhhoat.svg" alt="Linh hoạt vận hành" class="card-icon" draggable="false">
+            </div>
+            <div class="card-body">
+              <h2 class="card-title"><span>LINH HOẠT</span></h2>
+              <p class="card-desc">Linh hoạt vận hành<br>Chủ động quản trị</p>
+            </div>
+          </button>
+
+          <!-- Thẻ 3: Liền mạch -> 1.2 -->
+          <button type="button" class="feature-card card-lienmach" data-screen="screen-1-2">
+            <div class="card-header">
+              <img src="images/icon-ecosystem.svg" alt="Hệ sinh thái kết nối" class="card-icon" draggable="false">
+            </div>
+            <div class="card-body">
+              <h2 class="card-title"><span>LIỀN MẠCH</span></h2>
+              <p class="card-desc">Hệ sinh thái kết nối<br>All in One</p>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- ==============================================
+           SCREEN 2: SCREEN-1-1 (Linh hoạt - Quản trị dịch vụ trực tuyến)
+           ============================================== -->
+      <section class="screen-view stage-detail screen-2" id="screen-1-1" aria-label="Quản trị dịch vụ trực tuyến">
+        <header class="detail-heading toiuu-heading">
+          <span class="category-tag">Linh hoạt</span>
+          <div class="divider-line" aria-hidden="true"></div>
+          <h1 class="main-title">
+            <span>Quản trị dịch vụ trực tuyến</span>
+          </h1>
+          <p class="sub-desc">
+            Doanh nghiệp chủ động thiết lập – quản trị – phân quyền – vận hành <br>
+            trên nền tảng số, phù hợp với cơ cấu và quy trình nội bộ.
+          </p>
+        </header>
+
+        <div class="toiuu-cards-container in-row lien-mach">
+          <article class="toiuu-card">
+            <div class="rewards-card-num">1</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Quản trị 100%</span>
+                <span>trực tuyến</span>
+              </h2>
+            </div>
+            <div class="toiuu-card-desc2">Cài đặt dịch vụ và vận hành ngay trên nền tảng số</div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">2</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Chủ động</span>
+                <span>cập nhật thông tin</span>
+              </h2>
+            </div>
+            <div class="toiuu-card-desc2">Cập nhật giấy tờ, sinh trắc học, thông tin đăng nhập trực tuyến</div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">3</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Thiết lập hạn mức</span>
+                <span>linh hoạt</span>
+              </h2>
+            </div>
+            <div class="toiuu-card-desc2">Điều chỉnh theo quy mô và nhu cầu quản trị</div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">4</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Phân quyền theo</span>
+                <span>vai trò</span>
+              </h2>
+            </div>
+            <div class="toiuu-card-desc2">Quản lý người dùng, vai trò tạo lệnh và duyệt lệnh</div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">5</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Tùy chỉnh quy</span>
+                <span>trình phê duyệt</span>
+              </h2>
+            </div>
+            <div class="toiuu-card-desc2">Thiết lập luồng duyệt phù hợp cơ cấu quản trị nội bộ</div>
+          </article>
+        </div>
+
+        <button type="button" class="rewards-action-container btn-demo-trigger" data-demo-target="desktop" data-demo-title="Quản trị dịch vụ trực tuyến" aria-label="Mở demo Quản trị dịch vụ trực tuyến">
+          <div class="chevron-indicator" aria-hidden="true">
+            <img src="images/icon-chevron-down.svg" alt="" class="icon-down" draggable="false">
+          </div>
+          <span class="rewards-action-label">TRẢI NGHIỆM NGAY</span>
+          <div class="phone-mockup-wrapper">
+            <img src="images/phone_mockup.png" alt="Trải nghiệm ứng dụng MSB" class="img-phone-mockup" draggable="false">
+          </div>
+        </button>
+      </section>
+
+      <!-- ==============================================
+           SCREEN 3: SCREEN-1-2 (Liền mạch - Hệ sinh thái All in One)
+           ============================================== -->
+      <section class="screen-view stage-detail screen-2" id="screen-1-2" aria-label="Hệ sinh thái kết nối All in One">
+        <header class="detail-heading toiuu-heading">
+          <span class="category-tag">Liền mạch</span>
+          <div class="divider-line" aria-hidden="true"></div>
+          <h1 class="main-title">
+            <span>Hệ sinh thái kết nối All in One</span>
+          </h1>
+          <p class="sub-desc">
+            Kết nối ngân hàng với hệ thống và đối tác của doanh nghiệp, giúp thu - chi <br>
+            quản lý dòng tiền và đối soát được thực hiện liền mạch, giảm thao tác thủ công
+          </p>
+        </header>
+
+        <div class="toiuu-cards-container in-row lien-mach">
+          <article class="toiuu-card">
+            <div class="rewards-card-num">1</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Tự động hóa thu - chi</span>
+                <span>và quản lý dòng tiền</span>
+              </h2>
+            </div>
+            <div class="toiuu-card-desc2">Kết nối trực tiếp hệ thống doanh nghiệp với ngân hàng</div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">2</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Đồng bộ dữ liệu</span>
+                <span>theo thời gian thực</span>
+              </h2>
+            </div>
+            <ul class="toiuu-card-list">
+              <li>Số dư</li>
+              <li>Giao dịch</li>
+              <li>Biến động tài khoản</li>
+            </ul>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">3</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Tự động đối soát</span>
+                <span>và tổng hợp</span>
+              </h2>
+            </div>
+            <ul class="toiuu-card-list">
+              <li>Hóa đơn</li>
+              <li>Công nợ</li>
+              <li>Giao dịch thực tế</li>
+            </ul>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">4</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Nâng cao hiệu quả</span>
+                <span>vận hành</span>
+              </h2>
+            </div>
+            <ul class="toiuu-card-list">
+              <li>Giảm thao tác</li>
+              <li>Hạn chế sai sót</li>
+              <li>Rút ngắn thời gian đối soát</li>
+            </ul>
+          </article>
+        </div>
+
+        <button type="button" class="rewards-action-container btn-demo-trigger" data-demo-target="desktop" data-demo-title="Hệ sinh thái kết nối All in One" aria-label="Mở demo Hệ sinh thái kết nối All in One">
+          <div class="chevron-indicator" aria-hidden="true">
+            <img src="images/icon-chevron-down.svg" alt="" class="icon-down" draggable="false">
+          </div>
+          <span class="rewards-action-label">TRẢI NGHIỆM NGAY</span>
+          <div class="phone-mockup-wrapper">
+            <img src="images/phone_mockup.png" alt="Trải nghiệm ứng dụng MSB" class="img-phone-mockup" draggable="false">
+          </div>
+        </button>
+      </section>
+
+      <!-- ==============================================
+           SCREEN 4: SCREEN-1-3 (Tối ưu - Tối ưu tài chính)
+           ============================================== -->
+      <section class="screen-view stage-detail" id="screen-1-3" aria-label="Tối ưu tài chính - Tối đa hiệu quả">
+        <header class="detail-heading toiuu-heading">
+          <span class="category-tag">Tối ưu</span>
+          <div class="divider-line" aria-hidden="true"></div>
+          <h1 class="main-title">
+            <span>Tối ưu tài chính - Tối đa hiệu quả</span>
+          </h1>
+          <p class="sub-desc">
+            <span>Thấu hiểu nhu cầu và hành trình tài chính của doanh nghiệp,</span>
+            <span>từ đó chủ động đề xuất giải pháp phù hợp, giúp doanh nghiệp tối ưu nguồn vốn và dòng tiền.</span>
+          </p>
+        </header>
+
+        <div class="toiuu-cards-container">
+          <!-- Card 1 -> 1.3.1 -->
+          <article class="toiuu-card" data-screen="screen-1-3-1" role="button" aria-label="Xem chi tiết Tín dụng linh hoạt">
+            <div class="toiuu-card-icon">
+              <img src="images/icon-tin-dung.svg" alt="Tín dụng linh hoạt" class="card-icon-svg" draggable="false">
+            </div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title"><span>Tín dụng linh hoạt</span></h2>
+              <p class="toiuu-card-desc">Combo 5 trong 1</p>
+            </div>
+            <div class="toiuu-card-link" data-screen="screen-1-3-1" aria-hidden="true">
+              <span>Xem chi tiết</span>
+              <svg class="icon-arrow" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1.5 1.5L6 6L1.5 10.5" />
+              </svg>
+            </div>
+          </article>
+
+          <!-- Card 2 -> 1.3.2 -->
+          <article class="toiuu-card card-staggered" data-screen="screen-1-3-2" role="button" aria-label="Xem chi tiết Tái cấp hạn mức">
+            <div class="toiuu-card-icon">
+              <img src="images/icon-tai-cap.svg" alt="Tái cấp hạn mức" class="card-icon-svg" draggable="false">
+            </div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title"><span>Tái cấp hạn mức</span></h2>
+              <p class="toiuu-card-desc">PRE-APPROVED OFFER</p>
+            </div>
+            <div class="toiuu-card-link" data-screen="screen-1-3-2" aria-hidden="true">
+              <span>Xem chi tiết</span>
+              <svg class="icon-arrow" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1.5 1.5L6 6L1.5 10.5" />
+              </svg>
+            </div>
+          </article>
+
+          <!-- Card 3 -> 1.3.3 -->
+          <article class="toiuu-card" data-screen="screen-1-3-3" role="button" aria-label="Xem chi tiết Thẻ tín dụng">
+            <div class="toiuu-card-icon">
+              <img src="images/icon-the-tin-dung.svg" alt="Thẻ tín dụng" class="card-icon-svg" draggable="false">
+            </div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title"><span>Thẻ tín dụng</span></h2>
+              <p class="toiuu-card-desc">Một chạm mở thẻ</p>
+            </div>
+            <div class="toiuu-card-link" data-screen="screen-1-3-3" aria-hidden="true">
+              <span>Xem chi tiết</span>
+              <svg class="icon-arrow" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1.5 1.5L6 6L1.5 10.5" />
+              </svg>
+            </div>
+          </article>
+
+          <!-- Card 4 -> 1.3.4 -->
+          <article class="toiuu-card card-staggered" data-screen="screen-1-3-4" role="button" aria-label="Xem chi tiết Chứng chỉ tiền gửi">
+            <div class="toiuu-card-icon">
+              <img src="images/icon-chung-chi.svg" alt="Chứng chỉ tiền gửi" class="card-icon-svg" draggable="false">
+            </div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title"><span>Chứng chỉ tiền gửi</span></h2>
+              <p class="toiuu-card-desc">Tối ưu dòng tiền nhàn rỗi</p>
+            </div>
+            <div class="toiuu-card-link" data-screen="screen-1-3-4" aria-hidden="true">
+              <span>Xem chi tiết</span>
+              <svg class="icon-arrow" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1.5 1.5L6 6L1.5 10.5" />
+              </svg>
+            </div>
+          </article>
+
+          <!-- Card 5 -> 1.3.5 -->
+          <article class="toiuu-card" data-screen="screen-1-3-5" role="button" aria-label="Xem chi tiết MSB REWARDS">
+            <div class="toiuu-card-icon">
+              <img src="images/icon-rewards.svg" alt="MSB REWARDS" class="card-icon-svg" draggable="false">
+            </div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title"><span>MSB REWARDS</span></h2>
+              <p class="toiuu-card-desc">Gắn kết bền vững</p>
+            </div>
+            <div class="toiuu-card-link" data-screen="screen-1-3-5" aria-hidden="true">
+              <span>Xem chi tiết</span>
+              <svg class="icon-arrow" viewBox="0 0 8 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1.5 1.5L6 6L1.5 10.5" />
+              </svg>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ==============================================
+           SCREEN 5: SCREEN-1-3-1 (Tín dụng linh hoạt Combo 5 trong 1)
+           ============================================== -->
+      <section class="screen-view stage-detail screen-2" id="screen-1-3-1" aria-label="Tín dụng linh hoạt Combo 5 trong 1">
+        <header class="detail-heading toiuu-heading left">
+          <h1 class="main-title">
+            <span>TÍN DỤNG LINH HOẠT - COMBO 5 TRONG 1</span>
+          </h1>
+          <p class="sub-desc">Hành trình trải nghiệm số toàn diện, không điểm chạm</p>
+        </header>
+
+        <div class="toiuu-cards-container in-row">
+          <article class="toiuu-card">
+            <div class="rewards-card-num">1</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Đa dạng</span>
+                <span>giải pháp vốn</span>
+              </h2>
+            </div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">2</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Nộp hồ sơ online 100%.</span>
+                <span>Không cần cung cấp</span>
+                <span>TSBĐ tại thời điểm</span>
+                <span>đăng ký.</span>
+              </h2>
+            </div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">3</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Nhận ngay</span>
+                <span>Tài khoản số đẹp</span>
+              </h2>
+            </div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">4</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Ký số an toàn</span>
+                <span>với Chữ ký từ xa</span>
+                <span>(Smart CA)</span>
+              </h2>
+            </div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">5</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Phát hành LC,</span>
+                <span>Bảo lãnh</span>
+              </h2>
+            </div>
+            <ul class="toiuu-card-list">
+              <li>Không tài sản đảm bảo</li>
+              <li>0 đồng phí</li>
+              <li>Ngay sau khi kích hoạt hạn mức</li>
+            </ul>
+          </article>
+        </div>
+
+        <button type="button" class="rewards-action-container btn-demo-trigger" data-demo-target="desktop" data-demo-title="Tối ưu linh hoạt Combo 5 trong 1" aria-label="Mở demo Tín dụng linh hoạt">
+          <div class="chevron-indicator" aria-hidden="true">
+            <img src="images/icon-chevron-down.svg" alt="" class="icon-down" draggable="false">
+          </div>
+          <span class="rewards-action-label">TRẢI NGHIỆM NGAY</span>
+          <div class="phone-mockup-wrapper">
+            <img src="images/phone_mockup.png" alt="Trải nghiệm ứng dụng MSB" class="img-phone-mockup" draggable="false">
+          </div>
+        </button>
+      </section>
+
+      <!-- ==============================================
+           SCREEN 6: SCREEN-1-3-2 (Tái cấp hạn mức PRE-APPROVED OFFER)
+           ============================================== -->
+      <section class="screen-view stage-detail screen-2" id="screen-1-3-2" aria-label="Tái cấp hạn mức PRE-APPROVED OFFER">
+        <header class="detail-heading toiuu-heading left">
+          <h1 class="main-title">
+            <span>TÁI CẤP HẠN MỨC - PRE-APPROVED OFFER</span>
+          </h1>
+          <p class="sub-desc">Ngân hàng chủ động thấu hiểu & đề xuất</p>
+        </header>
+
+        <div class="toiuu-cards-container in-row">
+          <article class="toiuu-card">
+            <div class="rewards-card-num">1</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>MSB chủ động thẩm định & phê duyệt trước hạn mức dựa trên dữ liệu giao dịch</span>
+              </h2>
+            </div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">2</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Khách hàng chỉ việc bấm xác nhận</span>
+              </h2>
+            </div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">3</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Không cần nộp hồ sơ</span>
+                <span>Không cần chứng minh lại tài chính</span>
+              </h2>
+            </div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">4</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Kích hoạt hạn mức & Giải ngân online tức thì</span>
+              </h2>
+            </div>
+          </article>
+        </div>
+
+        <button type="button" class="rewards-action-container btn-demo-trigger" data-demo-target="phone" data-demo-title="Tái cấp hạn mức PRE-APPROVED OFFER" aria-label="Mở demo Tái cấp hạn mức">
+          <div class="chevron-indicator" aria-hidden="true">
+            <img src="images/icon-chevron-down.svg" alt="" class="icon-down" draggable="false">
+          </div>
+          <span class="rewards-action-label">TRẢI NGHIỆM NGAY</span>
+          <div class="phone-mockup-wrapper">
+            <img src="images/phone_mockup.png" alt="Trải nghiệm ứng dụng MSB" class="img-phone-mockup" draggable="false">
+          </div>
+        </button>
+      </section>
+
+      <!-- ==============================================
+           SCREEN 7: SCREEN-1-3-3 (Thẻ tín dụng doanh nghiệp)
+           ============================================== -->
+      <section class="screen-view stage-detail screen-2" id="screen-1-3-3" aria-label="Thẻ tín dụng doanh nghiệp">
+        <header class="detail-heading toiuu-heading left">
+          <h1 class="main-title">
+            <span>THẺ TÍN DỤNG DOANH NGHIỆP</span>
+          </h1>
+          <p class="sub-desc">Một chạm mở thẻ – Trọn hành trình</p>
+        </header>
+
+        <div class="toiuu-cards-container in-row">
+          <article class="toiuu-card">
+            <div class="rewards-card-num">1</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Mở thẻ 100% online trong 10 phút</span>
+              </h2>
+            </div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">2</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Kích hoạt & sử dụng ngay sau khi mở</span>
+              </h2>
+            </div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">3</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Quản lý thẻ trên MSB Business Banking tiện lợi</span>
+              </h2>
+            </div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">4</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Tra cứu sao kê & thanh toán dư nợ nhanh chóng</span>
+              </h2>
+            </div>
+          </article>
+        </div>
+
+        <button type="button" class="rewards-action-container btn-demo-trigger" data-demo-target="phone" data-demo-title="Thẻ tín dụng doanh nghiệp" aria-label="Mở demo Thẻ tín dụng">
+          <div class="chevron-indicator" aria-hidden="true">
+            <img src="images/icon-chevron-down.svg" alt="" class="icon-down" draggable="false">
+          </div>
+          <span class="rewards-action-label">TRẢI NGHIỆM NGAY</span>
+          <div class="phone-mockup-wrapper">
+            <img src="images/phone_mockup.png" alt="Trải nghiệm ứng dụng MSB" class="img-phone-mockup" draggable="false">
+          </div>
+        </button>
+      </section>
+
+      <!-- ==============================================
+           SCREEN 8: SCREEN-1-3-4 (Chứng chỉ tiền gửi)
+           ============================================== -->
+      <section class="screen-view stage-detail screen-2" id="screen-1-3-4" aria-label="Chứng chỉ tiền gửi">
+        <header class="detail-heading toiuu-heading left">
+          <h1 class="main-title">
+            <span>CHỨNG CHỈ TIỀN GỬI</span>
+          </h1>
+          <p class="sub-desc">Tối ưu dòng tiền nhàn rỗi – Linh hoạt sử dụng</p>
+        </header>
+
+        <div class="toiuu-cards-container in-row">
+          <article class="toiuu-card">
+            <div class="rewards-card-num">1</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Lãi suất hấp dẫn lên đến 7,5%/năm</span>
+              </h2>
+            </div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">2</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Hưởng lãi theo số ngày nắm giữ</span>
+              </h2>
+            </div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">3</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Linh hoạt chuyển nhượng</span>
+              </h2>
+            </div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">4</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Thao tác 100% online</span>
+              </h2>
+            </div>
+          </article>
+        </div>
+
+        <button type="button" class="rewards-action-container btn-demo-trigger" data-demo-target="desktop" data-demo-title="Chứng chỉ tiền gửi" aria-label="Mở demo Chứng chỉ tiền gửi">
+          <div class="chevron-indicator" aria-hidden="true">
+            <img src="images/icon-chevron-down.svg" alt="" class="icon-down" draggable="false">
+          </div>
+          <span class="rewards-action-label">TRẢI NGHIỆM NGAY</span>
+          <div class="phone-mockup-wrapper">
+            <img src="images/phone_mockup.png" alt="Trải nghiệm ứng dụng MSB" class="img-phone-mockup" draggable="false">
+          </div>
+        </button>
+      </section>
+
+      <!-- ==============================================
+           SCREEN 9: SCREEN-1-3-5 (MSB REWARDS)
+           ============================================== -->
+      <section class="screen-view stage-detail screen-2" id="screen-1-3-5" aria-label="MSB REWARDS">
+        <header class="detail-heading toiuu-heading left">
+          <h1 class="main-title">
+            <span>MSB REWARDS</span>
+          </h1>
+          <p class="sub-desc">Gắn kết bền vững – Tích lũy giá trị – Mở rộng đặc quyền</p>
+        </header>
+
+        <div class="toiuu-cards-container in-row">
+          <article class="toiuu-card">
+            <div class="rewards-card-num">1</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Quản lý phân hạng và điểm 100% online</span>
+              </h2>
+            </div>
+          </article>
+
+          <article class="toiuu-card">
+            <div class="rewards-card-num">2</div>
+            <div class="toiuu-card-body">
+              <h2 class="toiuu-card-title">
+                <span>Tận hưởng các đặc quyền:</span>
+              </h2>
+            </div>
+            <ul class="toiuu-card-list">
+              <li>Miễn/giảm phí chuyển tiền, TTR, bảo lãnh</li>
+              <li>Đổi voucher tại các đối tác uy tín</li>
+              <li>Đổi dặm bay Vietnam Airlines tận hưởng các đặc quyền phòng chờ, hạng ghế</li>
+            </ul>
+          </article>
+        </div>
+
+        <button type="button" class="rewards-action-container btn-demo-trigger" data-demo-target="phone" data-demo-title="MSB Rewards" aria-label="Mở demo MSB Rewards">
+          <div class="chevron-indicator" aria-hidden="true">
+            <img src="images/icon-chevron-down.svg" alt="" class="icon-down" draggable="false">
+          </div>
+          <span class="rewards-action-label">TRẢI NGHIỆM NGAY</span>
+          <div class="phone-mockup-wrapper">
+            <img src="images/phone_mockup.png" alt="Trải nghiệm ứng dụng MSB" class="img-phone-mockup" draggable="false">
+          </div>
+        </button>
+      </section>
+
+      <!-- ==============================================
+           MODAL 1: SCREEN-DEMO-DESKTOP (Màn hình lớn Laptop/PC)
+           ============================================== -->
+      <div class="demo-modal-overlay" id="screen-demo-desktop" aria-modal="true" role="dialog" aria-hidden="true">
+        <div class="demo-modal-container desktop-modal">
+          <header class="demo-modal-header">
+            <h2 class="demo-modal-title" id="demoDesktopTitle">Quản trị dịch vụ trực tuyến</h2>
+            <button type="button" class="demo-close-btn" id="btnDemoDesktopClose" aria-label="Đóng trải nghiệm">&times;</button>
+          </header>
+          <div class="demo-modal-body">
+            <div class="wrap-video desktop-frame">
+              <img src="images/man-hinh.png" alt="Giao diện máy tính MSB Doanh Nghiệp" class="demo-desktop-img" draggable="false">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==============================================
+           MODAL 2: SCREEN-DEMO-PHONE (Mockup điện thoại đứng)
+           ============================================== -->
+      <div class="demo-modal-overlay" id="screen-demo-phone" aria-modal="true" role="dialog" aria-hidden="true">
+        <div class="demo-modal-container phone-modal">
+          <header class="demo-modal-header">
+            <h2 class="demo-modal-title" id="demoPhoneTitle">Trải nghiệm ứng dụng</h2>
+            <button type="button" class="demo-close-btn" id="btnDemoPhoneClose" aria-label="Đóng trải nghiệm">&times;</button>
+          </header>
+          <div class="demo-modal-body">
+            <div class="wrap-video phone-frame">
+              <img src="images/my-phone.png" alt="Giao diện ứng dụng MSB Doanh Nghiệp" class="demo-phone-img" draggable="false">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- GSAP Core & Plugins -->
+  <script src="js/gsap.min.js"></script>
+  <!-- Main Application Motion & Controller (Module) -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -19,6 +19,24 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+}
+
+*:focus,
+*:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
 }
 
 html,
@@ -33,6 +51,8 @@ body {
   align-items: center;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+  touch-action: pan-x pan-y;
 }
 
 /* ==========================================================================
@@ -116,20 +136,6 @@ body {
   transition: transform 0.35s var(--ease-smooth), border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
 }
 
-.feature-card:focus-visible,
-.detail-card:focus-visible,
-.rewards-card:focus-visible {
-  border-color: rgba(255, 200, 150, 0.9);
-  box-shadow: 0 0 0 2px rgba(255, 160, 80, 0.5), 0 16px 40px rgba(0, 0, 0, 0.7);
-}
-
-.feature-card:hover,
-.detail-card:hover,
-.rewards-card:hover {
-  transform: translateY(-5px) scale(1.03);
-  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.75), 0 0 30px rgba(255, 120, 50, 0.38), inset 0 1px 1px rgba(255, 255, 255, 0.35);
-}
-
 /* Hiệu ứng màu chữ chuyển sắc trên thẻ */
 .card-title span,
 .detail-card-desc,
@@ -140,11 +146,33 @@ body {
   transition: color 0.3s ease;
 }
 
-.feature-card:hover .card-title span,
-.detail-card:hover .detail-card-desc,
-.rewards-card:hover .rewards-card-desc {
-  color: #FFFFFF;
-  -webkit-text-fill-color: #FFFFFF;
+/* Desktop Hover States - Chỉ áp dụng khi có chuột thật, không dính trên cảm ứng LED */
+@media (hover: hover) and (pointer: fine) {
+  .feature-card:hover,
+  .detail-card:hover,
+  .rewards-card:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.75), 0 0 30px rgba(255, 120, 50, 0.38), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+  }
+
+  .feature-card:hover .card-title span,
+  .detail-card:hover .detail-card-desc,
+  .rewards-card:hover .rewards-card-desc {
+    color: #FFFFFF;
+    -webkit-text-fill-color: #FFFFFF;
+  }
+}
+
+/* Phản hồi chạm tức thì cho Màn hình LED Cảm ứng (Kiosk Touch) */
+.feature-card:active,
+.detail-card:active,
+.rewards-card:active,
+.btn-cta:active,
+.phone-interactive-peek:active,
+.column-action:active {
+  transform: scale(0.97) !important;
+  filter: brightness(1.15) !important;
+  transition: transform 0.08s ease, filter 0.08s ease !important;
 }
 
 /* ==========================================================================
@@ -216,13 +244,15 @@ body {
   height: clamp(13px, 1.25vw, 15px);
 }
 
-.feature-card:hover .icon-badge {
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.14);
-}
+@media (hover: hover) and (pointer: fine) {
+  .feature-card:hover .icon-badge {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.14);
+  }
 
-.feature-card:hover .arrow-badge img {
-  transform: translate(2px, -2px);
+  .feature-card:hover .arrow-badge img {
+    transform: translate(2px, -2px);
+  }
 }
 
 .card-body {
@@ -370,8 +400,10 @@ body {
   transition: transform 0.35s var(--ease-smooth);
 }
 
-.detail-card:hover .img-icon-3d {
-  transform: scale(1.08) translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .detail-card:hover .img-icon-3d {
+    transform: scale(1.08) translateY(-2px);
+  }
 }
 
 .detail-card-body {
@@ -553,10 +585,12 @@ body {
   user-select: none;
 }
 
-.btn-cta:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 12px 32px rgba(232, 77, 29, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.45);
-  filter: brightness(1.06);
+@media (hover: hover) and (pointer: fine) {
+  .btn-cta:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 12px 32px rgba(232, 77, 29, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    filter: brightness(1.06);
+  }
 }
 
 /* Nút bấm theo từng cột */
@@ -606,8 +640,10 @@ body {
   transition: transform 0.3s var(--ease-smooth);
 }
 
-.phone-mockup-wrapper:hover .img-phone-mockup {
-  transform: translateY(-3px);
+@media (hover: hover) and (pointer: fine) {
+  .phone-mockup-wrapper:hover .img-phone-mockup {
+    transform: translateY(-3px);
+  }
 }
 
 /* ==========================================================================
@@ -881,19 +917,21 @@ body {
   transition: transform 0.35s var(--ease-smooth), filter 0.35s ease;
 }
 
-.phone-interactive-peek:hover {
-  transform: translateY(-8px);
-  filter: drop-shadow(0 -8px 24px rgba(255, 120, 50, 0.6));
-}
-
 .rewards-action-label {
   cursor: pointer;
   transition: color 0.3s ease, letter-spacing 0.3s ease;
 }
 
-.rewards-action-label:hover {
-  color: #ffb07a;
-  letter-spacing: 0.16em;
+@media (hover: hover) and (pointer: fine) {
+  .phone-interactive-peek:hover {
+    transform: translateY(-8px);
+    filter: drop-shadow(0 -8px 24px rgba(255, 120, 50, 0.6));
+  }
+
+  .rewards-action-label:hover {
+    color: #ffb07a;
+    letter-spacing: 0.16em;
+  }
 }
 
 /* Card TBU */

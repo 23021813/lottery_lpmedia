@@ -64,6 +64,18 @@ class AppMotionController {
   }
 
   setupEventListeners() {
+    // Kiosk Protection: Chặn chuột phải và menu long-press trên màn hình cảm ứng
+    window.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      return false;
+    });
+
+    // Kiosk Protection: Chặn kéo ảnh / phần tử mặc định của trình duyệt
+    window.addEventListener('dragstart', (e) => {
+      e.preventDefault();
+      return false;
+    });
+
     // 1. Chạm bất kỳ điểm nào trên Trang Chờ (Idle Screen) -> Vào Trang Chính
     const idleScreen = this.dom.screens.get('screen-idle');
     if (idleScreen) {

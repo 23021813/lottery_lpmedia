@@ -547,6 +547,11 @@ class AppMotionController {
     if (this.isDemoOpen) return;
     this.isDemoOpen = true;
 
+    // Xóa ngay trạng thái focus nếu có phần tử đang active
+    if (document.activeElement && typeof document.activeElement.blur === 'function') {
+      document.activeElement.blur();
+    }
+
     // Kích hoạt layer modal: Hiển thị rõ ràng (opacity: 1), nhận pointer-events
     this.dom.demoModal.classList.add('is-active');
     gsap.set(this.dom.demoModal, { opacity: 1, visibility: 'visible', pointerEvents: 'auto' });
@@ -562,7 +567,7 @@ class AppMotionController {
 
     // 2. Điện thoại trượt từ dưới đáy lên chiếm trọn trung tâm màn hình
     tl.fromTo(this.dom.demoPhoneContainer,
-      { y: '100%', scale: 0.88 },
+      { y: '130%', scale: 0.88 },
       { y: '0%', scale: 1, duration: 0.8, ease: 'power3.out' },
       0.05
     );
@@ -574,17 +579,23 @@ class AppMotionController {
   closeDemo() {
     if (!this.isDemoOpen) return;
 
+    // Xóa trạng thái focus của bất kỳ phần tử nào
+    if (document.activeElement && typeof document.activeElement.blur === 'function') {
+      document.activeElement.blur();
+    }
+
     const tl = gsap.timeline({
       onComplete: () => {
         this.dom.demoModal.classList.remove('is-active');
         gsap.set(this.dom.demoModal, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
+        gsap.set(this.dom.demoPhoneContainer, { y: '130%' });
         this.isDemoOpen = false;
       }
     });
 
-    // 1. Điện thoại trượt xuống đáy
+    // 1. Điện thoại trượt sâu xuống hẳn bên dưới đáy màn hình (130%)
     tl.to(this.dom.demoPhoneContainer, {
-      y: '100%',
+      y: '130%',
       scale: 0.9,
       duration: 0.5,
       ease: 'power2.in'

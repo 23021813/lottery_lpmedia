@@ -476,6 +476,11 @@ body {
 /* ==========================================================================
    KHỐI NÚT HÀNH ĐỘNG & ĐIỀU HƯỚNG DƯỚI CÙNG
    ========================================================================== */
+*:focus,
+*:focus-visible {
+  outline: none !important;
+}
+
 .detail-action-container,
 .rewards-action-container {
   position: absolute;
@@ -485,6 +490,8 @@ body {
   flex-direction: column;
   align-items: center;
   z-index: 10;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .detail-action-container {

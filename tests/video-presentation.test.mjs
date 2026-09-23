@@ -42,7 +42,7 @@ test('Video Assets & Full-Screen Touch Presentation Test Suite', async (t) => {
     });
   });
 
-  await t.test('ca-nhan/index.html should have full-screen video player and flat touch controls', () => {
+  await t.test('ca-nhan/index.html should have full-screen video player with minimal controls', () => {
     const html = fs.readFileSync(path.join(ROOT_DIR, 'ca-nhan', 'index.html'), 'utf8');
 
     // Modal và video element
@@ -53,10 +53,12 @@ test('Video Assets & Full-Screen Touch Presentation Test Suite', async (t) => {
     // Controls container
     assert.ok(html.includes('id="videoTouchControls"'), 'Missing #videoTouchControls in ca-nhan');
 
-    // User constraint: KHÔNG CẦN TIÊU ĐỀ
+    // User constraints: KHÔNG CẦN TIÊU ĐỀ, BỎ ÂM THANH, BỎ TIME
     assert.ok(!html.includes('video-title-badge') && !html.includes('videoTitleBadge'), 'Controls must NOT contain title badge');
+    assert.ok(!html.includes('id="volumeGroup"') && !html.includes('volume-slider-group'), 'Controls must NOT contain volume slider');
+    assert.ok(!html.includes('id="videoTimeDisplay"') && !html.includes('video-time-display'), 'Controls must NOT contain time display');
 
-    // Controls elements: Play/Pause phẳng, Scrub bar, Volume slider, Back button
+    // Controls elements: Play/Pause phẳng, Scrub bar, Back button
     assert.ok(html.includes('id="btnPlayToggle"'), 'Missing #btnPlayToggle in ca-nhan');
     assert.ok(html.includes('class="icon-play"'), 'Missing icon-play SVG in ca-nhan');
     assert.ok(html.includes('class="icon-pause"'), 'Missing icon-pause SVG in ca-nhan');
@@ -64,11 +66,6 @@ test('Video Assets & Full-Screen Touch Presentation Test Suite', async (t) => {
     assert.ok(html.includes('id="videoScrubBar"'), 'Missing #videoScrubBar in ca-nhan');
     assert.ok(html.includes('id="videoScrubProgress"'), 'Missing #videoScrubProgress in ca-nhan');
     assert.ok(html.includes('id="videoScrubThumb"'), 'Missing #videoScrubThumb in ca-nhan');
-
-    assert.ok(html.includes('id="volumeGroup"'), 'Missing #volumeGroup in ca-nhan');
-    assert.ok(html.includes('id="volumeTrackWrapper"'), 'Missing #volumeTrackWrapper in ca-nhan');
-    assert.ok(html.includes('id="volumeFill"'), 'Missing #volumeFill in ca-nhan');
-    assert.ok(html.includes('id="volumeThumb"'), 'Missing #volumeThumb in ca-nhan');
 
     assert.ok(html.includes('id="btnVideoBack"'), 'Missing #btnVideoBack in ca-nhan');
     assert.ok(html.includes('icon-back2.png'), 'Back button must use authentic icon-back2.png image style');
@@ -82,7 +79,7 @@ test('Video Assets & Full-Screen Touch Presentation Test Suite', async (t) => {
     assert.ok(html.includes('data-video="video/marketplace.webm"'), 'Missing data-video for marketplace.webm');
   });
 
-  await t.test('doanh-nghiep/index.html should have full-screen video player and flat touch controls', () => {
+  await t.test('doanh-nghiep/index.html should have full-screen video player with minimal controls', () => {
     const html = fs.readFileSync(path.join(ROOT_DIR, 'doanh-nghiep', 'index.html'), 'utf8');
 
     // Modal và video element
@@ -93,10 +90,12 @@ test('Video Assets & Full-Screen Touch Presentation Test Suite', async (t) => {
     // Controls container
     assert.ok(html.includes('id="videoTouchControls"'), 'Missing #videoTouchControls in doanh-nghiep');
 
-    // User constraint: KHÔNG CẦN TIÊU ĐỀ
+    // User constraints: KHÔNG CẦN TIÊU ĐỀ, BỎ ÂM THANH, BỎ TIME
     assert.ok(!html.includes('video-title-badge') && !html.includes('videoTitleBadge'), 'Controls must NOT contain title badge');
+    assert.ok(!html.includes('id="volumeGroup"') && !html.includes('volume-slider-group'), 'Controls must NOT contain volume slider');
+    assert.ok(!html.includes('id="videoTimeDisplay"') && !html.includes('video-time-display'), 'Controls must NOT contain time display');
 
-    // Controls elements: Play/Pause phẳng, Scrub bar, Volume slider, Back button
+    // Controls elements: Play/Pause phẳng, Scrub bar, Back button
     assert.ok(html.includes('id="btnPlayToggle"'), 'Missing #btnPlayToggle in doanh-nghiep');
     assert.ok(html.includes('class="icon-play"'), 'Missing icon-play SVG in doanh-nghiep');
     assert.ok(html.includes('class="icon-pause"'), 'Missing icon-pause SVG in doanh-nghiep');
@@ -104,11 +103,6 @@ test('Video Assets & Full-Screen Touch Presentation Test Suite', async (t) => {
     assert.ok(html.includes('id="videoScrubBar"'), 'Missing #videoScrubBar in doanh-nghiep');
     assert.ok(html.includes('id="videoScrubProgress"'), 'Missing #videoScrubProgress in doanh-nghiep');
     assert.ok(html.includes('id="videoScrubThumb"'), 'Missing #videoScrubThumb in doanh-nghiep');
-
-    assert.ok(html.includes('id="volumeGroup"'), 'Missing #volumeGroup in doanh-nghiep');
-    assert.ok(html.includes('id="volumeTrackWrapper"'), 'Missing #volumeTrackWrapper in doanh-nghiep');
-    assert.ok(html.includes('id="volumeFill"'), 'Missing #volumeFill in doanh-nghiep');
-    assert.ok(html.includes('id="volumeThumb"'), 'Missing #volumeThumb in doanh-nghiep');
 
     assert.ok(html.includes('id="btnVideoBack"'), 'Missing #btnVideoBack in doanh-nghiep');
     assert.ok(html.includes('icon-back2.png'), 'Back button must use authentic icon-back2.png image style');
@@ -123,7 +117,7 @@ test('Video Assets & Full-Screen Touch Presentation Test Suite', async (t) => {
     assert.ok(html.includes('data-demo-video="video/msb-rewards.webm"'), 'Missing data-demo-video for msb-rewards.webm');
   });
 
-  await t.test('CSS styles in both applications must include video modal and flat touch controls', () => {
+  await t.test('CSS styles in both applications must configure controls hidden by default and visible on .is-visible', () => {
     const cssCN = fs.readFileSync(path.join(ROOT_DIR, 'ca-nhan', 'css', 'style.css'), 'utf8');
     const cssDN = fs.readFileSync(path.join(ROOT_DIR, 'doanh-nghiep', 'css', 'style.css'), 'utf8');
 
@@ -132,28 +126,27 @@ test('Video Assets & Full-Screen Touch Presentation Test Suite', async (t) => {
       assert.ok(css.includes('.demo-video-modal'), `${appName} missing .demo-video-modal`);
       assert.ok(css.includes('.presentation-video'), `${appName} missing .presentation-video`);
       assert.ok(css.includes('.video-touch-controls'), `${appName} missing .video-touch-controls`);
-      assert.ok(css.includes('.video-touch-controls.is-dimmed'), `${appName} missing .video-touch-controls.is-dimmed for auto-hide`);
+      assert.ok(css.includes('.video-touch-controls.is-visible'), `${appName} missing .video-touch-controls.is-visible for touch reveal`);
       assert.ok(css.includes('.video-scrub-bar'), `${appName} missing .video-scrub-bar`);
-      assert.ok(css.includes('.volume-slider-group'), `${appName} missing .volume-slider-group`);
-      assert.ok(css.includes('.volume-track-wrapper'), `${appName} missing .volume-track-wrapper`);
       assert.ok(css.includes('.btn-ctrl-back'), `${appName} missing .btn-ctrl-back`);
+      assert.ok(!css.includes('.volume-slider-group'), `${appName} should not include .volume-slider-group`);
     });
   });
 
-  await t.test('JS controllers in both applications must include video mapping and auto-dim logic', () => {
+  await t.test('JS controllers must implement Cinematic Zoom animation and 5s auto-hide touch controls', () => {
     const jsCN = fs.readFileSync(path.join(ROOT_DIR, 'ca-nhan', 'js', 'app.js'), 'utf8');
     const jsDN = fs.readFileSync(path.join(ROOT_DIR, 'doanh-nghiep', 'js', 'app.js'), 'utf8');
 
     // ca-nhan
-    assert.ok(jsCN.includes('screenVideoMap'), 'ca-nhan/js/app.js missing screenVideoMap');
-    assert.ok(jsCN.includes('setupVideoControls'), 'ca-nhan/js/app.js missing setupVideoControls');
-    assert.ok(jsCN.includes('resetControlsAutoDim'), 'ca-nhan/js/app.js missing resetControlsAutoDim');
-    assert.ok(jsCN.includes('setPointerCapture'), 'ca-nhan/js/app.js must use setPointerCapture for touch scrub/volume');
+    assert.ok(jsCN.includes('showControlsWithTimer'), 'ca-nhan/js/app.js missing showControlsWithTimer');
+    assert.ok(jsCN.includes('hideControls'), 'ca-nhan/js/app.js missing hideControls');
+    assert.ok(jsCN.includes('5000'), 'ca-nhan/js/app.js must use 5000ms timer for auto-hide');
+    assert.ok(jsCN.includes('scale: 0.88') && jsCN.includes('blur(10px)'), 'ca-nhan/js/app.js must use Cinematic Zoom & Focus entrance animation');
 
     // doanh-nghiep
-    assert.ok(jsDN.includes('screenVideoMap'), 'doanh-nghiep/js/app.js missing screenVideoMap');
-    assert.ok(jsDN.includes('setupVideoControls'), 'doanh-nghiep/js/app.js missing setupVideoControls');
-    assert.ok(jsDN.includes('resetControlsAutoDim'), 'doanh-nghiep/js/app.js missing resetControlsAutoDim');
-    assert.ok(jsDN.includes('setPointerCapture'), 'doanh-nghiep/js/app.js must use setPointerCapture for touch scrub/volume');
+    assert.ok(jsDN.includes('showControlsWithTimer'), 'doanh-nghiep/js/app.js missing showControlsWithTimer');
+    assert.ok(jsDN.includes('hideControls'), 'doanh-nghiep/js/app.js missing hideControls');
+    assert.ok(jsDN.includes('5000'), 'doanh-nghiep/js/app.js must use 5000ms timer for auto-hide');
+    assert.ok(jsDN.includes('scale: 0.88') && jsDN.includes('blur(10px)'), 'doanh-nghiep/js/app.js must use Cinematic Zoom & Focus entrance animation');
   });
 });

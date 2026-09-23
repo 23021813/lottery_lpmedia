@@ -386,74 +386,74 @@ class AppMotionController {
       }
     });
 
-    // Giai đoạn 1: Mờ nội dung Trang Chính & Quả cầu xanh zoom in lướt tâm về chính giữa (từ 62.7% về 50%), out nét & transparent
-    tl.to(fromEl, { opacity: 0, scale: 0.92, duration: 0.6, ease: 'power2.in' }, 0);
+    // Giai đoạn 1: Mờ nội dung Trang Chính nhanh & Quả cầu xanh zoom in lướt tâm về chính giữa (từ 62.7% về 50%)
+    tl.to(fromEl, { opacity: 0, scale: 0.95, duration: 0.4, ease: 'power2.out' }, 0);
     
     gsap.set(this.dom.bgMain, { transformOrigin: '62.7% 47%' });
     tl.to(this.dom.bgMain, {
-      scale: 1.6,
+      scale: 1.55,
       x: '-12.7%',
       opacity: 0,
-      filter: 'blur(8px) brightness(1.25)',
-      duration: 1.35,
+      filter: 'blur(3px) brightness(1.2)',
+      duration: 1.05,
       ease: 'power2.inOut'
     }, 0);
 
-    // Giai đoạn 2: Nền chi tiết (bgDetail tại tâm giữa 50%) giật về nét 100% opacity (Snap Focus)
+    // Giai đoạn 2: Nền chi tiết (bgDetail tại tâm giữa 50%) cross-fade gối đầu liền mạch, bắt nét êm ái với power3.out
     toEl.classList.add('is-active');
     gsap.set(toEl, { opacity: 0, visibility: 'visible' });
 
     gsap.set(this.dom.bgDetail, { transformOrigin: '50% 50%' });
-    tl.set(this.dom.bgDetail, { scale: 1.25, opacity: 0, filter: 'blur(4px)' }, 0.55);
+    tl.set(this.dom.bgDetail, { scale: 1.18, opacity: 0, filter: 'blur(2px)' }, 0.3);
     tl.to(this.dom.bgDetail, {
       scale: 1.0,
       opacity: 1,
       filter: 'blur(0px)',
-      duration: 1.15,
-      ease: 'back.out(1.15)'
-    }, 0.65);
+      duration: 0.85,
+      ease: 'power3.out'
+    }, 0.35);
 
-    // Giai đoạn 3: "Mấy cái này tĩnh" - Tiêu đề, Card, Nút CTA trôi vào trễ sau khi quả cầu đã nét ở giữa
+    // Giai đoạn 3: "Mấy cái này tĩnh" - Tiêu đề, Card, Nút CTA trôi vào trễ nhịp nhàng ngay sau khi quả cầu định hình
     const heading = toEl.querySelector('.detail-heading');
     const cards = toEl.querySelectorAll('.detail-card, .rewards-card');
     const action = toEl.querySelector('.detail-action-container, .rewards-action-container, .feature-column .column-action');
 
-    tl.to(toEl, { opacity: 1, duration: 0.4 }, 1.15);
+    tl.to(toEl, { opacity: 1, duration: 0.35 }, 0.55);
 
     if (heading) {
       tl.fromTo(heading,
-        { opacity: 0, y: -25 },
-        { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
-        1.2
+        { opacity: 0, y: -20 },
+        { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
+        0.6
       );
     }
 
     if (cards.length > 0) {
       tl.fromTo(cards,
-        { opacity: 0, y: 35, scale: 0.92 },
+        { opacity: 0, y: 25, scale: 0.95 },
         {
           opacity: 1,
           y: 0,
           scale: 1,
-          stagger: 0.12,
-          duration: 0.7,
+          stagger: 0.08,
+          duration: 0.6,
           ease: 'power2.out'
         },
-        1.3
+        0.7
       );
     }
 
     if (action) {
       tl.fromTo(action,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.65, ease: 'power2.out' },
-        1.5
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' },
+        0.85
       );
     }
   }
 
   /**
-   * 3. Chuyển cảnh ngược từ Màn hình Cấp 1 -> Trang Chính (Reverse Cinematic Focus)
+   * 3. Chuyển cảnh ngược từ Màn hình Cấp 1 -> Trang Chính (Reverse Seamless Motion)
    */
   animLevel1ToMain(fromEl, toEl) {
     this.isAnimating = true;
@@ -467,42 +467,41 @@ class AppMotionController {
       }
     });
 
-    // 1. Thu nhỏ và mờ nội dung trang con
-    tl.to(fromEl, { opacity: 0, y: 25, duration: 0.55, ease: 'power2.in' }, 0);
+    // 1. Thu nhỏ và mờ nhanh nội dung trang con
+    tl.to(fromEl, { opacity: 0, y: 20, duration: 0.35, ease: 'power2.in' }, 0);
 
-    // 2. Quả cầu đổi chiều: Nền chi tiết mờ đi và out nét tại giữa
+    // 2. Quả cầu đổi chiều: Nền chi tiết mờ đi tại giữa
     toEl.classList.add('is-active');
     gsap.set(toEl, { opacity: 0, visibility: 'visible' });
 
     gsap.set(this.dom.bgDetail, { transformOrigin: '50% 50%' });
     tl.to(this.dom.bgDetail, {
       opacity: 0,
-      scale: 1.2,
-      filter: 'blur(6px)',
-      duration: 0.85,
+      scale: 1.12,
+      duration: 0.65,
       ease: 'power2.inOut'
-    }, 0.1);
+    }, 0.05);
 
     // Nền chính từ giữa thu nhỏ sắc nét và lướt về lại vị trí bên phải
     gsap.set(this.dom.bgMain, { transformOrigin: '62.7% 47%' });
-    tl.set(this.dom.bgMain, { scale: 1.6, x: '-12.7%', filter: 'blur(6px)', opacity: 0 }, 0.1);
+    tl.set(this.dom.bgMain, { scale: 1.5, x: '-12.7%', opacity: 0 }, 0.05);
     tl.to(this.dom.bgMain, {
       scale: 1.0,
       x: '0%',
       opacity: 1,
       filter: 'blur(0px) brightness(1)',
-      duration: 1.2,
+      duration: 0.9,
       ease: 'power2.out'
-    }, 0.25);
+    }, 0.15);
 
-    tl.to(toEl, { opacity: 1, duration: 0.6 }, 0.55);
+    tl.to(toEl, { opacity: 1, duration: 0.4 }, 0.35);
 
     const cards = toEl.querySelectorAll('.feature-card');
     if (cards.length > 0) {
       tl.fromTo(cards,
-        { opacity: 0.4, scale: 0.92 },
-        { opacity: 1, scale: 1, stagger: 0.09, duration: 0.65, ease: 'power2.out' },
-        0.65
+        { opacity: 0.4, scale: 0.95 },
+        { opacity: 1, scale: 1, stagger: 0.06, duration: 0.55, ease: 'power2.out' },
+        0.4
       );
     }
   }

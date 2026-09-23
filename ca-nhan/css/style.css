@@ -814,6 +814,9 @@ body {
   pointer-events: none;
   transform-origin: center center;
   will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 #bgLayerMain {
@@ -845,6 +848,9 @@ body {
   visibility: hidden;
   z-index: 10;
   overflow: hidden;
+  will-change: transform, opacity;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .screen-view.is-active {

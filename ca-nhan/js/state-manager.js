@@ -78,6 +78,10 @@ export class AppStateManager {
     return previousScreen;
   }
 
+  canGoBack() {
+    return this.currentScreen !== 'screen-idle' && this.currentScreen !== 'screen-main';
+  }
+
   resetToIdle() {
     if (this.currentScreen === 'screen-idle') {
       return;

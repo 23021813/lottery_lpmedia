@@ -24,6 +24,7 @@ class AppMotionController {
       demoModal: document.getElementById('screen-demo'),
       demoBackdrop: document.getElementById('demoBackdrop'),
       demoPhoneContainer: document.getElementById('demoPhoneContainer'),
+      btnBack: document.getElementById('btnGlobalBack'),
       screens: new Map()
     };
 
@@ -61,6 +62,27 @@ class AppMotionController {
     gsap.set(this.dom.demoModal, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
     gsap.set(this.dom.demoBackdrop, { opacity: 0 });
     gsap.set(this.dom.demoPhoneContainer, { y: '100%' });
+
+    // Trạng thái nút Back ban đầu (ẩn ở trang chờ / trang chính)
+    this.updateBackButtonVisibility();
+  }
+
+  updateBackButtonVisibility() {
+    if (!this.dom.btnBack) return;
+    const shouldShow = this.isDemoOpen || (typeof this.state.canGoBack === 'function' && this.state.canGoBack());
+    if (shouldShow) {
+      this.dom.btnBack.classList.add('is-visible');
+    } else {
+      this.dom.btnBack.classList.remove('is-visible');
+    }
+  }
+
+  handleBackAction() {
+    if (this.isDemoOpen) {
+      this.closeDemo();
+    } else {
+      this.goBack();
+    }
   }
 
   setupEventListeners() {
@@ -75,6 +97,15 @@ class AppMotionController {
       e.preventDefault();
       return false;
     });
+
+    // 0. Nút Back toàn cục (Universal Back Button)
+    if (this.dom.btnBack) {
+      this.dom.btnBack.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.handleBackAction();
+      });
+    }
 
     // 1. Chạm bất kỳ điểm nào trên Trang Chờ (Idle Screen) -> Vào Trang Chính
     const idleScreen = this.dom.screens.get('screen-idle');
@@ -134,11 +165,7 @@ class AppMotionController {
     // 4. Bàn phím điều khiển (ESC để Back hoặc đóng Demo)
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        if (this.isDemoOpen) {
-          this.closeDemo();
-        } else {
-          this.goBack();
-        }
+        this.handleBackAction();
       }
     });
 
@@ -227,6 +254,7 @@ class AppMotionController {
 
     // Ghi nhận vào state history
     this.state.navigateTo(targetId);
+    this.updateBackButtonVisibility();
 
     // Quyết định loại hiệu ứng dựa trên cặp màn hình
     if (currentId === 'screen-idle' && targetId === 'screen-main') {
@@ -251,6 +279,7 @@ class AppMotionController {
 
     const currentId = this.state.currentScreen;
     const prevId = this.state.goBack();
+    this.updateBackButtonVisibility();
 
     if (!prevId) {
       // Đã ở trang gốc
@@ -509,13 +538,21 @@ class AppMotionController {
       );
     }
 
-    // Hiệu ứng container TBU (nếu là màn hình 1.4.2)
-    const tbuBox = toEl.querySelector('.tbu-container');
-    if (tbuBox) {
-      tl.fromTo(tbuBox,
-        { opacity: 0, scale: 0.9, y: 25 },
-        { opacity: 1, scale: 1, y: 0, duration: 0.65, ease: 'back.out(1.4)' },
-        0.35
+    // Hiệu ứng Màn hình Marketplace (1.4.2): Title + Mô hình điện thoại trung tâm
+    const marketplaceTitle = toEl.querySelector('.marketplace-title');
+    const marketplacePhone = toEl.querySelector('.marketplace-phone-center .my-phone-gold');
+    if (marketplaceTitle) {
+      tl.fromTo(marketplaceTitle,
+        { opacity: 0, x: -35, y: -15 },
+        { opacity: 1, x: 0, y: 0, duration: 0.6, ease: 'power2.out' },
+        0.3
+      );
+    }
+    if (marketplacePhone) {
+      tl.fromTo(marketplacePhone,
+        { opacity: 0, y: 60, scale: 0.92 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.75, ease: 'back.out(1.2)' },
+        0.38
       );
     }
 
@@ -567,6 +604,7 @@ class AppMotionController {
     // Kích hoạt layer modal: Hiển thị rõ ràng (opacity: 1), nhận pointer-events
     this.dom.demoModal.classList.add('is-active');
     gsap.set(this.dom.demoModal, { opacity: 1, visibility: 'visible', pointerEvents: 'auto' });
+    this.updateBackButtonVisibility();
 
     const tl = gsap.timeline();
 
@@ -602,6 +640,7 @@ class AppMotionController {
         gsap.set(this.dom.demoModal, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
         gsap.set(this.dom.demoPhoneContainer, { y: '130%' });
         this.isDemoOpen = false;
+        this.updateBackButtonVisibility();
       }
     });
 

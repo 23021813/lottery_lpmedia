@@ -89,4 +89,36 @@ describe('AppStateManager - SPA Navigation & History Stack', () => {
     });
     assert.equal(state.isValidScreen('invalid-screen'), false);
   });
+
+  test('should navigate to screen-1-4-2 (Marketplace) and go back to screen-1-4', () => {
+    state.navigateTo('screen-main');
+    state.navigateTo('screen-1-4');
+    state.navigateTo('screen-1-4-2');
+    assert.equal(state.currentScreen, 'screen-1-4-2');
+
+    const prev = state.goBack();
+    assert.equal(prev, 'screen-1-4');
+    assert.equal(state.currentScreen, 'screen-1-4');
+  });
+
+  test('should correctly report canGoBack for idle/main vs sub-screens', () => {
+    assert.equal(state.canGoBack(), false, 'Idle screen should not have back button');
+    state.navigateTo('screen-main');
+    assert.equal(state.canGoBack(), false, 'Main screen should not have back button');
+
+    state.navigateTo('screen-1-1');
+    assert.equal(state.canGoBack(), true, 'Subscreen 1.1 should have back button');
+
+    state.navigateTo('screen-demo');
+    assert.equal(state.canGoBack(), true, 'Demo screen should have back button');
+
+    state.goBack();
+    assert.equal(state.currentScreen, 'screen-1-1');
+    assert.equal(state.canGoBack(), true);
+
+    state.goBack();
+    assert.equal(state.currentScreen, 'screen-main');
+    assert.equal(state.canGoBack(), false);
+  });
 });
+

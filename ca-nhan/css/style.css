@@ -1603,9 +1603,9 @@ body {
    ========================================================================== */
 .nav-dock-side {
   position: absolute;
-  bottom: clamp(24px, 4.5vh, 38px);
-  top: auto;
-  transform: none;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -208,5 +208,36 @@ test('Video Assets & Full-Screen Touch Presentation Test Suite', async (t) => {
       checkAlpha(path.join(ROOT_DIR, 'doanh-nghiep', 'video', file));
     });
   });
+
+  await t.test('Video Touch and Pointer Responsiveness Fixes', () => {
+    const cssCN = fs.readFileSync(path.join(ROOT_DIR, 'ca-nhan', 'css', 'style.css'), 'utf8');
+    const cssDN = fs.readFileSync(path.join(ROOT_DIR, 'doanh-nghiep', 'css', 'style.css'), 'utf8');
+    const jsCN = fs.readFileSync(path.join(ROOT_DIR, 'ca-nhan', 'js', 'app.js'), 'utf8');
+    const jsDN = fs.readFileSync(path.join(ROOT_DIR, 'doanh-nghiep', 'js', 'app.js'), 'utf8');
+
+    // 1. nav-dock-side có z-index: 170 để luôn nổi trên video modal (150) và controls (160)
+    assert.match(cssCN, /\.nav-dock-side\s*\{[^}]*z-index:\s*170;/s, 'ca-nhan .nav-dock-side must have z-index: 170');
+    assert.match(cssDN, /\.nav-dock-side\s*\{[^}]*z-index:\s*170;/s, 'doanh-nghiep .nav-dock-side must have z-index: 170');
+
+    // 2. presentation-video có touch-action: manipulation
+    assert.ok(cssCN.includes('touch-action: manipulation;'), 'ca-nhan must define touch-action: manipulation for video');
+    assert.ok(cssDN.includes('touch-action: manipulation;'), 'doanh-nghiep must define touch-action: manipulation for video');
+
+    // 3. JS Controller: controlsWereVisibleOnPointerDown để tránh tự động pause video khi chỉ chạm hiện controls
+    assert.ok(jsCN.includes('controlsWereVisibleOnPointerDown'), 'ca-nhan app.js must handle controlsWereVisibleOnPointerDown');
+    assert.ok(jsDN.includes('controlsWereVisibleOnPointerDown'), 'doanh-nghiep app.js must handle controlsWereVisibleOnPointerDown');
+
+    // 4. JS Controller: reset currentTime = 0 khi video.ended
+    assert.ok(jsCN.includes('video.currentTime = 0;'), 'ca-nhan app.js must reset currentTime on ended');
+    assert.ok(jsDN.includes('video.currentTime = 0;'), 'doanh-nghiep app.js must reset currentTime on ended');
+
+    // 5. JS Controller: window pointerup giải phóng isScrubbing
+    assert.ok(jsCN.includes("window.addEventListener('pointerup'"), 'ca-nhan app.js must listen for window pointerup to clear isScrubbing');
+    assert.ok(jsDN.includes("window.addEventListener('pointerup'"), 'doanh-nghiep app.js must listen for window pointerup to clear isScrubbing');
+
+    // 6. JS Controller: Failsafe pointerEvents: 'none' trong closeDemo
+    assert.ok(jsCN.includes("this.dom.demoVideoModal.style.pointerEvents = 'none';"), 'ca-nhan closeDemo must apply immediate pointerEvents: none');
+    assert.ok(jsDN.includes("this.dom.demoVideoModal.style.pointerEvents = 'none';"), 'doanh-nghiep closeDemo must apply immediate pointerEvents: none');
+  });
 });
 

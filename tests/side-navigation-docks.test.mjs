@@ -41,11 +41,15 @@ test('Side Navigation Docks (Dual Left & Right Home/Back Controls) - EB & RB', a
     }
   });
 
-  await t.test('3. CSS Architecture: bottom edge positioning, glassmorphism transparency and lower z-index', () => {
+  await t.test('3. CSS Architecture: vertically centered positioning (top: 50%, translateY(-50%)), glassmorphism transparency and lower z-index', () => {
     for (const [name, css] of [['ca-nhan', caNhanCss], ['doanh-nghiep', doanhNghiepCss]]) {
-      assert.ok(css.includes('.nav-dock-side'), `${name} CSS missing .nav-dock-side`);
-      assert.ok(css.includes('bottom: clamp('), `${name} CSS must position at bottom edge`);
-      assert.ok(css.includes('z-index: 25'), `${name} CSS must have moderate z-index: 25 (lower than modals/popups)`);
+      const dockMatch = css.match(/(?:^|\n)\.nav-dock-side\s*\{([^}]+)\}/);
+      assert.ok(dockMatch, `${name} CSS missing .nav-dock-side block`);
+      const dockContent = dockMatch[1];
+      assert.match(dockContent, /top:\s*50%/, `${name} .nav-dock-side must have top: 50%`);
+      assert.match(dockContent, /transform:[^;]*translateY\(-50%\)/, `${name} .nav-dock-side must have translateY(-50%)`);
+      assert.match(dockContent, /bottom:\s*auto/, `${name} .nav-dock-side must reset bottom to auto`);
+      assert.ok(dockContent.includes('z-index: 25'), `${name} CSS must have moderate z-index: 25 (lower than modals/popups)`);
       assert.ok(css.includes('backdrop-filter: blur(10px)'), `${name} CSS must have glassmorphism blur`);
       assert.ok(css.includes('.nav-dock-left'), `${name} CSS missing .nav-dock-left position`);
       assert.ok(css.includes('.nav-dock-right'), `${name} CSS missing .nav-dock-right position`);

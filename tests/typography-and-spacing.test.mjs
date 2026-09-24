@@ -162,6 +162,16 @@ test('Typography & Spacing Quality Test Suite (Preserving Stage Aspect Ratio)', 
     assert.ok(cardsContainerBlock[1].includes('top: 34.5%;'), '.toiuu-cards-container must have top: 34.5% (synced with msb-html)');
     assert.ok(cardsContainerBlock[1].includes('width: 100%;'), '.toiuu-cards-container must have width: 100% (synced with msb-html)');
   });
+
+  await t.test('15. doanh-nghiep: .feature-card must have specified gradient background', () => {
+    const cardBlock = doanhNghiepCss.match(/(?:^|\n)\.feature-card\s*\{([^}]+)\}/);
+    assert.ok(cardBlock, 'doanh-nghiep must define .feature-card block');
+    assert.match(
+      cardBlock[1],
+      /background:\s*linear-gradient\(160deg,\s*rgba\(20,\s*42,\s*98,\s*0\.9\)\s*0%,\s*rgba\(8,\s*20,\s*56,\s*0\.6\)\s*100%\)\s*!important;/,
+      '.feature-card must have linear-gradient(160deg, rgba(20, 42, 98, 0.9) 0%, rgba(8, 20, 56, 0.6) 100%) !important'
+    );
+  });
 });
 
 

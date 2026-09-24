@@ -106,6 +106,63 @@ export class AppStateManager {
     return this.history.length > 0 || this.getParentScreen(this.currentScreen) !== null;
   }
 
+  getBackConfig(screenId = this.currentScreen, isDemoOpen = false) {
+    if (!screenId || screenId === 'screen-idle' || screenId === 'screen-main') {
+      return null;
+    }
+
+    // 1.1, 1.2, 1.3, 1.4: Cấp 1 (Hiệu năng, Cá nhân hóa, Tối ưu, Hệ sinh thái)
+    // Nút ở góc dưới BÊN PHẢI -> [Quay lại trang chủ]
+    if (screenId === 'screen-1-1' || screenId === 'screen-1-2' || screenId === 'screen-1-3' || screenId === 'screen-1-4') {
+      return {
+        targetScreen: 'screen-main',
+        position: 'right',
+        label: 'Quay lại trang chủ'
+      };
+    }
+
+    // 1.3.1 & 1.3.2: Cấp 2 của Tối ưu (M-Sinh Lời, M-Triple)
+    // Nút ở góc dưới BÊN TRÁI -> Quay về 1.3
+    if (screenId === 'screen-1-3-1' || screenId === 'screen-1-3-2') {
+      if (isDemoOpen) {
+        return {
+          targetScreen: 'screen-1-3',
+          position: 'left',
+          label: 'Quay lại trang 1.3.'
+        };
+      }
+      return {
+        targetScreen: 'screen-1-3',
+        position: 'left',
+        label: 'Quay về trang trước'
+      };
+    }
+
+    // 1.4.1 & 1.4.2: Cấp 2 của Hệ sinh thái (Rewards, Marketplace)
+    // Nút ở góc dưới BÊN TRÁI -> Quay về 1.4
+    if (screenId === 'screen-1-4-1' || screenId === 'screen-1-4-2') {
+      if (isDemoOpen) {
+        return {
+          targetScreen: 'screen-1-4',
+          position: 'left',
+          label: 'Quay lại trang 1.4.'
+        };
+      }
+      return {
+        targetScreen: 'screen-1-4',
+        position: 'left',
+        label: 'Quay về trang trước'
+      };
+    }
+
+    const parent = this.getParentScreen(screenId) || 'screen-main';
+    return {
+      targetScreen: parent,
+      position: 'right',
+      label: parent === 'screen-main' ? 'Quay lại trang chủ' : 'Quay về trang trước'
+    };
+  }
+
   resetIdleTimer() {
     if (this.idleTimer) {
       clearTimeout(this.idleTimer);

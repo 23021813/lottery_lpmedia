@@ -82,4 +82,12 @@ test('Typography & Spacing Quality Test Suite (Preserving Stage Aspect Ratio)', 
       'doanh-nghiep .card-lienmach must have top: 61%'
     );
   });
+
+  await t.test('9. Back Button Positions: both ca-nhan and doanh-nghiep must support pos-left and pos-right', () => {
+    assert.ok(doanhNghiepCss.includes('.btn-back.pos-right'), 'doanh-nghiep CSS must include .btn-back.pos-right');
+    assert.ok(doanhNghiepCss.includes('.btn-back.pos-left'), 'doanh-nghiep CSS must include .btn-back.pos-left');
+
+    assert.ok(caNhanCss.includes('.btn-back.pos-right'), 'ca-nhan CSS must include .btn-back.pos-right');
+    assert.ok(caNhanCss.includes('.btn-back.pos-left'), 'ca-nhan CSS must include .btn-back.pos-left');
+  });
 });

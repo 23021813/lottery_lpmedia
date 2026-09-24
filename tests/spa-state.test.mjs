@@ -120,5 +120,53 @@ describe('AppStateManager - SPA Navigation & History Stack', () => {
     assert.equal(state.currentScreen, 'screen-main');
     assert.equal(state.canGoBack(), false);
   });
+
+  test('should return correct Back button configuration for ca-nhan based on level matrix', () => {
+    // 1. Idle and main have no back
+    assert.equal(state.getBackConfig('screen-main'), null);
+    assert.equal(state.getBackConfig('screen-idle'), null);
+
+    // Cấp 1: 1.1, 1.2, 1.3, 1.4 -> pos-right, target screen-main
+    ['screen-1-1', 'screen-1-2', 'screen-1-3', 'screen-1-4'].forEach(id => {
+      assert.deepEqual(state.getBackConfig(id, false), {
+        targetScreen: 'screen-main',
+        position: 'right',
+        label: 'Quay lại trang chủ'
+      });
+      assert.deepEqual(state.getBackConfig(id, true), {
+        targetScreen: 'screen-main',
+        position: 'right',
+        label: 'Quay lại trang chủ'
+      });
+    });
+
+    // Cấp 2 của 1.3: 1.3.1, 1.3.2 -> pos-left, target screen-1-3
+    ['screen-1-3-1', 'screen-1-3-2'].forEach(id => {
+      assert.deepEqual(state.getBackConfig(id, false), {
+        targetScreen: 'screen-1-3',
+        position: 'left',
+        label: 'Quay về trang trước'
+      });
+      assert.deepEqual(state.getBackConfig(id, true), {
+        targetScreen: 'screen-1-3',
+        position: 'left',
+        label: 'Quay lại trang 1.3.'
+      });
+    });
+
+    // Cấp 2 của 1.4: 1.4.1, 1.4.2 -> pos-left, target screen-1-4
+    ['screen-1-4-1', 'screen-1-4-2'].forEach(id => {
+      assert.deepEqual(state.getBackConfig(id, false), {
+        targetScreen: 'screen-1-4',
+        position: 'left',
+        label: 'Quay về trang trước'
+      });
+      assert.deepEqual(state.getBackConfig(id, true), {
+        targetScreen: 'screen-1-4',
+        position: 'left',
+        label: 'Quay lại trang 1.4.'
+      });
+    });
+  });
 });
 

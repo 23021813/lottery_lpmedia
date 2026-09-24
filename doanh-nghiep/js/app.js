@@ -128,17 +128,59 @@ class DoanhNghiepMotionController {
 
   updateBackButtonVisibility() {
     if (!this.dom.btnBack) return;
-    const shouldShow = this.isDemoOpen || (typeof this.state.canGoBack === 'function' && this.state.canGoBack());
-    if (shouldShow) {
+    const config = typeof this.state.getBackConfig === 'function'
+      ? this.state.getBackConfig(this.state.currentScreen, this.isDemoOpen)
+      : null;
+
+    if (config) {
       this.dom.btnBack.classList.add('is-visible');
+      if (config.position === 'left') {
+        this.dom.btnBack.classList.remove('pos-right', 'right');
+        this.dom.btnBack.classList.add('pos-left', 'left');
+      } else {
+        this.dom.btnBack.classList.remove('pos-left', 'left');
+        this.dom.btnBack.classList.add('pos-right', 'right');
+      }
+      this.dom.btnBack.setAttribute('aria-label', config.label);
+      this.dom.btnBack.setAttribute('title', config.label);
     } else {
-      this.dom.btnBack.classList.remove('is-visible');
+      this.dom.btnBack.classList.remove('is-visible', 'pos-left', 'pos-right', 'left', 'right');
     }
   }
 
   handleBackAction() {
     if (this.isDemoOpen) {
+      const config = typeof this.state.getBackConfig === 'function'
+        ? this.state.getBackConfig(this.state.currentScreen, true)
+        : null;
+
       this.closeDemo();
+
+      if (config && config.targetScreen) {
+        if (this.state.currentScreen !== config.targetScreen) {
+          const currentId = this.state.currentScreen;
+          const targetId = config.targetScreen;
+          this.state.currentScreen = targetId;
+          if (targetId === 'screen-main') {
+            this.state.history = ['screen-idle'];
+          } else if (targetId === 'screen-1-3') {
+            this.state.history = ['screen-idle', 'screen-main'];
+          }
+          this.updateBackButtonVisibility();
+
+          const currentEl = this.dom.screens.get(currentId);
+          const targetEl = this.dom.screens.get(targetId);
+          if (currentEl && targetEl) {
+            if (targetId === 'screen-main') {
+              this.animLevel1ToMain(currentEl, targetEl);
+            } else if (targetId === 'screen-1-3') {
+              this.animPanHorizontal(currentEl, targetEl, 'prev');
+            } else {
+              this.animDefaultCrossfade(currentEl, targetEl);
+            }
+          }
+        }
+      }
     } else {
       this.goBack();
     }
@@ -442,7 +484,7 @@ class DoanhNghiepMotionController {
 
   goBack() {
     if (this.isDemoOpen) {
-      this.closeDemo();
+      this.handleBackAction();
       return;
     }
 
@@ -458,7 +500,20 @@ class DoanhNghiepMotionController {
       currentId = activeDomId;
     }
 
-    const prevId = this.state.goBack();
+    const config = typeof this.state.getBackConfig === 'function'
+      ? this.state.getBackConfig(currentId, false)
+      : null;
+
+    let prevId = config && config.targetScreen ? config.targetScreen : this.state.goBack();
+    if (config && config.targetScreen) {
+      this.state.currentScreen = prevId;
+      if (prevId === 'screen-main') {
+        this.state.history = ['screen-idle'];
+      } else if (prevId === 'screen-1-3') {
+        this.state.history = ['screen-idle', 'screen-main'];
+      }
+    }
+
     this.updateBackButtonVisibility();
 
     if (!prevId) return;

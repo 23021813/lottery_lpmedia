@@ -136,4 +136,61 @@ describe('DoanhNghiepStateManager - Router & Navigation Stack (No Auto Timeout)'
       done();
     }, 80);
   });
+
+  test('should return correct Back button configuration based on user requirement matrix', () => {
+    // 1. Trang chủ: không có back
+    assert.equal(state.getBackConfig('screen-main'), null);
+    assert.equal(state.getBackConfig('screen-idle'), null);
+
+    // 1.1. Linh hoạt: góc dưới bên phải, quay lại trang chủ
+    assert.deepEqual(state.getBackConfig('screen-1-1', false), {
+      targetScreen: 'screen-main',
+      position: 'right',
+      label: 'Quay lại trang chủ'
+    });
+    // 1.1.1: góc dưới bên phải, quay lại trang chủ
+    assert.deepEqual(state.getBackConfig('screen-1-1', true), {
+      targetScreen: 'screen-main',
+      position: 'right',
+      label: 'Quay lại trang chủ'
+    });
+
+    // 1.2. Liền mạch: góc dưới bên phải, quay lại trang chủ
+    assert.deepEqual(state.getBackConfig('screen-1-2', false), {
+      targetScreen: 'screen-main',
+      position: 'right',
+      label: 'Quay lại trang chủ'
+    });
+    // 1.2.1: góc dưới bên phải, quay lại trang chủ
+    assert.deepEqual(state.getBackConfig('screen-1-2', true), {
+      targetScreen: 'screen-main',
+      position: 'right',
+      label: 'Quay lại trang chủ'
+    });
+
+    // 1.3. Tối ưu: góc dưới bên phải, quay lại trang chủ
+    assert.deepEqual(state.getBackConfig('screen-1-3', false), {
+      targetScreen: 'screen-main',
+      position: 'right',
+      label: 'Quay lại trang chủ'
+    });
+
+    // 1.3.1 đến 1.3.5: góc dưới bên trái, quay về trang trước (1.3)
+    const level2Screens = ['screen-1-3-1', 'screen-1-3-2', 'screen-1-3-3', 'screen-1-3-4', 'screen-1-3-5'];
+    level2Screens.forEach(id => {
+      // Khi không mở demo: quay về trang trước
+      assert.deepEqual(state.getBackConfig(id, false), {
+        targetScreen: 'screen-1-3',
+        position: 'left',
+        label: 'Quay về trang trước'
+      }, `Screen ${id} should have left button navigating to screen-1-3`);
+
+      // Khi mở demo (1.3.x.1): quay lại trang 1.3.
+      assert.deepEqual(state.getBackConfig(id, true), {
+        targetScreen: 'screen-1-3',
+        position: 'left',
+        label: 'Quay lại trang 1.3.'
+      }, `Demo for ${id} should have left button navigating to screen-1-3`);
+    });
+  });
 });

@@ -157,12 +157,24 @@ body {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.3s var(--ease-smooth), transform 0.25s var(--ease-smooth);
+  transition: opacity 0.3s var(--ease-smooth), transform 0.25s var(--ease-smooth), left 0.3s ease, right 0.3s ease;
   background: none;
   border: none;
   padding: 0;
   line-height: 0;
   display: block;
+}
+
+.btn-back.pos-right,
+.btn-back.right {
+  left: auto;
+  right: clamp(24px, 3.2vw, 60px);
+}
+
+.btn-back.pos-left,
+.btn-back.left {
+  left: clamp(24px, 3.2vw, 60px);
+  right: auto;
 }
 
 .btn-back.is-visible {

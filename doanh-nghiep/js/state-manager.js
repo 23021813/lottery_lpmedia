@@ -111,6 +111,47 @@ export class DoanhNghiepStateManager {
     return this.history.length > 0 || this.getParentScreen(this.currentScreen) !== null;
   }
 
+  getBackConfig(screenId = this.currentScreen, isDemoOpen = false) {
+    if (!screenId || screenId === 'screen-idle' || screenId === 'screen-main') {
+      return null;
+    }
+
+    // 1.1, 1.2, 1.3: Cấp 1 (Linh hoạt, Liền mạch, Tối ưu)
+    // Nút ở góc dưới BÊN PHẢI -> [Quay lại trang chủ]
+    if (screenId === 'screen-1-1' || screenId === 'screen-1-2' || screenId === 'screen-1-3') {
+      return {
+        targetScreen: 'screen-main',
+        position: 'right',
+        label: 'Quay lại trang chủ'
+      };
+    }
+
+    // 1.3.1 đến 1.3.5: Cấp 2 (Tín dụng, Tái cấp, Thẻ TD, Chứng chỉ, Rewards)
+    // Nút ở góc dưới BÊN TRÁI
+    if (typeof screenId === 'string' && screenId.startsWith('screen-1-3-')) {
+      if (isDemoOpen) {
+        return {
+          targetScreen: 'screen-1-3',
+          position: 'left',
+          label: 'Quay lại trang 1.3.'
+        };
+      }
+      return {
+        targetScreen: 'screen-1-3',
+        position: 'left',
+        label: 'Quay về trang trước'
+      };
+    }
+
+    // Fallback mặc định
+    const parent = this.getParentScreen(screenId) || 'screen-main';
+    return {
+      targetScreen: parent,
+      position: 'right',
+      label: parent === 'screen-main' ? 'Quay lại trang chủ' : 'Quay về trang trước'
+    };
+  }
+
   resetIdleTimer() {
     if (this.idleTimer) {
       clearTimeout(this.idleTimer);

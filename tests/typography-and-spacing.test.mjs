@@ -106,12 +106,13 @@ test('Typography & Spacing Quality Test Suite (Preserving Stage Aspect Ratio)', 
     assert.ok(fs.existsSync('ca-nhan/images/icon-back2.png'), 'ca-nhan icon-back2.png must exist');
   });
 
-  await t.test('11. Touch Target Extension: rewards-action-container::before must extend touch area', () => {
-    assert.ok(doanhNghiepCss.includes('.rewards-action-container::before'), 'doanh-nghiep must have .rewards-action-container::before');
-    assert.ok(doanhNghiepCss.includes('top: -35px;'), 'doanh-nghiep touch target must extend with top: -35px');
+  await t.test('11. Touch Target & Logo Header Fix: remove troublesome ::before and ensure logo top 10px !important', () => {
+    // Loại bỏ ::before gây lỗi che phủ
+    assert.strictEqual(doanhNghiepCss.includes('.rewards-action-container::before'), false, 'doanh-nghiep must NOT have .rewards-action-container::before (removed as requested)');
+    assert.strictEqual(caNhanCss.includes('.rewards-action-container::before'), false, 'ca-nhan must NOT have .rewards-action-container::before (removed as requested)');
 
-    assert.ok(caNhanCss.includes('.rewards-action-container::before'), 'ca-nhan must have .rewards-action-container::before');
-    assert.ok(caNhanCss.includes('top: -35px;'), 'ca-nhan touch target must extend with top: -35px');
+    // Kiểm tra logo-header top: 10px !important ở cá nhân
+    assert.ok(caNhanCss.includes('.logo-header') && caNhanCss.includes('top: 10px !important;'), 'ca-nhan .logo-header must have top: 10px !important');
   });
 
   await t.test('12. Item 5 & 7 (RB.pdf): Digibank -> Digital Bank and Inter font uniformity', () => {

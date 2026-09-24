@@ -879,18 +879,11 @@ body {
   align-items: center;
   z-index: 15;
   cursor: pointer;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
-.rewards-action-container::before {
-  content: "";
-  position: absolute;
-  top: -35px;
-  left: -20px;
-  right: -20px;
-  bottom: 0;
+.rewards-action-container > * {
   pointer-events: auto;
-  z-index: 0;
 }
 
 .chevron-indicator {

@@ -1118,7 +1118,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #000000;
+  background: transparent;
   z-index: 150;
   padding: 0;
   overflow: hidden;
@@ -1143,14 +1143,18 @@ body {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  background: #000000;
+  background-color: #0c0402;
+  background-image: url('../images/bg_canhanhoa.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
 }
 
 .presentation-video {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #000000;
+  background: transparent;
   display: block;
   cursor: pointer;
 }

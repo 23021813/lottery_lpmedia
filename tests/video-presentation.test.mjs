@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { execSync } from 'node:child_process';
 
 const ROOT_DIR = process.cwd();
 
@@ -149,4 +150,55 @@ test('Video Assets & Full-Screen Touch Presentation Test Suite', async (t) => {
     assert.ok(jsDN.includes('5000'), 'doanh-nghiep/js/app.js must use 5000ms timer for auto-hide');
     assert.ok(jsDN.includes('scale: 0.88') && jsDN.includes('blur(10px)'), 'doanh-nghiep/js/app.js must use Cinematic Zoom & Focus entrance animation');
   });
+
+  await t.test('Presentation background in CSS must use brand background image with transparent video', () => {
+    const cssCN = fs.readFileSync(path.join(ROOT_DIR, 'ca-nhan', 'css', 'style.css'), 'utf8');
+    const cssDN = fs.readFileSync(path.join(ROOT_DIR, 'doanh-nghiep', 'css', 'style.css'), 'utf8');
+
+    // ca-nhan: bg_canhanhoa.jpg and transparent video
+    assert.ok(cssCN.includes("bg_canhanhoa.jpg"), 'ca-nhan/css/style.css must use bg_canhanhoa.jpg for presentation background');
+    assert.match(cssCN, /\.presentation-video\s*\{[^}]*background:\s*transparent;/s, 'ca-nhan .presentation-video must have background: transparent');
+
+    // doanh-nghiep: bg_toiuu.jpg and transparent video
+    assert.ok(cssDN.includes("bg_toiuu.jpg"), 'doanh-nghiep/css/style.css must use bg_toiuu.jpg for presentation background');
+    assert.match(cssDN, /\.presentation-video\s*\{[^}]*background:\s*transparent;/s, 'doanh-nghiep .presentation-video must have background: transparent');
+  });
+
+  await t.test('All 13 WebM videos must contain alpha channel (alpha_mode = 1)', () => {
+    const caNhanVideos = [
+      'security.webm',
+      'thay-doi-giao-dien.webm',
+      'm-sinh-loi.webm',
+      'm-triple.webm',
+      'm-rewards.webm',
+      'marketplace.webm'
+    ];
+
+    const doanhNghiepVideos = [
+      'quan-tri-dich-vu.webm',
+      'ket-noi-doi-tac.webm',
+      'tin-dung-linh-hoat.webm',
+      'tai-cap-han-muc.webm',
+      'the-tin-dung.webm',
+      'chung-chi-tien-gui.webm',
+      'msb-rewards.webm'
+    ];
+
+    const checkAlpha = (filePath) => {
+      const out = execSync(`ffprobe -v error -show_entries stream=codec_name,pix_fmt -show_entries stream_tags=alpha_mode -of json "${filePath}"`).toString();
+      const data = JSON.parse(out);
+      const stream = data.streams && data.streams[0];
+      assert.ok(stream, `No video stream found in ${filePath}`);
+      assert.strictEqual(stream.tags && stream.tags.alpha_mode, '1', `${filePath} does not have alpha_mode: 1`);
+    };
+
+    caNhanVideos.forEach(file => {
+      checkAlpha(path.join(ROOT_DIR, 'ca-nhan', 'video', file));
+    });
+
+    doanhNghiepVideos.forEach(file => {
+      checkAlpha(path.join(ROOT_DIR, 'doanh-nghiep', 'video', file));
+    });
+  });
 });
+

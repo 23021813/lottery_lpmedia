@@ -1,3 +1,6 @@
 # External project references (do not commit)
 msb-html/
 *.zip
+scratch/
+test_alpha.html
+Comp 4_1.webm

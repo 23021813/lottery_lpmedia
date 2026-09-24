@@ -979,7 +979,7 @@ body {
    FULL-SCREEN VIDEO PRESENTATION & FLAT TOUCH CONTROLS (CHUẨN KIOSK LED)
    ========================================================================== */
 .demo-video-modal {
-  background: #000000;
+  background: transparent;
   z-index: 150;
   padding: 0;
   overflow: hidden;
@@ -993,14 +993,18 @@ body {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  background: #000000;
+  background-color: #02071a;
+  background-image: url('../images/bg_toiuu.jpg');
+  background-repeat: no-repeat;
+  background-position: center 42%;
+  background-size: cover;
 }
 
 .presentation-video {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #000000;
+  background: transparent;
   display: block;
   cursor: pointer;
 }

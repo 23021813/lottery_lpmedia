@@ -13,12 +13,12 @@ class DoanhNghiepMotionController {
       initialScreen: 'screen-idle',
       idleTimeoutMs: 300000,
       onTimeout: () => {
-        this.closeDemo();
-        this.navigateTo('screen-idle');
+        this.forceNavigateToIdle();
       }
     });
 
     this.isAnimating = false;
+    this.animWatchdog = null;
     this.isDemoOpen = false;
     this.activeDemoModal = null;
     this.isScrubbing = false;
@@ -145,8 +145,8 @@ class DoanhNghiepMotionController {
   }
 
   setupEventListeners() {
-    // Chặn menu chuột phải và kéo thả trên Kiosk
-    window.addEventListener('contextmenu', (e) => e.preventDefault());
+    // [DEBUG MODE] Tạm thời cho phép chuột phải và F12 Inspect theo yêu cầu (sẽ đóng lại sau)
+    // window.addEventListener('contextmenu', (e) => e.preventDefault());
     window.addEventListener('dragstart', (e) => e.preventDefault());
 
     // Nút quay lại toàn cục
@@ -304,8 +304,105 @@ class DoanhNghiepMotionController {
   }
 
   /* ========================================================================
-     ROUTING & ANIMATION DISPATCHER
+     ROUTING & ANIMATION DISPATCHER (VỚI WATCHDOG & CLEANUP TOÀN CỤC)
      ======================================================================== */
+  startAnimWatchdog(timeoutMs = 1500) {
+    this.clearAnimWatchdog();
+    this.animWatchdog = setTimeout(() => {
+      console.warn('[DoanhNghiepMotionController] Animation watchdog timeout: giải phóng isAnimating');
+      this.isAnimating = false;
+    }, timeoutMs);
+  }
+
+  clearAnimWatchdog() {
+    if (this.animWatchdog) {
+      clearTimeout(this.animWatchdog);
+      this.animWatchdog = null;
+    }
+  }
+
+  getActiveScreenIdFromDOM() {
+    for (const [id, el] of this.dom.screens.entries()) {
+      if (id !== 'screen-idle' && (el.classList.contains('active') || el.classList.contains('is-active'))) {
+        return id;
+      }
+    }
+    return this.state.currentScreen;
+  }
+
+  cleanupScreens(activeId) {
+    this.dom.screens.forEach((screenEl, screenId) => {
+      if (screenId === activeId) {
+        screenEl.classList.add('active');
+        screenEl.classList.remove('is-active');
+        gsap.set(screenEl, { opacity: 1, visibility: 'visible', pointerEvents: 'auto' });
+      } else {
+        screenEl.classList.remove('active', 'is-active');
+        gsap.set(screenEl, { opacity: 0, visibility: 'hidden', pointerEvents: 'none' });
+      }
+    });
+  }
+
+  forceNavigateToIdle() {
+    // 1. Đóng toàn bộ modal demo / video nếu đang mở
+    if (this.isDemoOpen) {
+      this.closeDemo();
+    }
+    if (typeof this.closeVideoModal === 'function') {
+      this.closeVideoModal();
+    }
+
+    // 2. Clear watchdog và dừng các animation dở dang
+    this.clearAnimWatchdog();
+    const screenEls = Array.from(this.dom.screens.values());
+    gsap.killTweensOf(screenEls);
+    gsap.killTweensOf([this.dom.bgMain, this.dom.bgDetail, this.dom.bgDetail2].filter(Boolean));
+
+    const idleEl = this.dom.screens.get('screen-idle');
+    if (!idleEl) return;
+
+    // Nếu đã ở screen-idle thì dọn dẹp và reset ngay
+    if (this.state.currentScreen === 'screen-idle') {
+      this.cleanupScreens('screen-idle');
+      this.state.resetToIdle();
+      this.updateBackButtonVisibility();
+      this.isAnimating = false;
+      return;
+    }
+
+    this.isAnimating = true;
+    this.startAnimWatchdog(1500);
+
+    const activeDomId = this.getActiveScreenIdFromDOM();
+    const currentScreenId = this.dom.screens.has(activeDomId) ? activeDomId : this.state.currentScreen;
+    const currentScreenEl = this.dom.screens.get(currentScreenId);
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        this.cleanupScreens('screen-idle');
+        this.state.resetToIdle();
+        this.updateBackButtonVisibility();
+        this.clearAnimWatchdog();
+        this.isAnimating = false;
+      }
+    });
+
+    // Mờ dần màn hình hiện tại và các background phụ
+    if (currentScreenEl && currentScreenEl !== idleEl) {
+      tl.to(currentScreenEl, { opacity: 0, duration: 0.5, ease: 'power2.out' }, 0);
+    }
+    tl.to([this.dom.bgDetail, this.dom.bgDetail2].filter(Boolean), {
+      opacity: 0,
+      duration: 0.5,
+      ease: 'power2.out'
+    }, 0);
+
+    // Kích hoạt screen-idle
+    idleEl.classList.add('active');
+    gsap.set(idleEl, { opacity: 0, visibility: 'visible', pointerEvents: 'auto' });
+    tl.to(idleEl, { opacity: 1, duration: 0.6, ease: 'power2.out' }, 0.2);
+  }
+
   navigateTo(targetId) {
     if (this.isAnimating) return;
     const currentId = this.state.currentScreen;
@@ -316,7 +413,14 @@ class DoanhNghiepMotionController {
       return;
     }
 
-    const currentEl = this.dom.screens.get(currentId);
+    // Tự động kiểm tra phần tử DOM đang active thực tế nếu có lệch pha
+    let fromId = currentId;
+    const activeDomId = this.getActiveScreenIdFromDOM();
+    if (activeDomId && activeDomId !== currentId && this.dom.screens.has(activeDomId)) {
+      fromId = activeDomId;
+    }
+
+    const currentEl = this.dom.screens.get(fromId) || this.dom.screens.get(currentId);
     const targetEl = this.dom.screens.get(targetId);
 
     if (!targetEl) return;
@@ -325,11 +429,11 @@ class DoanhNghiepMotionController {
     this.updateBackButtonVisibility();
 
     // Chọn hiệu ứng chuyển cảnh phù hợp
-    if (currentId === 'screen-idle' && targetId === 'screen-main') {
+    if (fromId === 'screen-idle' && targetId === 'screen-main') {
       this.animIdleToMain(currentEl, targetEl);
-    } else if (currentId === 'screen-main' && targetId.startsWith('screen-1-')) {
+    } else if (fromId === 'screen-main' && targetId.startsWith('screen-1-')) {
       this.animMainToLevel1(currentEl, targetEl);
-    } else if (this.isLevel2Transition(currentId, targetId)) {
+    } else if (this.isLevel2Transition(fromId, targetId)) {
       this.animPanHorizontal(currentEl, targetEl, 'next');
     } else {
       this.animDefaultCrossfade(currentEl, targetEl);
@@ -344,7 +448,16 @@ class DoanhNghiepMotionController {
 
     if (this.isAnimating) return;
 
-    const currentId = this.state.currentScreen;
+    let currentId = this.state.currentScreen;
+    const activeDomId = this.getActiveScreenIdFromDOM();
+    // Tự động đồng bộ nếu DOM và State bị lệch pha
+    if (activeDomId && activeDomId !== currentId && activeDomId !== 'screen-idle' && activeDomId !== 'screen-main') {
+      console.warn(`[Router] Synchronizing state with active DOM: ${activeDomId}`);
+      this.state.currentScreen = activeDomId;
+      this.state.history = [];
+      currentId = activeDomId;
+    }
+
     const prevId = this.state.goBack();
     this.updateBackButtonVisibility();
 
@@ -380,12 +493,11 @@ class DoanhNghiepMotionController {
    */
   animIdleToMain(fromEl, toEl) {
     this.isAnimating = true;
+    this.startAnimWatchdog(1500);
     const tl = gsap.timeline({
       onComplete: () => {
-        fromEl.classList.remove('active');
-        gsap.set(fromEl, { pointerEvents: 'none' });
-        toEl.classList.add('active');
-        gsap.set(toEl, { pointerEvents: 'auto' });
+        this.cleanupScreens(toEl.id);
+        this.clearAnimWatchdog();
         this.isAnimating = false;
       }
     });
@@ -435,12 +547,11 @@ class DoanhNghiepMotionController {
    */
   animMainToLevel1(fromEl, toEl) {
     this.isAnimating = true;
+    this.startAnimWatchdog(2500);
     const tl = gsap.timeline({
       onComplete: () => {
-        fromEl.classList.remove('active');
-        gsap.set(fromEl, { pointerEvents: 'none' });
-        toEl.classList.add('active');
-        gsap.set(toEl, { pointerEvents: 'auto' });
+        this.cleanupScreens(toEl.id);
+        this.clearAnimWatchdog();
         this.isAnimating = false;
       }
     });
@@ -519,12 +630,11 @@ class DoanhNghiepMotionController {
    */
   animLevel1ToMain(fromEl, toEl) {
     this.isAnimating = true;
+    this.startAnimWatchdog(1500);
     const tl = gsap.timeline({
       onComplete: () => {
-        fromEl.classList.remove('active');
-        gsap.set(fromEl, { pointerEvents: 'none', y: 0 });
-        toEl.classList.add('active');
-        gsap.set(toEl, { pointerEvents: 'auto' });
+        this.cleanupScreens(toEl.id);
+        this.clearAnimWatchdog();
         this.isAnimating = false;
       }
     });
@@ -574,15 +684,14 @@ class DoanhNghiepMotionController {
    */
   animPanHorizontal(fromEl, toEl, direction = 'next') {
     this.isAnimating = true;
+    this.startAnimWatchdog(1500);
     const moveOutX = direction === 'next' ? -80 : 80;
     const moveInX = direction === 'next' ? 80 : -80;
 
     const tl = gsap.timeline({
       onComplete: () => {
-        fromEl.classList.remove('active');
-        gsap.set(fromEl, { x: 0, pointerEvents: 'none' });
-        toEl.classList.add('active');
-        gsap.set(toEl, { pointerEvents: 'auto' });
+        this.cleanupScreens(toEl.id);
+        this.clearAnimWatchdog();
         this.isAnimating = false;
       }
     });
@@ -638,12 +747,11 @@ class DoanhNghiepMotionController {
    */
   animDefaultCrossfade(fromEl, toEl) {
     this.isAnimating = true;
+    this.startAnimWatchdog(1500);
     const tl = gsap.timeline({
       onComplete: () => {
-        fromEl.classList.remove('active');
-        gsap.set(fromEl, { pointerEvents: 'none' });
-        toEl.classList.add('active');
-        gsap.set(toEl, { pointerEvents: 'auto' });
+        this.cleanupScreens(toEl.id);
+        this.clearAnimWatchdog();
         this.isAnimating = false;
       }
     });

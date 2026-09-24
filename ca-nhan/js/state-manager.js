@@ -64,11 +64,19 @@ export class AppStateManager {
     return true;
   }
 
+  getParentScreen(screenId) {
+    if (screenId === 'screen-1-3-1' || screenId === 'screen-1-3-2') return 'screen-1-3';
+    if (screenId === 'screen-1-4-1' || screenId === 'screen-1-4-2') return 'screen-1-4';
+    if (typeof screenId === 'string' && screenId.startsWith('screen-1-')) return 'screen-main';
+    return null;
+  }
+
   goBack() {
     if (this.history.length === 0) {
-      if (this.currentScreen !== 'screen-main' && this.currentScreen !== 'screen-idle') {
-        this.navigateTo('screen-main');
-        return 'screen-main';
+      const parentScreen = this.getParentScreen(this.currentScreen);
+      if (parentScreen) {
+        this.navigateTo(parentScreen);
+        return parentScreen;
       }
       return null;
     }
@@ -92,7 +100,10 @@ export class AppStateManager {
   }
 
   canGoBack() {
-    return this.currentScreen !== 'screen-idle' && this.currentScreen !== 'screen-main';
+    if (this.currentScreen === 'screen-idle' || this.currentScreen === 'screen-main') {
+      return false;
+    }
+    return this.history.length > 0 || this.getParentScreen(this.currentScreen) !== null;
   }
 
   resetIdleTimer() {
@@ -103,9 +114,11 @@ export class AppStateManager {
 
     if (this.idleTimeoutMs > 0) {
       this.idleTimer = setTimeout(() => {
-        this.resetToIdle();
+        const fromScreen = this.currentScreen;
         if (typeof this.onTimeout === 'function') {
-          this.onTimeout();
+          this.onTimeout(fromScreen);
+        } else {
+          this.resetToIdle();
         }
       }, this.idleTimeoutMs);
       if (this.idleTimer && typeof this.idleTimer.unref === 'function') {

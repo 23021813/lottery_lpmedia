@@ -72,7 +72,22 @@ export class DoanhNghiepStateManager {
     return true;
   }
 
+  getParentScreen(screenId) {
+    if (typeof screenId === 'string' && screenId.startsWith('screen-1-3-')) return 'screen-1-3';
+    if (typeof screenId === 'string' && screenId.startsWith('screen-1-')) return 'screen-main';
+    return null;
+  }
+
   goBack() {
+    if (this.history.length === 0) {
+      const parentScreen = this.getParentScreen(this.currentScreen);
+      if (parentScreen) {
+        this.navigateTo(parentScreen);
+        return parentScreen;
+      }
+      return null;
+    }
+
     if (!this.canGoBack()) {
       return null;
     }
@@ -89,12 +104,11 @@ export class DoanhNghiepStateManager {
   }
 
   canGoBack() {
-    if (this.history.length === 0) return false;
     // Không cho phép nút Back ở Trang Chờ hoặc Trang Chính
     if (this.currentScreen === 'screen-idle' || this.currentScreen === 'screen-main') {
       return false;
     }
-    return true;
+    return this.history.length > 0 || this.getParentScreen(this.currentScreen) !== null;
   }
 
   resetIdleTimer() {
@@ -105,9 +119,11 @@ export class DoanhNghiepStateManager {
 
     if (this.idleTimeoutMs > 0) {
       this.idleTimer = setTimeout(() => {
-        this.resetToIdle();
+        const fromScreen = this.currentScreen;
         if (typeof this.onTimeout === 'function') {
-          this.onTimeout();
+          this.onTimeout(fromScreen);
+        } else {
+          this.resetToIdle();
         }
       }, this.idleTimeoutMs);
       if (this.idleTimer && typeof this.idleTimer.unref === 'function') {

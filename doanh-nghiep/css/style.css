@@ -1385,7 +1385,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: clamp(10px, 1vw, 14px);
-  z-index: 25; /* Nhỏ hơn các thành phần modal, video, popup (z-index: 100-200) */
+  z-index: 170; /* Luôn nổi trên video presentation (z-index: 150) và video controls (z-index: 160) */
   pointer-events: none;
   opacity: 0;
   visibility: hidden;

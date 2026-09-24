@@ -578,6 +578,17 @@ body {
   pointer-events: none;
 }
 
+.rewards-action-container::before {
+  content: "";
+  position: absolute;
+  top: -35px;
+  left: -20px;
+  right: -20px;
+  bottom: 0;
+  pointer-events: auto;
+  z-index: 0;
+}
+
 .rewards-action-container > * {
   pointer-events: auto;
 }
@@ -609,8 +620,9 @@ body {
 
 .btn-back {
   position: absolute;
-  bottom: clamp(16px, 4vh, 24px);
-  right: clamp(24px, 3.2vw, 60px);
+  bottom: clamp(32px, 6.5vh, 42px);
+  left: clamp(24px, 3.2vw, 60px);
+  right: auto;
   z-index: 25;
   display: flex;
   align-items: center;
@@ -644,8 +656,8 @@ body {
 
 .btn-back .img-back {
   display: block;
-  width: 99px;
-  height: 45px;
+  width: auto;
+  height: clamp(52px, 9.6vh, 58px);
   max-width: none;
   pointer-events: none;
 }

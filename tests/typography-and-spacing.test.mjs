@@ -90,4 +90,26 @@ test('Typography & Spacing Quality Test Suite (Preserving Stage Aspect Ratio)', 
     assert.ok(caNhanCss.includes('.btn-back.pos-right'), 'ca-nhan CSS must include .btn-back.pos-right');
     assert.ok(caNhanCss.includes('.btn-back.pos-left'), 'ca-nhan CSS must include .btn-back.pos-left');
   });
+
+  await t.test('10. Back Button Sizing & Assets: bottom raised to 32px-42px, height 52px-58px, both icons present', () => {
+    assert.ok(doanhNghiepCss.includes('bottom: clamp(32px, 6.5vh, 42px)'), 'doanh-nghiep bottom must be raised to clamp(32px, 6.5vh, 42px)');
+    assert.ok(caNhanCss.includes('bottom: clamp(32px, 6.5vh, 42px)'), 'ca-nhan bottom must be raised to clamp(32px, 6.5vh, 42px)');
+
+    assert.ok(doanhNghiepCss.includes('height: clamp(52px, 9.6vh, 58px)'), 'doanh-nghiep height must be enlarged to clamp(52px, 9.6vh, 58px)');
+    assert.ok(caNhanCss.includes('height: clamp(52px, 9.6vh, 58px)'), 'ca-nhan height must be enlarged to clamp(52px, 9.6vh, 58px)');
+
+    assert.ok(fs.existsSync('doanh-nghiep/images/icon-back.png'), 'doanh-nghiep icon-back.png must exist');
+    assert.ok(fs.existsSync('doanh-nghiep/images/icon-back2.png'), 'doanh-nghiep icon-back2.png must exist');
+
+    assert.ok(fs.existsSync('ca-nhan/images/icon-back.png'), 'ca-nhan icon-back.png must exist');
+    assert.ok(fs.existsSync('ca-nhan/images/icon-back2.png'), 'ca-nhan icon-back2.png must exist');
+  });
+
+  await t.test('11. Touch Target Extension: rewards-action-container::before must extend touch area', () => {
+    assert.ok(doanhNghiepCss.includes('.rewards-action-container::before'), 'doanh-nghiep must have .rewards-action-container::before');
+    assert.ok(doanhNghiepCss.includes('top: -35px;'), 'doanh-nghiep touch target must extend with top: -35px');
+
+    assert.ok(caNhanCss.includes('.rewards-action-container::before'), 'ca-nhan must have .rewards-action-container::before');
+    assert.ok(caNhanCss.includes('top: -35px;'), 'ca-nhan touch target must extend with top: -35px');
+  });
 });

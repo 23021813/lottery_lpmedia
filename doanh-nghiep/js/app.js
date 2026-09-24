@@ -134,12 +134,19 @@ class DoanhNghiepMotionController {
 
     if (config) {
       this.dom.btnBack.classList.add('is-visible');
+      const imgBack = this.dom.btnBack.querySelector('.img-back') || this.dom.btnBack.querySelector('img');
       if (config.position === 'left') {
         this.dom.btnBack.classList.remove('pos-right', 'right');
         this.dom.btnBack.classList.add('pos-left', 'left');
+        if (imgBack && !imgBack.src.endsWith('icon-back2.png')) {
+          imgBack.src = 'images/icon-back2.png';
+        }
       } else {
         this.dom.btnBack.classList.remove('pos-left', 'left');
         this.dom.btnBack.classList.add('pos-right', 'right');
+        if (imgBack && !imgBack.src.endsWith('icon-back.png')) {
+          imgBack.src = 'images/icon-back.png';
+        }
       }
       this.dom.btnBack.setAttribute('aria-label', config.label);
       this.dom.btnBack.setAttribute('title', config.label);

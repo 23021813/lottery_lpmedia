@@ -150,8 +150,9 @@ body {
    ========================================================================== */
 .btn-back {
   position: absolute;
-  bottom: clamp(16px, 4vh, 24px);
-  right: clamp(24px, 3.2vw, 60px);
+  bottom: clamp(32px, 6.5vh, 42px);
+  left: clamp(24px, 3.2vw, 60px);
+  right: auto;
   z-index: 90;
   cursor: pointer;
   opacity: 0;
@@ -185,7 +186,7 @@ body {
 
 .btn-back .img-back {
   width: auto;
-  height: 45px; /* Chiều cao chuẩn 45px của icon-back2.png (99x45) */
+  height: clamp(52px, 9.6vh, 58px);
   display: block;
   filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.7));
   transition: transform 0.25s var(--ease-smooth), filter 0.25s ease;
@@ -879,6 +880,17 @@ body {
   z-index: 15;
   cursor: pointer;
   pointer-events: auto;
+}
+
+.rewards-action-container::before {
+  content: "";
+  position: absolute;
+  top: -35px;
+  left: -20px;
+  right: -20px;
+  bottom: 0;
+  pointer-events: auto;
+  z-index: 0;
 }
 
 .chevron-indicator {

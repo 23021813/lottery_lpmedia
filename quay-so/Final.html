@@ -569,28 +569,118 @@
         transition: all 0.35s ease;
       }
 
-      /* Space Hint Bar */
-      .space-hint-bar {
-        font-size: 13px;
-        font-weight: 600;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.55);
-        display: flex;
+      /* Nút Điều Khiển Quay Số: Liquid Glass 3D MSB */
+      .lottery-control-btn {
+        position: relative;
+        display: inline-flex;
         align-items: center;
-        gap: 8px;
-        transition: opacity 0.3s ease;
+        justify-content: center;
+        gap: 12px;
+        min-width: 250px;
+        padding: 16px 48px;
+        background: linear-gradient(
+          135deg,
+          rgba(243, 112, 33, 0.92) 0%,
+          rgba(239, 65, 35, 0.96) 100%
+        );
+        backdrop-filter: var(--liquid-glass-blur);
+        -webkit-backdrop-filter: var(--liquid-glass-blur);
+        border: 1.5px solid rgba(255, 255, 255, 0.45);
+        border-radius: 9999px;
+        font-family: inherit;
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #ffffff;
+        cursor: pointer;
+        box-shadow: 
+          inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+          inset -2px -2px 4px rgba(0, 0, 0, 0.4),
+          inset 0 12px 24px rgba(255, 255, 255, 0.2),
+          0 15px 35px rgba(0, 0, 0, 0.6),
+          0 0 50px rgba(243, 112, 33, 0.65);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        overflow: hidden;
+        user-select: none;
+        z-index: 25;
       }
 
-      .space-key-pill {
-        display: inline-block;
-        padding: 3px 10px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 6px;
-        color: rgba(255, 255, 255, 0.85);
-        font-size: 11px;
-        box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+      .lottery-control-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 10%;
+        right: 10%;
+        height: 48%;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.65) 0%,
+          transparent 100%
+        );
+        border-radius: 9999px 9999px 0 0;
+        pointer-events: none;
+      }
+
+      .lottery-control-btn:hover {
+        transform: translateY(-2px) scale(1.04);
+        box-shadow: 
+          inset 2px 2px 4px rgba(255, 255, 255, 0.95),
+          inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+          0 20px 45px rgba(0, 0, 0, 0.7),
+          0 0 70px rgba(243, 112, 33, 0.85);
+        filter: brightness(1.1);
+      }
+
+      .lottery-control-btn:active {
+        transform: translateY(1px) scale(0.98);
+        box-shadow: 
+          inset 2px 2px 5px rgba(0, 0, 0, 0.6),
+          0 8px 20px rgba(0, 0, 0, 0.5),
+          0 0 30px rgba(243, 112, 33, 0.5);
+      }
+
+      /* Trạng thái Đang Quay -> DỪNG LẠI */
+      .lottery-control-btn.is-spinning {
+        background: linear-gradient(
+          135deg,
+          rgba(237, 28, 36, 0.92) 0%,
+          rgba(158, 11, 15, 0.96) 100%
+        );
+        border-color: rgba(255, 255, 255, 0.55);
+        box-shadow: 
+          inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+          inset -2px -2px 4px rgba(0, 0, 0, 0.5),
+          0 15px 35px rgba(0, 0, 0, 0.7),
+          0 0 60px rgba(237, 28, 36, 0.75);
+        animation: pulseStopBtn 1.5s infinite alternate ease-in-out;
+      }
+
+      @keyframes pulseStopBtn {
+        0% {
+          box-shadow: 
+            inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+            inset -2px -2px 4px rgba(0, 0, 0, 0.5),
+            0 15px 35px rgba(0, 0, 0, 0.7),
+            0 0 45px rgba(237, 28, 36, 0.6);
+        }
+        100% {
+          box-shadow: 
+            inset 2px 2px 4px rgba(255, 255, 255, 0.9),
+            inset -2px -2px 4px rgba(0, 0, 0, 0.5),
+            0 20px 45px rgba(0, 0, 0, 0.8),
+            0 0 80px rgba(237, 28, 36, 0.95);
+        }
+      }
+
+      /* Trạng thái Khóa / Đang Hãm Phanh (Disabled) */
+      .lottery-control-btn:disabled,
+      .lottery-control-btn.is-stopping {
+        opacity: 0.6;
+        cursor: not-allowed;
+        pointer-events: none;
+        transform: none !important;
+        animation: none !important;
       }
 
       /* ============================================================
@@ -994,19 +1084,7 @@
         transform: translateY(0) scale(0.98);
       }
 
-      .modal-keyboard-hints {
-        margin-top: 22px;
-        font-size: 12px;
-        font-weight: 500;
-        color: rgba(255, 255, 255, 0.5);
-        letter-spacing: 0.04em;
-        padding: 8px 20px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 9999px;
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-      }
+
 
       /* ============================================================
          MODAL DANH SÁCH NGƯỜI TRÚNG GIẢI (LIQUID GLASS)
@@ -1368,7 +1446,6 @@
       <div
         class="slot-machine-container"
         id="slotMachineContainer"
-        onclick="handleSlotClick()"
       >
         <div class="slot-grid">
           <div class="slot-cell" id="slot-cell-0">
@@ -1386,11 +1463,18 @@
         </div>
       </div>
 
-      <!-- Hướng dẫn phím Space tinh tế -->
-      <div class="space-hint-bar" id="spaceHintBar">
-        <span class="space-key-pill">SPACE</span>
-        <span>BẤM ĐỂ QUAY / DỪNG</span>
-      </div>
+      <!-- Nút Điều Khiển Quay Số: Liquid Glass MSB (QUAY SỐ / DỪNG LẠI / QUAY TIẾP) -->
+      <button
+        id="lotteryControlBtn"
+        class="lottery-control-btn"
+        onclick="handleLotteryControlClick()"
+        aria-label="Quay số may mắn"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        <span>QUAY SỐ</span>
+      </button>
     </div>
 
     <!-- Modal Vinh Danh Người Trúng Thưởng (Liquid Glass Siêu Trong Suốt, Bỏ "Chúc Mừng") -->
@@ -1414,9 +1498,6 @@
           <button class="btn-modal btn-continue" onclick="handleWinnerConfirm()">
             TIẾP TỤC
           </button>
-        </div>
-        <div class="modal-keyboard-hints">
-          [SPACE / ENTER]: Tiếp tục &nbsp;•&nbsp; [V / DELETE]: Vắng mặt &nbsp;•&nbsp; [ESC]: Đóng
         </div>
       </div>
     </div>
@@ -1823,9 +1904,54 @@
       });
 
       /* ============================================================
-         QUAY SỐ LỆCH CHU KỲ & LỆCH Ô HOÀN TOÀN (NON-CYCLICAL)
+          QUAY SỐ & ĐIỀU KHIỂN NÚT BẤM (CHẬM RÃI, MƯỢT MÀ)
          ============================================================ */
-      function handleSlotClick() {
+      function updateControlButtonState(state) {
+        const btn = document.getElementById("lotteryControlBtn");
+        if (!btn) return;
+
+        if (state === "spinning") {
+          btn.classList.add("is-spinning");
+          btn.classList.remove("is-stopping");
+          btn.disabled = false;
+          btn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="5" y="5" width="14" height="14" rx="2" />
+            </svg>
+            <span>DỪNG LẠI</span>
+          `;
+        } else if (state === "stopping") {
+          btn.classList.add("is-spinning", "is-stopping");
+          btn.disabled = true;
+          btn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="5" y="5" width="14" height="14" rx="2" />
+            </svg>
+            <span>ĐANG DỪNG...</span>
+          `;
+        } else if (state === "ready-next") {
+          btn.classList.remove("is-spinning", "is-stopping");
+          btn.disabled = false;
+          btn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <span>QUAY TIẾP</span>
+          `;
+        } else {
+          // initial
+          btn.classList.remove("is-spinning", "is-stopping");
+          btn.disabled = false;
+          btn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <span>QUAY SỐ</span>
+          `;
+        }
+      }
+
+      function handleLotteryControlClick() {
         if (!isSpinning) {
           startSpin();
         } else {
@@ -1858,14 +1984,13 @@
           available[Math.floor(Math.random() * available.length)];
 
         isSpinning = true;
+        updateControlButtonState("spinning");
+
         const container = document.getElementById("slotMachineContainer");
         if (container) {
           container.classList.remove("is-celebrating");
           container.classList.add("is-spinning");
         }
-
-        const hint = document.getElementById("spaceHintBar");
-        if (hint) hint.style.opacity = "0.2";
 
         // Bắt đầu dao động 3D không đồng trục
         startNonCoaxialAnimation();
@@ -1891,20 +2016,16 @@
           startStripContinuousSpin(i);
         }
 
-        // Tự động dừng sau 5 đến 7 giây
-        const randomDuration = Math.floor(Math.random() * 2000) + 5000;
-        spinTimeoutId = setTimeout(() => {
-          stopSpin();
-        }, randomDuration);
+        // QUAY LIÊN TỤC CHO ĐẾN KHI BẤM DỪNG (Không tự động dừng)
       }
 
       function startStripContinuousSpin(col) {
         const h = getCellHeight();
         const maxScroll = h * 10 * (STRIP_REPEAT - 3);
 
-        // Vận tốc cuộn không đồng trục, không trùng bội số: Lệch chu kỳ 100%
-        const baseSpeed = [78, 48, 86, 56];
-        stripVelocities[col] = baseSpeed[col] + Math.random() * 5;
+        // Vận tốc cuộn vừa phải, các số chạy chậm rõ nét, mượt mà và hồi hộp
+        const baseSpeed = [24, 18, 26, 20];
+        stripVelocities[col] = baseSpeed[col] + Math.random() * 2;
 
         function step() {
           if (!isStripSpinning[col]) return;
@@ -1925,6 +2046,8 @@
           clearTimeout(spinTimeoutId);
           spinTimeoutId = null;
         }
+
+        updateControlButtonState("stopping");
 
         const container = document.getElementById("slotMachineContainer");
         if (container) container.classList.remove("is-spinning");
@@ -2009,14 +2132,14 @@
           nonCoaxialFrameId = null;
         }
 
-        const hint = document.getElementById("spaceHintBar");
-        if (hint) hint.style.opacity = "1";
-
         const container = document.getElementById("slotMachineContainer");
         if (container) container.classList.add("is-celebrating");
 
         // Kích hoạt pháo hoa sao băng ăn mừng (Chỉ màu Cam - Đỏ MSB)
         triggerCelebration();
+
+        // Chuyển nút về trạng thái sẵn sàng cho lượt tiếp
+        updateControlButtonState("ready-next");
 
         // Hiển thị modal vinh danh sau khi pháo hoa bung tỏa (delay 1.6s)
         setTimeout(() => {
@@ -2071,6 +2194,7 @@
         updatePrizeCountsUI();
         hideWinnerModal();
         currentWinnerCandidate = null;
+        updateControlButtonState("ready-next");
       }
 
       function handleWinnerAbsent() {
@@ -2087,9 +2211,8 @@
         hideWinnerModal();
         currentWinnerCandidate = null;
 
-        setTimeout(() => {
-          startSpin();
-        }, 400);
+        // Bỏ tự động quay tiếp! Đặt nút về trạng thái QUAY TIẾP để người điều khiển chủ động bấm
+        updateControlButtonState("ready-next");
       }
 
       /* ============================================================
@@ -2110,6 +2233,7 @@
         sessionStorage.removeItem("msb_winnersData");
 
         updatePrizeCountsUI();
+        updateControlButtonState("initial");
 
         for (let i = 0; i < DIGIT_COUNT; i++) {
           const cell = document.getElementById(`slot-cell-${i}`);
@@ -2121,59 +2245,6 @@
           setStripTransform(i, 0);
         }
       }
-
-      /* ============================================================
-         PHÍM TẮT BÀN PHÍM
-         ============================================================ */
-      window.addEventListener("keydown", (e) => {
-        const listModal = document.getElementById("winnerListModalOverlay");
-        if (listModal && listModal.classList.contains("is-visible")) {
-          if (e.key === "Escape" || e.code === "Escape") {
-            closeWinnerListModal();
-          }
-          return;
-        }
-
-        const modal = document.getElementById("winnerModalOverlay");
-        const isModalOpen = modal && modal.classList.contains("is-visible");
-
-        if (isModalOpen) {
-          if (e.key === "Escape" || e.code === "Escape") {
-            e.preventDefault();
-            hideWinnerModal();
-            return;
-          }
-
-          if (
-            e.code === "Space" ||
-            e.code === "Enter" ||
-            e.key === " " ||
-            e.key === "Enter"
-          ) {
-            e.preventDefault();
-            handleWinnerConfirm();
-          } else if (
-            e.code === "KeyV" ||
-            e.key === "v" ||
-            e.key === "V" ||
-            e.code === "Delete" ||
-            e.code === "Backspace"
-          ) {
-            e.preventDefault();
-            handleWinnerAbsent();
-          }
-          return;
-        }
-
-        if (e.code === "Space" || e.key === " ") {
-          e.preventDefault();
-          if (!isSpinning) {
-            startSpin();
-          } else {
-            stopSpin();
-          }
-        }
-      });
 
       /* ============================================================
          QUẢN LÝ VIDEO NỀN DUY NHẤT & TỰ ĐỘNG PHÁT (BACKGROUND MP4)

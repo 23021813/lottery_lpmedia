@@ -8,10 +8,14 @@ import { DoanhNghiepStateManager } from './state-manager.js';
 
 class DoanhNghiepMotionController {
   constructor() {
-    // Khởi tạo state manager không có idle timeout (idleTimeoutMs = 0)
+    // Khởi tạo state manager với idle timeout 5 phút (300.000 ms)
     this.state = new DoanhNghiepStateManager({
       initialScreen: 'screen-idle',
-      idleTimeoutMs: 0
+      idleTimeoutMs: 300000,
+      onTimeout: () => {
+        this.closeDemo();
+        this.navigateTo('screen-idle');
+      }
     });
 
     this.isAnimating = false;
@@ -229,6 +233,13 @@ class DoanhNghiepMotionController {
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         this.handleBackAction();
+      }
+    });
+
+    // Reset bộ đếm 5 phút tự động về trang chờ khi có bất kỳ thao tác chạm
+    window.addEventListener('pointerdown', () => {
+      if (this.state && typeof this.state.resetIdleTimer === 'function') {
+        this.state.resetIdleTimer();
       }
     });
 

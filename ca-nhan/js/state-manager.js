@@ -20,11 +20,16 @@ export const VALID_SCREENS = [
 export class AppStateManager {
   constructor(options = {}) {
     this.initialScreen = options.initialScreen || 'screen-idle';
-    this.idleTimeoutMs = options.idleTimeoutMs || 60000;
+    this.idleTimeoutMs = options.idleTimeoutMs ?? 300000; // 5 phút = 300.000 ms
+    this.onTimeout = options.onTimeout || null;
     this.currentScreen = this.initialScreen;
     this.history = [];
     this.idleTimer = null;
     this.listeners = new Set();
+
+    if (this.idleTimeoutMs > 0) {
+      this.resetIdleTimer();
+    }
   }
 
   isValidScreen(screenId) {
@@ -52,6 +57,10 @@ export class AppStateManager {
       history: [...this.history]
     });
 
+    if (this.idleTimeoutMs > 0) {
+      this.resetIdleTimer();
+    }
+
     return true;
   }
 
@@ -75,6 +84,10 @@ export class AppStateManager {
       history: [...this.history]
     });
 
+    if (this.idleTimeoutMs > 0) {
+      this.resetIdleTimer();
+    }
+
     return previousScreen;
   }
 
@@ -82,7 +95,28 @@ export class AppStateManager {
     return this.currentScreen !== 'screen-idle' && this.currentScreen !== 'screen-main';
   }
 
+  resetIdleTimer() {
+    if (this.idleTimer) {
+      clearTimeout(this.idleTimer);
+      this.idleTimer = null;
+    }
+
+    if (this.idleTimeoutMs > 0) {
+      this.idleTimer = setTimeout(() => {
+        this.resetToIdle();
+        if (typeof this.onTimeout === 'function') {
+          this.onTimeout();
+        }
+      }, this.idleTimeoutMs);
+    }
+  }
+
   resetToIdle() {
+    if (this.idleTimer) {
+      clearTimeout(this.idleTimer);
+      this.idleTimer = null;
+    }
+
     if (this.currentScreen === 'screen-idle') {
       return;
     }

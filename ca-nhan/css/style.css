@@ -452,7 +452,7 @@ body {
 
 .detail-card-desc {
   font-family: var(--font-family);
-  font-size: clamp(16px, 1.2vw, 18px);
+  font-size: clamp(14px, 1.05cqw, 17px) !important;
   font-weight: 700;
   line-height: 1.45;
   color: var(--text-primary);

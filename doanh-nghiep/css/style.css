@@ -715,6 +715,18 @@ body {
               background 0.3s ease;
 }
 
+.toiuu-card {
+    flex-direction: revert;
+    flex-wrap: wrap;
+    row-gap: 12px;
+    align-content: start;
+    align-items: center;
+}
+
+.toiuu-card-list {
+    margin-top: 0;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .toiuu-card[data-screen]:hover {
     transform: translateY(-6px) !important;

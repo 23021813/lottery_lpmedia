@@ -100,5 +100,27 @@ test('Doanh Nghiệp Markup & SPA Structure Test Suite', async (t) => {
     assert.match(html, /class=["'][^"']*\btoiuu-card-link\b[^"']*["'][^>]*data-screen=["']screen-1-3-1["']/);
     assert.match(html, /class=["'][^"']*\btoiuu-card-link\b[^"']*["'][^>]*data-screen=["']screen-1-3-5["']/);
   });
+
+  await t.test('should contain divider-line in all 5 sub-screens of Tối ưu (screen-1-3-1 to screen-1-3-5)', () => {
+    const subScreens = ['screen-1-3-1', 'screen-1-3-2', 'screen-1-3-3', 'screen-1-3-4', 'screen-1-3-5'];
+    for (const subId of subScreens) {
+      const sectionRegex = new RegExp(`<section[^>]*id=["']${subId}["'][\\s\\S]*?<\\/section>`, 'i');
+      const match = html.match(sectionRegex);
+      assert.ok(match, `Section with id="${subId}" must exist`);
+      assert.match(match[0], /<div\s+class=["']divider-line["']\s+aria-hidden=["']true["']\s*><\/div>/, `${subId} must contain divider-line`);
+    }
+  });
+
+  await t.test('ca-nhan should contain bgLayerMarketplace and proper card dimensions', () => {
+    const caNhanHtmlPath = path.resolve(__dirname, '../ca-nhan/index.html');
+    const caNhanCssPath = path.resolve(__dirname, '../ca-nhan/css/style.css');
+    const caNhanHtml = fs.readFileSync(caNhanHtmlPath, 'utf8');
+    const caNhanCss = fs.readFileSync(caNhanCssPath, 'utf8');
+
+    assert.match(caNhanHtml, /id=["']bgLayerMarketplace["']/);
+    assert.match(caNhanCss, /#bgLayerMarketplace\s*{[^}]*bg_marketplace\.jpg/);
+    assert.match(caNhanCss, /\.detail-card\s*{[^}]*width:\s*clamp\(180px,\s*20cqw,\s*300px\)/);
+    assert.match(caNhanCss, /\.rewards-cards-container\s+\.rewards-card\s*{[^}]*width:\s*clamp\(160px,\s*16\.2cqw,\s*250px\)/);
+  });
 });
 

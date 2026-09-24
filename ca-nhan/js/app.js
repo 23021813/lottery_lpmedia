@@ -37,6 +37,7 @@ class AppMotionController {
       stage: document.getElementById('screenStage'),
       bgMain: document.getElementById('bgLayerMain'),
       bgDetail: document.getElementById('bgLayerDetail'),
+      bgMarketplace: document.getElementById('bgLayerMarketplace'),
       bgIdle: document.getElementById('bgLayerIdle'),
       demoModal: document.getElementById('screen-demo'),
       demoBackdrop: document.getElementById('demoBackdrop'),
@@ -90,6 +91,9 @@ class AppMotionController {
     gsap.set(this.dom.bgIdle, { opacity: 1, scale: 1 });
     gsap.set(this.dom.bgMain, { opacity: 0, scale: 1, x: '0%', transformOrigin: '62.7% 47%', filter: 'blur(0px)' });
     gsap.set(this.dom.bgDetail, { opacity: 0, scale: 1, transformOrigin: '50% 50%', filter: 'blur(0px)' });
+    if (this.dom.bgMarketplace) {
+      gsap.set(this.dom.bgMarketplace, { opacity: 0, scale: 1, transformOrigin: '50% 50%', filter: 'blur(0px)' });
+    }
 
     // Demo phone modal initial state (Hoàn toàn ẩn và không cản trở tương tác)
     if (this.dom.demoModal) {
@@ -535,6 +539,10 @@ class AppMotionController {
       ease: 'power2.inOut'
     }, 0.05);
 
+    if (this.dom.bgMarketplace) {
+      tl.to(this.dom.bgMarketplace, { opacity: 0, duration: 0.5, ease: 'power2.out' }, 0.05);
+    }
+
     // Nền chính từ giữa thu nhỏ sắc nét và lướt về lại vị trí bên phải
     gsap.set(this.dom.bgMain, { transformOrigin: '62.7% 47%' });
     tl.set(this.dom.bgMain, { scale: 1.5, x: '-12.7%', opacity: 0 }, 0.05);
@@ -588,6 +596,17 @@ class AppMotionController {
     // Chuẩn bị màn hình mới
     toEl.classList.add('is-active');
     gsap.set(toEl, { opacity: 0, x: moveInX, visibility: 'visible' });
+
+    // Chuyển background nếu vào hoặc ra khỏi Marketplace (1.4.2)
+    if (this.dom.bgMarketplace) {
+      if (toEl.id === 'screen-1-4-2') {
+        tl.to(this.dom.bgMarketplace, { opacity: 1, duration: 0.65, ease: 'power2.out' }, 0.1);
+        tl.to(this.dom.bgDetail, { opacity: 0, duration: 0.65, ease: 'power2.out' }, 0.1);
+      } else if (fromEl.id === 'screen-1-4-2') {
+        tl.to(this.dom.bgMarketplace, { opacity: 0, duration: 0.6, ease: 'power2.out' }, 0);
+        tl.to(this.dom.bgDetail, { opacity: 1, duration: 0.65, ease: 'power2.out' }, 0.1);
+      }
+    }
 
     tl.to(toEl, {
       opacity: 1,
@@ -653,6 +672,18 @@ class AppMotionController {
     tl.to(fromEl, { opacity: 0, duration: 0.4 }, 0);
     toEl.classList.add('is-active');
     gsap.set(toEl, { opacity: 0, visibility: 'visible' });
+
+    // Chuyển background nếu vào hoặc ra khỏi Marketplace (1.4.2)
+    if (this.dom.bgMarketplace) {
+      if (toEl.id === 'screen-1-4-2') {
+        tl.to(this.dom.bgMarketplace, { opacity: 1, duration: 0.5 }, 0.1);
+        tl.to(this.dom.bgDetail, { opacity: 0, duration: 0.5 }, 0.1);
+      } else if (fromEl.id === 'screen-1-4-2') {
+        tl.to(this.dom.bgMarketplace, { opacity: 0, duration: 0.5 }, 0);
+        tl.to(this.dom.bgDetail, { opacity: 1, duration: 0.5 }, 0.1);
+      }
+    }
+
     tl.to(toEl, { opacity: 1, duration: 0.5 }, 0.2);
   }
 

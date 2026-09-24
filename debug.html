@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MSB LED Kiosk — Interactive Diagnostic & Calibration Suite</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap">
+  <style>
+    :root {
+      --bg-dark: #050b18;
+      --card-bg: rgba(10, 24, 58, 0.75);
+      --border-cyan: #00f0ff;
+      --border-amber: #ffb800;
+      --border-green: #00ff66;
+      --border-magenta: #ff0055;
+      --text-white: #ffffff;
+      --text-dim: #8fa5c8;
+      --font-sans: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      font-family: var(--font-sans);
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP LIVE TELEMETRY BAR */
+    .telemetry-bar {
+      height: 48px;
+      background: rgba(4, 12, 30, 0.95);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .telemetry-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .tele-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 240, 255, 0.1);
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 240, 255, 0.25);
+    }
+
+    .tele-label { color: var(--text-dim); }
+    .tele-val { color: var(--border-cyan); font-weight: 700; }
+    .tele-val.warn { color: var(--border-amber); }
+    .tele-val.good { color: var(--border-green); }
+    .tele-val.bad { color: var(--border-magenta); }
+
+    /* NAVIGATION TABS FOR TEST MODULES */
+    .tab-nav {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--text-white);
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--border-cyan);
+      color: #01040f;
+      border-color: var(--border-cyan);
+      box-shadow: 0 0 14px rgba(0, 240, 255, 0.5);
+    }
+
+    /* MAIN VIEWPORT TEST CONTAINER */
+    .test-viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000000;
+      transition: all 0.3s;
+    }
+
+    /* SIMULATION MODES FOR STAGE CONTAINER */
+    .test-viewport.mode-center {
+      justify-content: center;
+      align-items: center;
+    }
+
+    .test-viewport.mode-top-left {
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+
+    /* THE SIMULATED 1535x576 LED STAGE */
+    .simulated-stage {
+      position: relative;
+      width: 1535px;
+      height: 576px;
+      background: #07153b;
+      box-shadow: 0 0 0 2px var(--border-cyan), 0 0 50px rgba(0, 240, 255, 0.2);
+      overflow: hidden;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+
+    /* ACTIVE TAB PANELS */
+    .test-panel {
+      position: absolute;
+      inset: 0;
+      display: none;
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .test-panel.active {
+      display: flex;
+    }
+
+    /* ========================================================
+       MODULE 1: ASPECT RATIO & ANTI-STRETCH CALIBRATION (RULER & CIRCLES)
+       ======================================================== */
+    .panel-aspect {
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .ruler-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 24px;
+      border-bottom: 1px solid var(--border-cyan);
+      display: flex;
+      justify-content: space-between;
+      padding: 2px 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--border-cyan);
+      background: rgba(0, 240, 255, 0.08);
+    }
+
+    .ruler-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 24px;
+      border-top: 1px solid var(--border-cyan);
+      display: flex;
+      justify-content: space-between;
+      padding: 2px 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--border-cyan);
+      background: rgba(0, 240, 255, 0.08);
+    }
+
+    .ruler-left {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 48px;
+      border-right: 1px solid var(--border-cyan);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 30px 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--border-cyan);
+      background: rgba(0, 240, 255, 0.08);
+    }
+
+    .ruler-right {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 48px;
+      border-left: 1px solid var(--border-cyan);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 30px 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--border-cyan);
+      background: rgba(0, 240, 255, 0.08);
+    }
+
+    .aspect-body {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      width: 100%;
+      height: 100%;
+      padding: 30px 60px;
+    }
+
+    .shape-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(5, 15, 45, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 16px 24px;
+    }
+
+    .perfect-circle {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 3px solid var(--border-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, transparent 70%);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
+    }
+
+    .perfect-circle::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background: rgba(0, 240, 255, 0.4);
+    }
+
+    .perfect-circle::after {
+      content: '';
+      position: absolute;
+      height: 100%;
+      width: 1px;
+      background: rgba(0, 240, 255, 0.4);
+    }
+
+    .shape-card h3 {
+      margin-top: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .shape-card p {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 4px;
+      text-align: center;
+      max-width: 240px;
+    }
+
+    .perfect-square {
+      width: 220px;
+      height: 220px;
+      border: 3px solid var(--border-amber);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: rgba(255, 184, 0, 0.05);
+      box-shadow: 0 0 25px rgba(255, 184, 0, 0.2);
+    }
+
+    .perfect-square svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ========================================================
+       MODULE 2: FONT & TEXT GRADIENT CHROMIUM BUG BENCHMARK
+       ======================================================== */
+    .panel-text {
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+      height: 100%;
+      padding: 30px 60px;
+    }
+
+    .benchmark-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--border-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      padding-bottom: 8px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      flex: 1;
+    }
+
+    .compare-card {
+      background: rgba(5, 16, 45, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    .compare-card.bad {
+      border-color: var(--border-magenta);
+      box-shadow: inset 0 0 20px rgba(255, 0, 85, 0.15);
+    }
+
+    .compare-card.good {
+      border-color: var(--border-green);
+      box-shadow: inset 0 0 20px rgba(0, 255, 102, 0.15);
+    }
+
+    .badge-status {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+
+    .badge-status.bad {
+      background: rgba(255, 0, 85, 0.25);
+      color: var(--border-magenta);
+      border: 1px solid var(--border-magenta);
+    }
+
+    .badge-status.good {
+      background: rgba(0, 255, 102, 0.25);
+      color: var(--border-green);
+      border: 1px solid var(--border-green);
+    }
+
+    .card-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      font-family: var(--font-mono);
+    }
+
+    /* THE BUGGY SAMPLE (Original Code) */
+    .title-buggy {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: var(--font-sans);
+      font-weight: 800;
+      font-size: 32px;
+      line-height: 1.15;
+      text-transform: uppercase;
+      margin-bottom: 0;
+      background: linear-gradient(180deg, #d8d9dd 0%, #cdd8fe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* THE FIXED SAMPLE (Bright Neon Metal with Span Clipping & Drop Shadow) */
+    .title-fixed {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: var(--font-sans);
+      font-weight: 800;
+      font-size: 32px;
+      line-height: 1.15;
+      text-transform: uppercase;
+      filter: drop-shadow(0 0 16px rgba(59, 130, 246, 0.65));
+    }
+
+    .title-fixed span {
+      background: linear-gradient(180deg, #FFFFFF 0%, #E8F0FE 45%, #90B8FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: block;
+    }
+
+    /* ========================================================
+       MODULE 3: CARD & BUTTON SPACING ANALYSIS
+       ======================================================== */
+    .panel-spacing {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      width: 100%;
+      height: 100%;
+      padding: 30px;
+    }
+
+    .spacing-view {
+      width: 48%;
+      height: 100%;
+      background: rgba(5, 15, 45, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .spacing-header {
+      padding: 10px 16px;
+      background: rgba(0, 0, 0, 0.4);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .spacing-stage-box {
+      flex: 1;
+      position: relative;
+      background: radial-gradient(circle at center, #2a1107 0%, #0c0402 100%);
+    }
+
+    .mock-card-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .mock-card {
+      width: 130px;
+      height: 140px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(77, 39, 17, 0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .mock-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(255, 150, 50, 0.3);
+      margin-bottom: 8px;
+    }
+
+    .mock-btn-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 24px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #f78f4a 0%, #e55729 100%);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(229, 87, 41, 0.5);
+    }
+
+    .measure-tape {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      background: repeating-linear-gradient(to bottom, #ff0055 0, #ff0055 4px, transparent 4px, transparent 8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .measure-tape-badge {
+      background: var(--border-magenta);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    /* ========================================================
+       MODULE 4: 5-MINUTE AUTO-TIMEOUT SIMULATOR
+       ======================================================== */
+    .panel-timeout {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: 30px;
+      gap: 20px;
+    }
+
+    .timer-display {
+      font-family: var(--font-mono);
+      font-size: 64px;
+      font-weight: 800;
+      color: var(--border-cyan);
+      text-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
+      padding: 20px 48px;
+      background: rgba(0, 240, 255, 0.05);
+      border: 2px solid var(--border-cyan);
+      border-radius: 16px;
+    }
+
+    .timer-controls {
+      display: flex;
+      gap: 16px;
+    }
+
+    .t-btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .t-btn.primary { background: var(--border-cyan); color: #01040f; }
+    .t-btn.secondary { background: rgba(255, 255, 255, 0.15); color: #fff; }
+    .t-btn.warn { background: var(--border-magenta); color: #fff; }
+
+    /* BOTTOM INTERACTIVE TOOLBAR */
+    .bottom-toolbar {
+      height: 56px;
+      background: rgba(4, 12, 30, 0.95);
+      border-top: 1px solid rgba(0, 240, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .tool-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-toggle-tool {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-toggle-tool.active {
+      background: rgba(0, 255, 102, 0.2);
+      border-color: var(--border-green);
+      color: var(--border-green);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP TELEMETRY BAR -->
+  <header class="telemetry-bar">
+    <div class="telemetry-group">
+      <div class="tele-tag">
+        <span class="tele-label">VIEWPORT:</span>
+        <span class="tele-val" id="valViewport">0 x 0</span>
+      </div>
+      <div class="tele-tag">
+        <span class="tele-label">SCREEN RESOLUTION:</span>
+        <span class="tele-val" id="valScreen">0 x 0</span>
+      </div>
+      <div class="tele-tag">
+        <span class="tele-label">DEVICE PIXEL RATIO (DPI):</span>
+        <span class="tele-val" id="valDPI">1.0</span>
+      </div>
+      <div class="tele-tag">
+        <span class="tele-label">STATUS:</span>
+        <span class="tele-val" id="valStatus">CHECKING...</span>
+      </div>
+    </div>
+
+    <!-- MODULE SWITCHER TABS -->
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="aspect">1. TỶ LỆ & KÉO NGANG</button>
+      <button class="tab-btn" data-tab="text">2. HIỆU ỨNG CHỮ & BUG CHROMIUM</button>
+      <button class="tab-btn" data-tab="spacing">3. KHOẢNG CÁCH CARD - NÚT</button>
+      <button class="tab-btn" data-tab="timeout">4. TIMEOUT 5 PHÚT</button>
+    </nav>
+  </header>
+
+  <!-- MAIN TEST VIEWPORT -->
+  <main class="test-viewport mode-center" id="testViewport">
+    
+    <div class="simulated-stage" id="simulatedStage">
+
+      <!-- ========================================================
+           MODULE 1: ASPECT RATIO & ANTI-STRETCH CALIBRATION
+           ======================================================== -->
+      <section class="test-panel panel-aspect active" id="tab-aspect">
+        <div class="ruler-top">
+          <span>X: 0px</span>
+          <span>X: 384px (25%)</span>
+          <span>X: 767.5px (50% CENTER)</span>
+          <span>X: 1151px (75%)</span>
+          <span>X: 1535px (100% RIGHT)</span>
+        </div>
+        <div class="ruler-bottom">
+          <span>Y: 576px</span>
+          <span>TARGET LED RESOLUTION: 1535 x 576 px (8:3 / 2.665:1)</span>
+          <span>Y: 576px</span>
+        </div>
+        <div class="ruler-left">
+          <span>Y: 0</span>
+          <span>Y: 288 (CENTER)</span>
+          <span>Y: 576</span>
+        </div>
+        <div class="ruler-right">
+          <span>Y: 0</span>
+          <span>Y: 288</span>
+          <span>Y: 576</span>
+        </div>
+
+        <div class="aspect-body">
+          <!-- HÌNH TRÒN ĐỐI CHỨNG -->
+          <div class="shape-card">
+            <div class="perfect-circle">
+              <span style="font-family: var(--font-mono); font-size: 14px; font-weight:700; color: var(--border-cyan);">
+                220 x 220 px
+              </span>
+            </div>
+            <h3>HÌNH TRÒN CHUẨN 1:1</h3>
+            <p>Nếu trên màn hình LED hình này bị <strong>biến thành hình elip nằm ngang (bẹp trên dưới)</strong> &rarr; Đội LED đang bật chế độ <strong>Scale / Stretch</strong> ép 1080p vào 576p!</p>
+          </div>
+
+          <!-- HÌNH VUÔNG 45 ĐỘ ĐỐI CHỨNG -->
+          <div class="shape-card">
+            <div class="perfect-square">
+              <svg viewBox="0 0 220 220">
+                <line x1="0" y1="0" x2="220" y2="220" stroke="#ffb800" stroke-width="2" stroke-dasharray="6,4" />
+                <line x1="220" y1="0" x2="0" y2="220" stroke="#ffb800" stroke-width="2" stroke-dasharray="6,4" />
+                <circle cx="110" cy="110" r="4" fill="#ffb800" />
+              </svg>
+            </div>
+            <h3>HÌNH VUÔNG GÓC 45°</h3>
+            <p>Nếu 2 đường chéo không vuông góc 90° mà bị bẹt góc &rarr; Tỷ lệ hiển thị bị bóp méo méo dạng hình học.</p>
+          </div>
+
+          <!-- THÔNG SỐ CHUẨN ĐOÁN -->
+          <div class="shape-card" style="max-width: 320px; align-items: flex-start; text-align: left;">
+            <h3 style="color: var(--border-cyan); margin-bottom: 8px;">KẾT LUẬN TEST 1:</h3>
+            <ul style="font-size: 12px; line-height: 1.6; color: #d0e0ff; margin-left: 18px;">
+              <li>Độ phân giải chuẩn: <strong>1535 x 576 px</strong></li>
+              <li>Tỷ lệ chuẩn: <strong>2.665 : 1</strong></li>
+              <li>Nếu PC cắm HDMI 1920x1080: Bộ xử lý LED phải chọn <strong>"1:1 Bypass / Top-Left Capture"</strong>, TUYỆT ĐỐI KHÔNG chọn "Full Screen / Stretch".</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           MODULE 2: TEXT EFFECT & CHROMIUM BUG BENCHMARK
+           ======================================================== -->
+      <section class="test-panel panel-text" id="tab-text">
+        <h2 class="benchmark-title">CHỨNG MINH LỖI CHỮ "MSB BUSINESS BANKING" BỊ XÁM MỜ TRÊN MÀN LED</h2>
+
+        <div class="comparison-grid">
+          <!-- BÊN TRÁI: CODE CŨ BỊ LỖI (MÀU XÁM MỜ) -->
+          <div class="compare-card bad">
+            <div class="badge-status bad">CODE CŨ ĐANG BỊ LỖI</div>
+            <div class="card-label">1. Flexbox + -webkit-background-clip: text + dải màu tối (#d8d9dd &rarr; #cdd8fe)</div>
+            
+            <div style="background: #02071a; padding: 24px; border-radius: 8px; margin: 12px 0;">
+              <h1 class="title-buggy">
+                <span>MSB</span>
+                <span>BUSINESS</span>
+                <span>BANKING</span>
+              </h1>
+            </div>
+
+            <p style="font-size: 12px; color: var(--border-magenta); line-height: 1.5;">
+              &times; <strong>Nguyên nhân:</strong> Chromium gặp bug không clip được gradient lên các thẻ span con trong flexbox, kết hợp màu xám #d8d9dd làm chữ bị tối thui và xám đục y như Ảnh 1.
+            </p>
+          </div>
+
+          <!-- BÊN PHẢI: CODE MỚI ĐÃ FIX (SÁNG RỰC RỠ TRÊN LED) -->
+          <div class="compare-card good">
+            <div class="badge-status good">CODE ĐÃ SỬA CHUẨN SÁNG</div>
+            <div class="card-label">2. Clip trực tiếp từng Span + Trắng Ánh Kim (#FFFFFF &rarr; #90B8FF) + Glow Drop-shadow</div>
+            
+            <div style="background: #02071a; padding: 24px; border-radius: 8px; margin: 12px 0;">
+              <h1 class="title-fixed">
+                <span>MSB</span>
+                <span>BUSINESS</span>
+                <span>BANKING</span>
+              </h1>
+            </div>
+
+            <p style="font-size: 12px; color: var(--border-green); line-height: 1.5;">
+              &check; <strong>Khắc phục triệt để:</strong> Chữ nổi bật ánh kim, từng viền chữ phát sáng rực rỡ và sắc nét ngay cả khi đứng dưới đèn sân khấu mạnh.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           MODULE 3: CARD & BUTTON SPACING ANALYSIS
+           ======================================================== -->
+      <section class="test-panel panel-spacing" id="tab-spacing">
+        
+        <!-- BÊN TRÁI: HIỆN TRẠNG (CÁCH XA NHAU HƠN 200PX) -->
+        <div class="spacing-view">
+          <div class="spacing-header">
+            <span style="color: var(--border-magenta);">HIỆN TRẠNG: Neo độc lập top:32.5% và bottom:11.5%</span>
+            <span style="font-family: var(--font-mono); font-size: 11px;">KHOẢNG CÁCH BỊ GIÃN</span>
+          </div>
+          <div class="spacing-stage-box" id="spacingStageOld">
+            
+            <!-- Cards ở top 28% -->
+            <div style="position: absolute; top: 22%; left: 50%; transform: translateX(-50%); width: 100%;">
+              <div class="mock-card-row">
+                <div class="mock-card">
+                  <div class="mock-icon"></div>
+                  <span>Đa dạng giao diện</span>
+                </div>
+                <div class="mock-card">
+                  <div class="mock-icon"></div>
+                  <span>Bộ theme riêng</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Thước đo khoảng cách bị giãn -->
+            <div class="measure-tape" style="top: 55%; height: 85px;">
+              <span class="measure-tape-badge">KHOẢNG TRỐNG ~120px - 220px (QUÁ XA)</span>
+            </div>
+
+            <!-- Nút ở đáy bottom: 10% -->
+            <div style="position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%);">
+              <div class="mock-btn-cta">Thay đổi giao diện</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- BÊN PHẢI: GIẢI PHÁP ĐỀ XUẤT (GOM CỤM CÂN ĐỐI CÁCH 24PX) -->
+        <div class="spacing-view">
+          <div class="spacing-header">
+            <span style="color: var(--border-green);">GIẢI PHÁP: Cụm Flow thống nhất (Nút cách Card 24px)</span>
+            <span style="font-family: var(--font-mono); font-size: 11px;">GỌN GÀNG CHUẨN DESIGN</span>
+          </div>
+          <div class="spacing-stage-box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;">
+            
+            <div class="mock-card-row">
+              <div class="mock-card" style="box-shadow: 0 8px 24px rgba(0,0,0,0.5);">
+                <div class="mock-icon"></div>
+                <span>Đa dạng giao diện</span>
+              </div>
+              <div class="mock-card" style="box-shadow: 0 8px 24px rgba(0,0,0,0.5);">
+                <div class="mock-icon"></div>
+                <span>Bộ theme riêng</span>
+              </div>
+            </div>
+
+            <!-- Khoảng cách đo được -->
+            <div style="background: rgba(0, 255, 102, 0.2); border: 1px dashed var(--border-green); padding: 2px 10px; border-radius: 4px; font-family: var(--font-mono); font-size: 11px; color: var(--border-green);">
+              KHOẢNG CÁCH CHUẨN: 24px
+            </div>
+
+            <div class="mock-btn-cta">Thay đổi giao diện</div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================================
+           MODULE 4: 5-MINUTE AUTO-TIMEOUT SIMULATOR
+           ======================================================== -->
+      <section class="test-panel panel-timeout" id="tab-timeout">
+        <h2 style="font-size: 18px; color: var(--border-cyan); text-transform: uppercase;">
+          MÔ PHỎNG TỰ ĐỘNG VỀ MÀN HÌNH CHỜ SAU 5 PHÚT (300 GIÂY)
+        </h2>
+        <p style="color: var(--text-dim); font-size: 13px;">
+          Chạm vào bất kỳ vị trí nào trên màn hình để đặt lại bộ đếm 5 phút. Khi hết thời gian, hệ thống sẽ tự động chuyển về trang chờ.
+        </p>
+
+        <div class="timer-display" id="timerDisplay">05:00</div>
+
+        <div class="timer-controls">
+          <button class="t-btn primary" id="btnResetTimer">CHẠM ĐỂ RESET (300S)</button>
+          <button class="t-btn secondary" id="btnTest5s">TEST THỬ NHANH 5 GIÂY</button>
+          <button class="t-btn warn" id="btnForceIdle">VỀ MÀN CHỜ NGAY</button>
+        </div>
+
+        <div id="timeoutLog" style="font-family: var(--font-mono); font-size: 12px; color: var(--border-green); height: 24px;">
+          Đang lắng nghe thao tác chạm...
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- BOTTOM TOOLBAR (INTERACTIVE SWITCHES FOR LED TECHNICIANS) -->
+  <footer class="bottom-toolbar">
+    <div class="tool-group">
+      <span style="font-size: 12px; color: var(--text-dim); font-weight: 700;">CHẾ ĐỘ CĂN KHUNG:</span>
+      <button class="btn-toggle-tool active" id="btnModeCenter">1. CĂN GIỮA (align-items: center)</button>
+      <button class="btn-toggle-tool" id="btnModeTop">2. CĂN ĐỈNH GÓC (0,0) (align-items: flex-start)</button>
+      <button class="btn-toggle-tool" id="btnModeFixed">3. KHÓA 100% CỐ ĐỊNH 1535x576</button>
+    </div>
+
+    <div class="tool-group">
+      <button class="btn-toggle-tool" id="btnToggleFullscreen">⛶ TOÀN MÀN HÌNH (F11)</button>
+      <a href="ca-nhan/" style="color: var(--border-cyan); text-decoration: none; font-size: 12px; font-weight: 700; margin-left: 12px;">&rarr; MỞ CÁ NHÂN</a>
+      <a href="doanh-nghiep/" style="color: var(--border-cyan); text-decoration: none; font-size: 12px; font-weight: 700; margin-left: 12px;">&rarr; MỞ DOANH NGHIỆP</a>
+    </div>
+  </footer>
+
+  <script>
+    // 1. TELEMETRY & VIEWPORT CALCULATION
+    const valViewport = document.getElementById('valViewport');
+    const valScreen = document.getElementById('valScreen');
+    const valDPI = document.getElementById('valDPI');
+    const valStatus = document.getElementById('valStatus');
+
+    function updateTelemetry() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const sw = screen.width;
+      const sh = screen.height;
+      const dpr = window.devicePixelRatio || 1;
+
+      valViewport.textContent = `${vw} x ${vh} px`;
+      valScreen.textContent = `${sw} x ${sh} px`;
+      valDPI.textContent = `${dpr.toFixed(2)} (${Math.round(dpr * 100)}%)`;
+
+      // Status Assessment
+      const ratio = vw / vh;
+      const targetRatio = 1535 / 576; // ~2.6649
+      const ratioDiff = Math.abs(ratio - targetRatio);
+
+      if (vw === 1535 && vh === 576) {
+        valStatus.textContent = 'CHUẨN PIXEL-PERFECT 1535x576';
+        valStatus.className = 'tele-val good';
+      } else if (ratioDiff < 0.05) {
+        valStatus.textContent = `TỶ LỆ ĐÚNG 2.66:1 (${vw}x${vh})`;
+        valStatus.className = 'tele-val good';
+      } else {
+        valStatus.textContent = `LỆCH TỶ LỆ (${ratio.toFixed(2)} vs chuẩn 2.66:1) - NGUY CƠ KÉO NGANG!`;
+        valStatus.className = 'tele-val warn';
+      }
+    }
+
+    window.addEventListener('resize', updateTelemetry);
+    updateTelemetry();
+
+    // 2. TAB SWITCHING
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const testPanels = document.querySelectorAll('.test-panel');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        testPanels.forEach(p => p.classList.remove('active'));
+
+        btn.classList.add('active');
+        const tabId = `tab-${btn.dataset.tab}`;
+        const panel = document.getElementById(tabId);
+        if (panel) panel.classList.add('active');
+      });
+    });
+
+    // 3. ALIGNMENT MODE TOGGLES (FOR LED TECHNICIANS)
+    const testViewport = document.getElementById('testViewport');
+    const simulatedStage = document.getElementById('simulatedStage');
+    const btnModeCenter = document.getElementById('btnModeCenter');
+    const btnModeTop = document.getElementById('btnModeTop');
+    const btnModeFixed = document.getElementById('btnModeFixed');
+
+    btnModeCenter.addEventListener('click', () => {
+      btnModeCenter.classList.add('active');
+      btnModeTop.classList.remove('active');
+      btnModeFixed.classList.remove('active');
+
+      testViewport.className = 'test-viewport mode-center';
+      simulatedStage.style.width = '1535px';
+      simulatedStage.style.height = '576px';
+    });
+
+    btnModeTop.addEventListener('click', () => {
+      btnModeCenter.classList.remove('active');
+      btnModeTop.classList.add('active');
+      btnModeFixed.classList.remove('active');
+
+      testViewport.className = 'test-viewport mode-top-left';
+      simulatedStage.style.width = '1535px';
+      simulatedStage.style.height = '576px';
+    });
+
+    btnModeFixed.addEventListener('click', () => {
+      btnModeCenter.classList.remove('active');
+      btnModeTop.classList.remove('active');
+      btnModeFixed.classList.add('active');
+
+      testViewport.className = 'test-viewport mode-top-left';
+      simulatedStage.style.width = '100vw';
+      simulatedStage.style.height = '100vh';
+    });
+
+    // 4. FULLSCREEN TOGGLE
+    const btnToggleFullscreen = document.getElementById('btnToggleFullscreen');
+    btnToggleFullscreen.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+
+    // 5. 5-MINUTE AUTO-TIMEOUT LOGIC
+    let remainingSeconds = 300; // 5 minutes = 300s
+    let timerInterval = null;
+    const timerDisplay = document.getElementById('timerDisplay');
+    const timeoutLog = document.getElementById('timeoutLog');
+    const btnResetTimer = document.getElementById('btnResetTimer');
+    const btnTest5s = document.getElementById('btnTest5s');
+    const btnForceIdle = document.getElementById('btnForceIdle');
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        remainingSeconds--;
+        if (remainingSeconds <= 0) {
+          remainingSeconds = 0;
+          timerDisplay.textContent = '00:00';
+          timeoutLog.textContent = '[HẾT 5 PHÚT] Tự động kích hoạt trở về Màn Hình Chờ!';
+          timeoutLog.style.color = '#ff0055';
+          clearInterval(timerInterval);
+        } else {
+          timerDisplay.textContent = formatTime(remainingSeconds);
+        }
+      }, 1000);
+    }
+
+    function resetTimer(seconds = 300) {
+      remainingSeconds = seconds;
+      timerDisplay.textContent = formatTime(remainingSeconds);
+      timeoutLog.textContent = `Đã nhận thao tác chạm. Reset bộ đếm về ${seconds}s.`;
+      timeoutLog.style.color = '#00ff66';
+      startTimer();
+    }
+
+    btnResetTimer.addEventListener('click', () => resetTimer(300));
+    btnTest5s.addEventListener('click', () => resetTimer(5));
+    btnForceIdle.addEventListener('click', () => {
+      remainingSeconds = 0;
+      timerDisplay.textContent = '00:00';
+      timeoutLog.textContent = 'Đã ép chuyển về Màn Hình Chờ ngay lập tức.';
+      timeoutLog.style.color = '#ffb800';
+    });
+
+    // Global touch detection
+    window.addEventListener('pointerdown', (e) => {
+      // Don't auto reset if clicking force buttons
+      if (!e.target.closest('#tab-timeout')) {
+        resetTimer(300);
+      }
+    });
+
+    startTimer();
+  </script>
+</body>
+</html>

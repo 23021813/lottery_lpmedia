@@ -211,37 +211,7 @@ class DoanhNghiepMotionController {
 
   handleBackAction() {
     if (this.isDemoOpen) {
-      const config = typeof this.state.getBackConfig === 'function'
-        ? this.state.getBackConfig(this.state.currentScreen, true)
-        : null;
-
       this.closeDemo();
-
-      if (config && config.targetScreen) {
-        if (this.state.currentScreen !== config.targetScreen) {
-          const currentId = this.state.currentScreen;
-          const targetId = config.targetScreen;
-          this.state.currentScreen = targetId;
-          if (targetId === 'screen-main') {
-            this.state.history = ['screen-idle'];
-          } else if (targetId === 'screen-1-3') {
-            this.state.history = ['screen-idle', 'screen-main'];
-          }
-          this.updateBackButtonVisibility();
-
-          const currentEl = this.dom.screens.get(currentId);
-          const targetEl = this.dom.screens.get(targetId);
-          if (currentEl && targetEl) {
-            if (targetId === 'screen-main') {
-              this.animLevel1ToMain(currentEl, targetEl);
-            } else if (targetId === 'screen-1-3') {
-              this.animPanHorizontal(currentEl, targetEl, 'prev');
-            } else {
-              this.animDefaultCrossfade(currentEl, targetEl);
-            }
-          }
-        }
-      }
       return;
     }
 

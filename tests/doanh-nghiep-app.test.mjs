@@ -48,4 +48,12 @@ test('Doanh Nghiệp Motion & Controller Test Suite', async (t) => {
     assert.match(code, /dragstart/);
     assert.match(code, /Escape/);
   });
+
+  await t.test('handleBackAction must only close demo and stay on current screen without navigating to screen-main when isDemoOpen', () => {
+    assert.match(
+      code,
+      /handleBackAction\s*\(\)\s*\{[\s\S]*?if\s*\(\s*this\.isDemoOpen\s*\)\s*\{\s*this\.closeDemo\(\);\s*return;\s*\}[\s\S]*?this\.goBack\(\);/,
+      'handleBackAction must only call this.closeDemo() and return when isDemoOpen is true'
+    );
+  });
 });

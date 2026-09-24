@@ -202,37 +202,7 @@ class AppMotionController {
 
   handleBackAction() {
     if (this.isDemoOpen) {
-      const config = typeof this.state.getBackConfig === 'function'
-        ? this.state.getBackConfig(this.state.currentScreen, true)
-        : null;
-
       this.closeDemo();
-
-      if (config && config.targetScreen) {
-        if (this.state.currentScreen !== config.targetScreen) {
-          const currentId = this.state.currentScreen;
-          const targetId = config.targetScreen;
-          this.state.currentScreen = targetId;
-          if (targetId === 'screen-main') {
-            this.state.history = ['screen-idle'];
-          } else if (targetId === 'screen-1-3' || targetId === 'screen-1-4') {
-            this.state.history = ['screen-idle', 'screen-main'];
-          }
-          this.updateBackButtonVisibility();
-
-          const currentScreenEl = this.dom.screens.get(currentId);
-          const prevScreenEl = this.dom.screens.get(targetId);
-          if (currentScreenEl && prevScreenEl) {
-            if (targetId === 'screen-main') {
-              this.animLevel1ToMain(currentScreenEl, prevScreenEl);
-            } else if (this.isLevel2Transition(targetId, currentId)) {
-              this.animPanHorizontal(currentScreenEl, prevScreenEl, 'prev');
-            } else {
-              this.animDefaultCrossfade(currentScreenEl, prevScreenEl);
-            }
-          }
-        }
-      }
       return;
     }
 

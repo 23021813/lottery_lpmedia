@@ -142,6 +142,25 @@ test('Typography & Spacing Quality Test Suite (Preserving Stage Aspect Ratio)', 
     assert.ok(caNhanCss.includes('.btn-round-action'), 'ca-nhan CSS must include .btn-round-action');
     assert.ok(doanhNghiepCss.includes('.btn-round-action'), 'doanh-nghiep CSS must include .btn-round-action');
   });
+
+  await t.test('14. Toi uu tai chinh Layout sync with msb-html: no margin-bottom on main-title, margin-top 40px, top 34.5%, width 100%', () => {
+    // 1. .main-title không có margin-bottom
+    const mainTitleBlock = doanhNghiepCss.match(/(?:^|\n)\.main-title\s*\{([^}]+)\}/);
+    assert.ok(mainTitleBlock, 'doanh-nghiep must define .main-title block');
+    assert.strictEqual(mainTitleBlock[1].includes('margin-bottom'), false, '.main-title must not have margin-bottom (synced with msb-html)');
+
+    // 2. .toiuu-heading.left / .detail-heading.left có margin-top: 40px và không có padding-left
+    const leftHeadingBlock = doanhNghiepCss.match(/(?:\.toiuu-heading\.left|\.detail-heading\.left)[^{]*\{([^}]+)\}/);
+    assert.ok(leftHeadingBlock, 'doanh-nghiep must define left heading block');
+    assert.ok(leftHeadingBlock[1].includes('margin-top: 40px;'), 'left heading must have margin-top: 40px (synced with msb-html)');
+    assert.strictEqual(leftHeadingBlock[1].includes('padding-left'), false, 'left heading must not have padding-left (synced with msb-html)');
+
+    // 3. .toiuu-cards-container có top: 34.5% và width: 100%
+    const cardsContainerBlock = doanhNghiepCss.match(/\.toiuu-cards-container\s*\{([^}]+)\}/);
+    assert.ok(cardsContainerBlock, 'doanh-nghiep must define .toiuu-cards-container block');
+    assert.ok(cardsContainerBlock[1].includes('top: 34.5%;'), '.toiuu-cards-container must have top: 34.5% (synced with msb-html)');
+    assert.ok(cardsContainerBlock[1].includes('width: 100%;'), '.toiuu-cards-container must have width: 100% (synced with msb-html)');
+  });
 });
 
 

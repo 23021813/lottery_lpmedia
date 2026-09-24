@@ -601,17 +601,18 @@ body {
   margin: clamp(7px, 1.4vh, 12px) auto 6px auto;
 }
 
+.toiuu-heading.left,
 .detail-heading.left {
   position: static;
   transform: none;
   text-align: left;
   display: block;
   margin: 0 auto;
-  margin-top: 36px;
+  margin-top: 40px;
   max-width: 1400px;
-  padding-left: clamp(20px, 4vw, 55px);
 }
 
+.toiuu-heading.left .divider-line,
 .detail-heading.left .divider-line {
   display: none;
 }
@@ -631,7 +632,6 @@ body {
   font-size: clamp(22px, 2.7vw, 40px);
   line-height: 1.1;
   color: #FFFFFF;
-  margin-bottom: clamp(4px, 0.8vh, 8px);
   filter: drop-shadow(0 0 16px rgba(59, 130, 246, 0.6));
 }
 
@@ -662,11 +662,11 @@ body {
    ========================================================================== */
 .toiuu-cards-container {
   position: absolute;
-  top: 33.5%;
+  top: 34.5%;
   left: 50%;
   transform: translateX(-50%);
   max-width: 1400px;
-  width: 94%;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-start;

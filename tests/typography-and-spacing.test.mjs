@@ -5,6 +5,7 @@ import fs from 'node:fs';
 test('Typography & Spacing Quality Test Suite (Preserving Stage Aspect Ratio)', async (t) => {
   const caNhanCss = fs.readFileSync('ca-nhan/css/style.css', 'utf8');
   const doanhNghiepCss = fs.readFileSync('doanh-nghiep/css/style.css', 'utf8');
+  const caNhanHtml = fs.readFileSync('ca-nhan/index.html', 'utf8');
 
   await t.test('1. ca-nhan: stage must preserve 1535/576 aspect-ratio and stage-wrapper must center', () => {
     assert.ok(caNhanCss.includes('aspect-ratio: 1535 / 576') || caNhanCss.includes('1535 / 576'), 'ca-nhan stage must preserve 1535/576 ratio');
@@ -112,4 +113,17 @@ test('Typography & Spacing Quality Test Suite (Preserving Stage Aspect Ratio)', 
     assert.ok(caNhanCss.includes('.rewards-action-container::before'), 'ca-nhan must have .rewards-action-container::before');
     assert.ok(caNhanCss.includes('top: -35px;'), 'ca-nhan touch target must extend with top: -35px');
   });
+
+  await t.test('12. Item 5 & 7 (RB.pdf): Digibank -> Digital Bank and Inter font uniformity', () => {
+    // Item 5: Sửa Digibank thành Digital Bank
+    assert.strictEqual(caNhanHtml.includes('DigiBank'), false, 'ca-nhan/index.html must not contain DigiBank');
+    assert.strictEqual(caNhanHtml.includes('Digibank'), false, 'ca-nhan/index.html must not contain Digibank');
+    assert.ok(caNhanHtml.includes('Digital Bank'), 'ca-nhan/index.html must contain Digital Bank');
+
+    // Item 7: Đồng nhất font Inter
+    assert.ok(caNhanHtml.includes('family=Inter:opsz,wght@'), 'ca-nhan/index.html must load Google Fonts Inter');
+    assert.ok(caNhanCss.includes('--font-family: "Inter"'), 'ca-nhan CSS must define Inter as primary font');
+    assert.ok(caNhanCss.includes('button,') && caNhanCss.includes('font-family: inherit;'), 'ca-nhan CSS must set font-family: inherit for buttons/inputs');
+  });
 });
+

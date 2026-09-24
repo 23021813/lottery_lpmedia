@@ -2,14 +2,14 @@
    DESIGN SYSTEM & TOKENS — HÀNH TINH SỐ CÁ NHÂN (MSB)
    ĐỘ PHÂN GIẢI CHUẨN MÀN HÌNH LED: 1535 x 576 px (Tỷ lệ ~ 8:3 / 2.665:1)
    ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,700;14..32,800&display=swap&subset=vietnamese');
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap&subset=vietnamese');
 
 :root {
   --bg-space: #070302;
   --border-card: rgba(255, 255, 255, 0.18);
   --border-card-hover: rgba(255, 195, 140, 0.65);
   --text-primary: #F2E2D5;
-  --font-family: "Inter", sans-serif;
+  --font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -25,6 +25,14 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent !important;
   -webkit-touch-callout: none !important;
+}
+
+button,
+input,
+select,
+textarea,
+a {
+  font-family: inherit;
 }
 
 *:focus,

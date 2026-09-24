@@ -26,38 +26,14 @@
       <div class="stage-bg-layer" id="bgLayerMarketplace"></div>
 
       <!-- ====================================================================
-           0. TRANG CHỜ (IDLE / SCREENSAVER DRAFT - THUẦN CSS INLINE CAM ĐỎ)
+           0. TRANG CHỜ (IDLE / COVER SCREEN - THIẾT KẾ CHUẨN 1536x576)
            ==================================================================== -->
-      <section class="screen-view is-active" id="screen-idle" data-target="screen-main" aria-label="Màn hình chờ MSB (Nháp)"
-        style="background: radial-gradient(circle at 50% 24%, #ff4d00 0%, #db2900 30%, #541103 66%, #080302 100%); cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; user-select: none; z-index: 30;">
-
-        <!-- Vòm cầu hào quang ánh sáng vũ trụ -->
-        <div style="position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 140%; height: 75%; border-radius: 50%; background: radial-gradient(ellipse at 50% 0%, rgba(255, 160, 80, 0.45) 0%, rgba(232, 77, 29, 0.2) 45%, transparent 75%); filter: blur(35px); pointer-events: none;"></div>
-
-        <div style="position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center;">
-          <!-- Logo MSB inline -->
-          <div style="margin-bottom: clamp(10px, 2vh, 18px); filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.7));">
-            <svg width="150" height="42" viewBox="0 0 160 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 28C16.4183 28 20 24.4183 20 20C20 15.5817 16.4183 12 12 12C7.58172 12 4 15.5817 4 20C4 24.4183 7.58172 28 12 28Z" fill="#E84D1D"/>
-              <path d="M28 28C32.4183 28 36 24.4183 36 20C36 15.5817 32.4183 12 28 12C23.5817 12 20 15.5817 20 20C20 24.4183 23.5817 28 28 28Z" fill="#F37021"/>
-              <path d="M20 36C24.4183 36 28 32.4183 28 28C28 23.5817 24.4183 20 20 20C15.5817 20 12 23.5817 12 28C12 32.4183 15.5817 36 20 36Z" fill="#E84D1D"/>
-              <text x="48" y="28" fill="#FFFFFF" font-family="'Inter', sans-serif" font-weight="900" font-size="24" letter-spacing="1.5">MSB</text>
-            </svg>
-          </div>
-
-          <p style="font-family: var(--font-family); font-size: clamp(11px, 1.1vw, 15px); letter-spacing: 0.32em; color: rgba(255, 235, 220, 0.92); margin-bottom: clamp(6px, 1.4vh, 14px); text-transform: uppercase; font-weight: 500;">
-            MSB DIGITAL UNIVERSE
-          </p>
-
-          <h1 style="font-family: var(--font-family); font-weight: 800; font-size: clamp(40px, 5.4vw, 80px); letter-spacing: 0.08em; text-transform: uppercase; color: #ffffff; text-shadow: 0 0 45px rgba(255, 140, 60, 0.75), 0 4px 24px rgba(0, 0, 0, 0.95); margin-bottom: clamp(16px, 3vh, 30px); line-height: 1;">
-            THE NEXT MOVE
-          </h1>
-
-          <div style="display: inline-flex; align-items: center; gap: 12px; padding: 10px 26px; background: rgba(15, 6, 3, 0.65); border: 1px solid rgba(255, 180, 110, 0.5); border-radius: 999px; backdrop-filter: blur(8px); box-shadow: 0 4px 24px rgba(0, 0, 0, 0.75), 0 0 18px rgba(232, 77, 29, 0.3);">
-            <span style="width: 10px; height: 10px; border-radius: 50%; background: #ff7832; box-shadow: 0 0 10px #ff7832, 0 0 18px #ff4500; display: inline-block;"></span>
-            <span style="font-size: clamp(11px, 0.95vw, 13px); font-weight: 600; letter-spacing: 0.14em; color: #ffeedb; text-transform: uppercase;">
-              CHẠM VÀO ĐIỂM NÀO TRÊN MÀN HÌNH CŨNG CHUYỂN TRANG
-            </span>
+      <section class="screen-view is-active cover-screen" id="screen-idle" data-target="screen-main" aria-label="Màn hình chờ MSB">
+        <!-- Chạm vào bất kỳ điểm nào trên màn hình để bắt đầu khám phá -->
+        <div class="idle-content-wrapper" style="pointer-events: none;">
+          <div class="idle-touch-indicator">
+            <span class="touch-ring"></span>
+            <span class="touch-text">Chạm vào màn hình để khám phá</span>
           </div>
         </div>
       </section>

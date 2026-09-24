@@ -78,6 +78,13 @@ body {
   overflow: hidden;
 }
 
+.cover-screen {
+  background-image: url('../images/COVER.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
 /* ==========================================================================
    TYPOGRAPHY CHUNG
    ========================================================================== */
@@ -969,7 +976,7 @@ body {
 }
 
 #bgLayerIdle {
-  background-image: url('../images/bg_idle_draft.jpg');
+  background-image: url('../images/COVER.jpg');
   z-index: 3;
   opacity: 1;
 }
@@ -997,8 +1004,12 @@ body {
   z-index: 20;
 }
 
-/* 0. Trang Chờ (Idle Screen) */
+/* 0. Trang Chờ (Idle Screen / Cover Screen) */
 #screen-idle {
+  background-image: url('../images/COVER.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
   cursor: pointer;
   z-index: 25;
 }

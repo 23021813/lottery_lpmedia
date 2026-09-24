@@ -100,6 +100,13 @@ body {
   backface-visibility: hidden;
 }
 
+.cover-screen {
+  background-image: url('../images/COVER.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
 /* ==========================================================================
    MULTI-LAYER BACKGROUNDS (HỖ TRỢ GSAP CINEMATIC GLOBE CENTERING)
    ========================================================================== */
@@ -226,9 +233,13 @@ body {
 }
 
 /* ==========================================================================
-   SCREEN 0: SCREEN-IDLE (TRANG CHỜ KIOSK)
+   SCREEN 0: SCREEN-IDLE (TRANG CHỜ KIOSK / COVER SCREEN)
    ========================================================================== */
 #screen-idle {
+  background-image: url('../images/COVER.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
   cursor: pointer;
   z-index: 25;
 }
@@ -238,10 +249,10 @@ body {
   inset: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   text-align: center;
-  padding: 40px;
+  padding-bottom: clamp(24px, 5vh, 48px);
 }
 
 .idle-brand {

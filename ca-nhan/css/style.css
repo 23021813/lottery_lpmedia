@@ -2,7 +2,7 @@
    DESIGN SYSTEM & TOKENS — HÀNH TINH SỐ CÁ NHÂN (MSB)
    ĐỘ PHÂN GIẢI CHUẨN MÀN HÌNH LED: 1535 x 576 px (Tỷ lệ ~ 8:3 / 2.665:1)
    ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,700;14..32,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,700;14..32,800&display=swap&subset=vietnamese');
 
 :root {
   --bg-space: #070302;
@@ -104,6 +104,8 @@ body {
 
 .main-title span {
   display: block;
+  padding: 0.16em 0;
+  line-height: 1.1;
   background: linear-gradient(180deg, #FFFFFF 0%, #FFF0DE 40%, #E8B97C 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -311,6 +313,20 @@ body {
 /* ==========================================================================
    TIÊU ĐỀ CÁC TRANG CHI TIẾT (.detail-heading)
    ========================================================================== */
+/* Logo Header */
+.logo-header {
+  position: absolute;
+  top: clamp(24px, 2.2vw, 30px);
+  left: clamp(24px, 2.2vw, 30px);
+  z-index: 11;
+}
+
+.logo-header img {
+  width: clamp(44px, 9.2vw, 140px);
+  height: auto;
+  display: block;
+}
+
 .detail-heading {
   position: absolute;
   top: 7%;
@@ -325,7 +341,6 @@ body {
 .detail-heading .main-title {
   font-size: clamp(24px, 3.1vw, 48px);
   letter-spacing: 0.04em;
-  padding: 0;
 }
 
 .detail-heading .sub-title {

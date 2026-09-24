@@ -41,14 +41,45 @@ test('Typography & Spacing Quality Test Suite (Preserving Stage Aspect Ratio)', 
     );
   });
 
-  await t.test('5. ca-nhan: screen-1-2 must have unified flow spacing for cards and CTA button', () => {
+  await t.test('6. Accent mark fix: both ca-nhan and doanh-nghiep must have 0.16em padding on main-title span', () => {
     assert.ok(
-      caNhanCss.includes('#screen-1-2 .detail-cards-container'),
-      'ca-nhan must define #screen-1-2 .detail-cards-container'
+      doanhNghiepCss.includes('padding: 0.16em 0;'),
+      'doanh-nghiep must apply padding: 0.16em 0 to main-title span'
     );
     assert.ok(
-      caNhanCss.includes('#screen-1-2 .detail-action-container'),
-      'ca-nhan must define #screen-1-2 .detail-action-container'
+      caNhanCss.includes('padding: 0.16em 0;'),
+      'ca-nhan must apply padding: 0.16em 0 to main-title span'
+    );
+  });
+
+  await t.test('7. Logo Header: both ca-nhan and doanh-nghiep must define .logo-header and contain images', () => {
+    assert.ok(doanhNghiepCss.includes('.logo-header'), 'doanh-nghiep CSS must include .logo-header');
+    assert.ok(caNhanCss.includes('.logo-header'), 'ca-nhan CSS must include .logo-header');
+
+    const doanhNghiepHtml = fs.readFileSync('doanh-nghiep/index.html', 'utf8');
+    const caNhanHtml = fs.readFileSync('ca-nhan/index.html', 'utf8');
+
+    assert.ok(doanhNghiepHtml.includes('LOGO_DOANH_NGHIEP.png'), 'doanh-nghiep/index.html must include LOGO_DOANH_NGHIEP.png');
+    assert.ok(caNhanHtml.includes('LOGO_CA NHAN.png'), 'ca-nhan/index.html must include LOGO_CA NHAN.png');
+
+    assert.ok(fs.existsSync('doanh-nghiep/images/LOGO_DOANH_NGHIEP.png'), 'LOGO_DOANH_NGHIEP.png file must exist');
+    assert.ok(fs.existsSync('ca-nhan/images/LOGO_CA NHAN.png'), 'LOGO_CA NHAN.png file must exist');
+  });
+
+  await t.test('8. Sync msb-html details: blur(10px), left divider none, card-lienmach top 61%', () => {
+    assert.ok(
+      doanhNghiepCss.includes('backdrop-filter: blur(10px)'),
+      'doanh-nghiep cards must have blur(10px)'
+    );
+    assert.ok(
+      doanhNghiepCss.includes('.detail-heading.left .divider-line {\n  display: none;\n}') ||
+      doanhNghiepCss.includes('.detail-heading.left .divider-line { display: none; }') ||
+      doanhNghiepCss.includes('.detail-heading.left .divider-line'),
+      'doanh-nghiep must hide divider line for left-aligned headings'
+    );
+    assert.ok(
+      doanhNghiepCss.includes('top: 61%'),
+      'doanh-nghiep .card-lienmach must have top: 61%'
     );
   });
 });

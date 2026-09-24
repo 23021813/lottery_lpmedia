@@ -28,4 +28,20 @@ test('Quay Số Integration Test Suite', async (t) => {
     assert.ok(portalHtml.includes('quay-so/index.html') || portalHtml.includes('quay-so/'), 'Portal phải liên kết tới quay-so');
     assert.ok(portalHtml.includes('Quay Số') || portalHtml.includes('Lucky Draw'), 'Portal phải có tiêu đề Quay Số');
   });
+
+  await t.test('5. Tệp video BACKGROUND QUAY SO.mp4 phải tồn tại và có dung lượng hợp lệ', () => {
+    const videoPath = 'quay-so/BACKGROUND QUAY SO.mp4';
+    assert.strictEqual(fs.existsSync(videoPath), true, 'File video BACKGROUND QUAY SO.mp4 phải tồn tại');
+    const stat = fs.statSync(videoPath);
+    assert.ok(stat.size > 1024 * 1024, 'File video phải lớn hơn 1MB');
+  });
+
+  await t.test('6. Tệp Final.html và index.html phải chứa thẻ <video> nền với autoplay loop muted', () => {
+    const finalHtml = fs.readFileSync('quay-so/Final.html', 'utf8');
+    assert.ok(finalHtml.includes('BACKGROUND QUAY SO.mp4') || finalHtml.includes('BACKGROUND%20QUAY%20SO.mp4'), 'Final.html phải tham chiếu video BACKGROUND QUAY SO.mp4');
+    assert.ok(finalHtml.includes('autoplay'), 'Video phải có thuộc tính autoplay');
+    assert.ok(finalHtml.includes('loop'), 'Video phải có thuộc tính loop');
+    assert.ok(finalHtml.includes('muted'), 'Video phải có thuộc tính muted');
+    assert.ok(finalHtml.includes('playsinline'), 'Video phải có thuộc tính playsinline');
+  });
 });

@@ -60,7 +60,7 @@
         min-height: 100dvh;
         overflow: hidden;
         background-color: var(--color-bg-space);
-        /* Hình nền thiên hà vòng cung hành tinh cao cấp */
+        /* Giữ ảnh nền làm fallback poster khi video đang buffer */
         background-image: url("msb-planet-arc-bg.jpg");
         background-size: cover;
         background-position: center;
@@ -69,6 +69,31 @@
         font-family: var(--font-sans);
         color: #ffffff;
         user-select: none;
+      }
+
+      /* Video nền động sân khấu sự kiện MSB */
+      .bg-video-container {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        z-index: 1;
+        pointer-events: none;
+        background-color: var(--color-bg-space);
+      }
+
+      .bg-video-element {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+        pointer-events: none;
       }
 
       /* Lớp phủ chuyển sắc nhẹ làm dịu nền */
@@ -1287,6 +1312,23 @@
     </style>
   </head>
   <body>
+    <!-- Video nền động sân khấu quay số MSB -->
+    <div class="bg-video-container">
+      <video
+        id="bgVideo"
+        class="bg-video-element"
+        autoplay
+        loop
+        muted
+        playsinline
+        preload="auto"
+        poster="msb-planet-arc-bg.jpg"
+      >
+        <source src="BACKGROUND%20QUAY%20SO.mp4" type="video/mp4" />
+        <source src="BACKGROUND QUAY SO.mp4" type="video/mp4" />
+      </video>
+    </div>
+
     <!-- Canvas Sao Vũ Trụ & Sao Băng Rơi Động Liên Tục -->
     <canvas id="cosmosCanvas"></canvas>
 

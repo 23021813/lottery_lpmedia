@@ -369,7 +369,7 @@ body {
 .detail-heading .sub-title2 {
   text-transform: none;
   font-size: clamp(12px, 1vw, 14px);
-  margin-top: 15px;
+  margin-top: 6px !important;
   letter-spacing: 0.04em;
   font-weight: 500;
   line-height: 1.45;
@@ -484,7 +484,7 @@ body {
    ========================================================================== */
 .rewards-cards-container {
   position: absolute;
-  top: 36%;
+  top: 37%;
   left: 50%;
   transform: translateX(-50%);
   width: auto;

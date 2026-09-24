@@ -26,15 +26,15 @@ class DoanhNghiepMotionController {
     this.controlsDimTimer = null;
     this.lastVolume = 1;
 
-    // Mapping video chuẩn theo từng màn hình
+    // Mapping video chuẩn theo từng màn hình (Hosted trên GitHub Releases CDN)
     this.screenVideoMap = {
-      'screen-1-1': 'video/quan-tri-dich-vu.webm',
-      'screen-1-2': 'video/ket-noi-doi-tac.webm',
-      'screen-1-3-1': 'video/tin-dung-linh-hoat.webm',
-      'screen-1-3-2': 'video/tai-cap-han-muc.webm',
-      'screen-1-3-3': 'video/the-tin-dung.webm',
-      'screen-1-3-4': 'video/chung-chi-tien-gui.webm',
-      'screen-1-3-5': 'video/msb-rewards.webm'
+      'screen-1-1': 'https://github.com/23021813/lottery_lpmedia/releases/download/media-doanh-nghiep/quan-tri-dich-vu.webm',
+      'screen-1-2': 'https://github.com/23021813/lottery_lpmedia/releases/download/media-doanh-nghiep/ket-noi-doi-tac.webm',
+      'screen-1-3-1': 'https://github.com/23021813/lottery_lpmedia/releases/download/media-doanh-nghiep/tin-dung-linh-hoat.webm',
+      'screen-1-3-2': 'https://github.com/23021813/lottery_lpmedia/releases/download/media-doanh-nghiep/tai-cap-han-muc.webm',
+      'screen-1-3-3': 'https://github.com/23021813/lottery_lpmedia/releases/download/media-doanh-nghiep/the-tin-dung.webm',
+      'screen-1-3-4': 'https://github.com/23021813/lottery_lpmedia/releases/download/media-doanh-nghiep/chung-chi-tien-gui.webm',
+      'screen-1-3-5': 'https://github.com/23021813/lottery_lpmedia/releases/download/media-doanh-nghiep/msb-rewards.webm'
     };
 
     // Cache các phần tử DOM chính
@@ -235,6 +235,10 @@ class DoanhNghiepMotionController {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        btn.blur();
+        if (document.activeElement && typeof document.activeElement.blur === 'function') {
+          document.activeElement.blur();
+        }
         this.handleHomeAction();
       });
     });
@@ -243,6 +247,10 @@ class DoanhNghiepMotionController {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        btn.blur();
+        if (document.activeElement && typeof document.activeElement.blur === 'function') {
+          document.activeElement.blur();
+        }
         this.handleBackAction();
       });
     });
@@ -904,6 +912,17 @@ class DoanhNghiepMotionController {
       // Mặc định không hiện player controls khi mở video
       this.hideControls();
 
+      this.dom.video.onerror = () => {
+        const currentSrc = this.dom.video.src || '';
+        if (currentSrc.includes('github.com')) {
+          const fileName = currentSrc.split('/').pop();
+          console.warn(`[VideoFallback] Fallback sang video local: video/${fileName}`);
+          this.dom.video.onerror = null;
+          this.dom.video.src = `video/${fileName}`;
+          this.dom.video.play().catch(() => {});
+        }
+      };
+
       this.dom.video.src = targetVideo;
       this.dom.video.currentTime = 0;
       this.dom.video.play().catch(() => {});
@@ -948,6 +967,10 @@ class DoanhNghiepMotionController {
    */
   closeDemo() {
     if (!this.isDemoOpen) return;
+
+    if (this.dom.demoVideoModal) {
+      this.dom.demoVideoModal.style.pointerEvents = 'none';
+    }
 
     this.hideControls();
 
@@ -1137,7 +1160,22 @@ class DoanhNghiepMotionController {
     }
 
     // Bất kỳ thao tác chạm/vuốt trên modal video -> hiện controls kèm timer 5s
-    demoVideoModal.addEventListener('pointerdown', () => this.showControlsWithTimer(5000));
+    let controlsWereVisibleOnPointerDown = false;
+    demoVideoModal.addEventListener('pointerdown', () => {
+      controlsWereVisibleOnPointerDown = this.dom.videoControls && this.dom.videoControls.classList.contains('is-visible');
+      this.showControlsWithTimer(5000);
+    });
+
+    if (video) {
+      video.addEventListener('ended', () => {
+        video.currentTime = 0;
+        this.updatePlayPauseUI(true);
+      });
+    }
+
+    window.addEventListener('pointerup', () => {
+      if (this.isScrubbing) this.isScrubbing = false;
+    });
   }
 
   updatePlayPauseUI(isPaused) {

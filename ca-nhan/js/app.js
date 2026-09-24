@@ -22,14 +22,14 @@ class AppMotionController {
     this.isScrubbing = false;
     this.controlsTimer = null;
 
-    // Bản đồ video ánh xạ trực tiếp theo ID màn hình con
+    // Bản đồ video ánh xạ trực tiếp theo ID màn hình con (Hosted trên GitHub Releases CDN)
     this.screenVideoMap = {
-      'screen-1-1': 'video/security.webm',
-      'screen-1-2': 'video/thay-doi-giao-dien.webm',
-      'screen-1-3-1': 'video/m-sinh-loi.webm',
-      'screen-1-3-2': 'video/m-triple.webm',
-      'screen-1-4-1': 'video/m-rewards.webm',
-      'screen-1-4-2': 'video/marketplace.webm'
+      'screen-1-1': 'https://github.com/23021813/lottery_lpmedia/releases/download/media-ca-nhan/security.webm',
+      'screen-1-2': 'https://github.com/23021813/lottery_lpmedia/releases/download/media-ca-nhan/thay-doi-giao-dien.webm',
+      'screen-1-3-1': 'https://github.com/23021813/lottery_lpmedia/releases/download/media-ca-nhan/m-sinh-loi.webm',
+      'screen-1-3-2': 'https://github.com/23021813/lottery_lpmedia/releases/download/media-ca-nhan/m-triple.webm',
+      'screen-1-4-1': 'https://github.com/23021813/lottery_lpmedia/releases/download/media-ca-nhan/m-rewards.webm',
+      'screen-1-4-2': 'https://github.com/23021813/lottery_lpmedia/releases/download/media-ca-nhan/marketplace.webm'
     };
 
     // DOM Elements Cache
@@ -234,6 +234,10 @@ class AppMotionController {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        btn.blur();
+        if (document.activeElement && typeof document.activeElement.blur === 'function') {
+          document.activeElement.blur();
+        }
         this.handleHomeAction();
       });
     });
@@ -242,6 +246,10 @@ class AppMotionController {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        btn.blur();
+        if (document.activeElement && typeof document.activeElement.blur === 'function') {
+          document.activeElement.blur();
+        }
         this.handleBackAction();
       });
     });
@@ -1072,7 +1080,22 @@ class AppMotionController {
     }
 
     // Bất kỳ thao tác chạm/vuốt trên modal video -> hiện controls kèm timer 5s
-    demoVideoModal.addEventListener('pointerdown', () => this.showControlsWithTimer(5000));
+    let controlsWereVisibleOnPointerDown = false;
+    demoVideoModal.addEventListener('pointerdown', () => {
+      controlsWereVisibleOnPointerDown = this.dom.videoControls && this.dom.videoControls.classList.contains('is-visible');
+      this.showControlsWithTimer(5000);
+    });
+
+    if (video) {
+      video.addEventListener('ended', () => {
+        video.currentTime = 0;
+        this.updatePlayPauseUI(true);
+      });
+    }
+
+    window.addEventListener('pointerup', () => {
+      if (this.isScrubbing) this.isScrubbing = false;
+    });
   }
 
   updatePlayPauseUI(isPaused) {
@@ -1094,7 +1117,7 @@ class AppMotionController {
       document.activeElement.blur();
     }
 
-    const targetVideo = videoSrc || this.screenVideoMap[this.state.currentScreen] || 'video/security.webm';
+    const targetVideo = videoSrc || this.screenVideoMap[this.state.currentScreen] || 'https://github.com/23021813/lottery_lpmedia/releases/download/media-ca-nhan/security.webm';
 
     if (this.dom.demoVideoModal && this.dom.video) {
       this.dom.demoVideoModal.classList.add('is-active');
@@ -1103,6 +1126,17 @@ class AppMotionController {
 
       // Mặc định không hiện player controls khi mở video
       this.hideControls();
+
+      this.dom.video.onerror = () => {
+        const currentSrc = this.dom.video.src || '';
+        if (currentSrc.includes('github.com')) {
+          const fileName = currentSrc.split('/').pop();
+          console.warn(`[VideoFallback] Fallback sang video local: video/${fileName}`);
+          this.dom.video.onerror = null;
+          this.dom.video.src = `video/${fileName}`;
+          this.dom.video.play().catch(() => {});
+        }
+      };
 
       this.dom.video.src = targetVideo;
       this.dom.video.currentTime = 0;
@@ -1144,6 +1178,10 @@ class AppMotionController {
    */
   closeDemo() {
     if (!this.isDemoOpen) return;
+
+    if (this.dom.demoVideoModal) {
+      this.dom.demoVideoModal.style.pointerEvents = 'none';
+    }
 
     if (document.activeElement && typeof document.activeElement.blur === 'function') {
       document.activeElement.blur();

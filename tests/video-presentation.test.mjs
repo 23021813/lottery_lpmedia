@@ -76,12 +76,13 @@ test('Video Assets & Full-Screen Touch Presentation Test Suite', async (t) => {
     assert.ok(html.includes('data-nav="back"'), 'Missing data-nav="back" button in ca-nhan');
 
     // 6 screens in ca-nhan must have data-video pointing to their files
-    assert.ok(html.includes('data-video="video/security.webm"'), 'Missing data-video for security.webm');
-    assert.ok(html.includes('data-video="video/thay-doi-giao-dien.webm"'), 'Missing data-video for thay-doi-giao-dien.webm');
-    assert.ok(html.includes('data-video="video/m-sinh-loi.webm"'), 'Missing data-video for m-sinh-loi.webm');
-    assert.ok(html.includes('data-video="video/m-triple.webm"'), 'Missing data-video for m-triple.webm');
-    assert.ok(html.includes('data-video="video/m-rewards.webm"'), 'Missing data-video for m-rewards.webm');
-    assert.ok(html.includes('data-video="video/marketplace.webm"'), 'Missing data-video for marketplace.webm');
+    assert.ok(html.includes('security.webm'), 'Missing data-video for security.webm');
+    assert.ok(html.includes('thay-doi-giao-dien.webm'), 'Missing data-video for thay-doi-giao-dien.webm');
+    assert.ok(html.includes('m-sinh-loi.webm'), 'Missing data-video for m-sinh-loi.webm');
+    assert.ok(html.includes('m-triple.webm'), 'Missing data-video for m-triple.webm');
+    assert.ok(html.includes('m-rewards.webm'), 'Missing data-video for m-rewards.webm');
+    assert.ok(html.includes('marketplace.webm'), 'Missing data-video for marketplace.webm');
+    assert.ok(html.includes('media-ca-nhan'), 'Must point to media-ca-nhan release');
   });
 
   await t.test('doanh-nghiep/index.html should have full-screen video player with minimal controls', () => {
@@ -117,13 +118,14 @@ test('Video Assets & Full-Screen Touch Presentation Test Suite', async (t) => {
     assert.ok(html.includes('data-nav="back"'), 'Missing data-nav="back" button in doanh-nghiep');
 
     // 7 screens in doanh-nghiep must have data-demo-video pointing to their files
-    assert.ok(html.includes('data-demo-video="video/quan-tri-dich-vu.webm"'), 'Missing data-demo-video for quan-tri-dich-vu.webm');
-    assert.ok(html.includes('data-demo-video="video/ket-noi-doi-tac.webm"'), 'Missing data-demo-video for ket-noi-doi-tac.webm');
-    assert.ok(html.includes('data-demo-video="video/tin-dung-linh-hoat.webm"'), 'Missing data-demo-video for tin-dung-linh-hoat.webm');
-    assert.ok(html.includes('data-demo-video="video/tai-cap-han-muc.webm"'), 'Missing data-demo-video for tai-cap-han-muc.webm');
-    assert.ok(html.includes('data-demo-video="video/the-tin-dung.webm"'), 'Missing data-demo-video for the-tin-dung.webm');
-    assert.ok(html.includes('data-demo-video="video/chung-chi-tien-gui.webm"'), 'Missing data-demo-video for chung-chi-tien-gui.webm');
-    assert.ok(html.includes('data-demo-video="video/msb-rewards.webm"'), 'Missing data-demo-video for msb-rewards.webm');
+    assert.ok(html.includes('quan-tri-dich-vu.webm'), 'Missing data-demo-video for quan-tri-dich-vu.webm');
+    assert.ok(html.includes('ket-noi-doi-tac.webm'), 'Missing data-demo-video for ket-noi-doi-tac.webm');
+    assert.ok(html.includes('tin-dung-linh-hoat.webm'), 'Missing data-demo-video for tin-dung-linh-hoat.webm');
+    assert.ok(html.includes('tai-cap-han-muc.webm'), 'Missing data-demo-video for tai-cap-han-muc.webm');
+    assert.ok(html.includes('the-tin-dung.webm'), 'Missing data-demo-video for the-tin-dung.webm');
+    assert.ok(html.includes('chung-chi-tien-gui.webm'), 'Missing data-demo-video for chung-chi-tien-gui.webm');
+    assert.ok(html.includes('msb-rewards.webm'), 'Missing data-demo-video for msb-rewards.webm');
+    assert.ok(html.includes('media-doanh-nghiep'), 'Must point to media-doanh-nghiep release');
   });
 
   await t.test('CSS styles in both applications must configure controls hidden by default and visible on .is-visible', () => {

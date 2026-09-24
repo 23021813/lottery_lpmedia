@@ -16,8 +16,8 @@ test('Doanh Nghiệp Motion & Controller Test Suite', async (t) => {
     assert.match(code, /import\s+\{\s*DoanhNghiepStateManager\s*\}\s+from\s+['"]\.\/state-manager\.js['"]/);
   });
 
-  await t.test('should configure zero idle timeout (no auto timeout back to idle)', () => {
-    assert.match(code, /idleTimeoutMs:\s*0/);
+  await t.test('should configure 5-minute idle timeout (300000ms auto timeout back to idle)', () => {
+    assert.match(code, /idleTimeoutMs:\s*300000/);
   });
 
   await t.test('should define all required animation methods', () => {

@@ -9,15 +9,15 @@ describe('DoanhNghiepStateManager - Router & Navigation Stack (No Auto Timeout)'
   beforeEach(() => {
     state = new DoanhNghiepStateManager({
       initialScreen: 'screen-idle',
-      idleTimeoutMs: 0 // Bỏ tự động quay về trang chờ
+      idleTimeoutMs: 300000 // 5 phút tự động quay về trang chờ
     });
   });
 
-  test('should initialize with screen-idle, empty history, and no auto-timeout timer', () => {
+  test('should initialize with screen-idle, empty history, and 5-minute timeout', () => {
     assert.equal(state.currentScreen, 'screen-idle');
     assert.deepEqual(state.history, []);
-    assert.equal(state.idleTimeoutMs, 0);
-    assert.equal(state.idleTimer, null);
+    assert.equal(state.idleTimeoutMs, 300000);
+    assert.ok(state.idleTimer !== null);
   });
 
   test('should navigate from idle to screen-main', () => {
@@ -119,14 +119,21 @@ describe('DoanhNghiepStateManager - Router & Navigation Stack (No Auto Timeout)'
     assert.equal(state.getDemoTypeForScreen('screen-1-3-5'), 'phone');
   });
 
-  test('should NOT auto timeout when idleTimeoutMs is 0', (t, done) => {
-    state.navigateTo('screen-main');
-    state.navigateTo('screen-1-3-1');
+  test('should auto timeout and reset to screen-idle when idle timer fires', (t, done) => {
+    // Khởi tạo state test với timeout ngắn 50ms
+    const shortTimerState = new DoanhNghiepStateManager({
+      initialScreen: 'screen-idle',
+      idleTimeoutMs: 50
+    });
 
-    // Simulate waiting
+    shortTimerState.navigateTo('screen-main');
+    shortTimerState.navigateTo('screen-1-3-1');
+    assert.equal(shortTimerState.currentScreen, 'screen-1-3-1');
+
+    // Sau 80ms phải tự động về screen-idle
     setTimeout(() => {
-      assert.equal(state.currentScreen, 'screen-1-3-1', 'Should stay on 1-3-1 without reset');
+      assert.equal(shortTimerState.currentScreen, 'screen-idle', 'Should auto reset to screen-idle after timeout');
       done();
-    }, 100);
+    }, 80);
   });
 });

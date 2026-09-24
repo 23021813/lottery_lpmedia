@@ -198,6 +198,7 @@ class AppMotionController {
       return;
     }
     this.navigateTo('screen-main');
+    this.state.history = ['screen-idle'];
   }
 
   handleBackAction() {
@@ -532,6 +533,8 @@ class AppMotionController {
       this.animIdleToMain(currentScreenEl, targetScreenEl);
     } else if (fromId === 'screen-main' && targetId.startsWith('screen-1-')) {
       this.animMainToLevel1(currentScreenEl, targetScreenEl);
+    } else if (targetId === 'screen-main' && fromId.startsWith('screen-1-')) {
+      this.animLevel1ToMain(currentScreenEl, targetScreenEl);
     } else if (this.isLevel2Transition(fromId, targetId)) {
       this.animPanHorizontal(currentScreenEl, targetScreenEl, 'next');
     } else {

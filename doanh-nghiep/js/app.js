@@ -207,6 +207,7 @@ class DoanhNghiepMotionController {
       return;
     }
     this.navigateTo('screen-main');
+    this.state.history = ['screen-idle'];
   }
 
   handleBackAction() {
@@ -539,6 +540,8 @@ class DoanhNghiepMotionController {
       this.animIdleToMain(currentEl, targetEl);
     } else if (fromId === 'screen-main' && targetId.startsWith('screen-1-')) {
       this.animMainToLevel1(currentEl, targetEl);
+    } else if (targetId === 'screen-main' && fromId.startsWith('screen-1-')) {
+      this.animLevel1ToMain(currentEl, targetEl);
     } else if (this.isLevel2Transition(fromId, targetId)) {
       this.animPanHorizontal(currentEl, targetEl, 'next');
     } else {

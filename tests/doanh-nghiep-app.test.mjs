@@ -56,4 +56,12 @@ test('Doanh Nghiệp Motion & Controller Test Suite', async (t) => {
       'handleBackAction must only call this.closeDemo() and return when isDemoOpen is true'
     );
   });
+
+  await t.test('navigateTo must call animLevel1ToMain when navigating to screen-main from inner screens (Home button behavior)', () => {
+    assert.match(
+      code,
+      /else\s+if\s*\(\s*targetId\s*===\s*['"]screen-main['"]\s*&&\s*fromId\.startsWith\(['"]screen-1-['"]\)\s*\)\s*\{\s*this\.animLevel1ToMain\(/,
+      'navigateTo must call animLevel1ToMain when target is screen-main from screen-1-*'
+    );
+  });
 });

@@ -110,7 +110,18 @@ export class DoanhNghiepStateManager {
           this.onTimeout();
         }
       }, this.idleTimeoutMs);
+      if (this.idleTimer && typeof this.idleTimer.unref === 'function') {
+        this.idleTimer.unref();
+      }
     }
+  }
+
+  destroy() {
+    if (this.idleTimer) {
+      clearTimeout(this.idleTimer);
+      this.idleTimer = null;
+    }
+    this.listeners.clear();
   }
 
   resetToIdle() {

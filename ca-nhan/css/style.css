@@ -92,13 +92,14 @@ body {
   padding: 0.12em 0;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  background: linear-gradient(180deg, #f9eedf 0%, #d6b487 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 16px rgba(243, 152, 62, 0.6));
 }
 
 .main-title span {
   display: block;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFF0DE 40%, #E8B97C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* Đường gạch phân cách vàng kim */
@@ -150,7 +151,7 @@ body {
 .card-title span,
 .detail-card-desc,
 .rewards-card-desc {
-  background: linear-gradient(180deg, #f9e7d0 0%, #d8b78a 100%);
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFF0DE 40%, #E8B97C 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   transition: color 0.3s ease;
@@ -533,7 +534,16 @@ body {
 }
 
 .detail-action-container {
-  bottom: 11.5%;
+  bottom: 14%;
+}
+
+/* Cá nhân hóa dịch vụ (screen-1-2): Gom cụm Cards và Button chuẩn tầm tay, cách 24px */
+#screen-1-2 .detail-cards-container {
+  top: 30%;
+}
+
+#screen-1-2 .detail-action-container {
+  bottom: 21%;
 }
 
 .rewards-action-container {

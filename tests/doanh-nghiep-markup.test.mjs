@@ -52,10 +52,12 @@ test('Doanh Nghiệp Markup & SPA Structure Test Suite', async (t) => {
     assert.match(html, /id=["']bgLayerDetail["']/);
   });
 
-  await t.test('should contain global back button with standard icon-back2.png', () => {
-    assert.match(html, /id=["']btnGlobalBack["']/);
-    assert.match(html, /class=["'][^"']*\bbtn-back\b[^"']*["'][^>]*id=["']btnGlobalBack["']|id=["']btnGlobalBack["'][^>]*class=["'][^"']*\bbtn-back\b[^"']*["']/);
-    assert.match(html, /images\/icon-back2\.png/);
+  await t.test('should contain side navigation docks on both sides with Home and Back buttons', () => {
+    assert.match(html, /id=["']navDockLeft["']/);
+    assert.match(html, /id=["']navDockRight["']/);
+    assert.match(html, /class=["'][^"']*\bnav-dock-side\b[^"']*["']/);
+    assert.match(html, /data-nav=["']home["']/);
+    assert.match(html, /data-nav=["']back["']/);
   });
 
   await t.test('should enforce kiosk touchscreen checklist in HTML', () => {

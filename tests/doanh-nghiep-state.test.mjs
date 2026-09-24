@@ -193,4 +193,24 @@ describe('DoanhNghiepStateManager - Router & Navigation Stack (No Auto Timeout)'
       }, `Demo for ${id} should have left button navigating to screen-1-3`);
     });
   });
+
+  test('Doanh nghiệp: should identify Level 3 screens correctly for top Home button visibility', () => {
+    const state = new DoanhNghiepStateManager();
+    // Level 1 & 2 screens must return false
+    assert.strictEqual(state.isLevel3Screen('screen-idle'), false);
+    assert.strictEqual(state.isLevel3Screen('screen-main'), false);
+    assert.strictEqual(state.isLevel3Screen('screen-1-1'), false);
+    assert.strictEqual(state.isLevel3Screen('screen-1-2'), false);
+    assert.strictEqual(state.isLevel3Screen('screen-1-3'), false);
+
+    // Level 3 screens must return true
+    assert.strictEqual(state.isLevel3Screen('screen-1-1-1'), true);
+    assert.strictEqual(state.isLevel3Screen('screen-1-2-1'), true);
+    assert.strictEqual(state.isLevel3Screen('screen-1-3-1'), true);
+    assert.strictEqual(state.isLevel3Screen('screen-1-3-2'), true);
+    assert.strictEqual(state.isLevel3Screen('screen-1-3-3'), true);
+    assert.strictEqual(state.isLevel3Screen('screen-1-3-4'), true);
+    assert.strictEqual(state.isLevel3Screen('screen-1-3-5'), true);
+  });
 });
+

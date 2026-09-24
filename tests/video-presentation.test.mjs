@@ -69,7 +69,11 @@ test('Video Assets & Full-Screen Touch Presentation Test Suite', async (t) => {
     assert.ok(html.includes('id="videoScrubThumb"'), 'Missing #videoScrubThumb in ca-nhan');
 
     assert.ok(html.includes('id="btnVideoBack"'), 'Missing #btnVideoBack in ca-nhan');
-    assert.ok(html.includes('icon-back2.png'), 'Back button must use authentic icon-back2.png image style');
+    assert.ok(html.includes('id="btnVideoHome"'), 'Missing #btnVideoHome in ca-nhan');
+    assert.ok(html.includes('btn-round-action'), 'Video controls must have round action buttons');
+    assert.ok(html.includes('id="navDockLeft"') && html.includes('id="navDockRight"'), 'Missing side navigation docks in ca-nhan');
+    assert.ok(html.includes('data-nav="home"'), 'Missing data-nav="home" button in ca-nhan');
+    assert.ok(html.includes('data-nav="back"'), 'Missing data-nav="back" button in ca-nhan');
 
     // 6 screens in ca-nhan must have data-video pointing to their files
     assert.ok(html.includes('data-video="video/security.webm"'), 'Missing data-video for security.webm');
@@ -106,7 +110,11 @@ test('Video Assets & Full-Screen Touch Presentation Test Suite', async (t) => {
     assert.ok(html.includes('id="videoScrubThumb"'), 'Missing #videoScrubThumb in doanh-nghiep');
 
     assert.ok(html.includes('id="btnVideoBack"'), 'Missing #btnVideoBack in doanh-nghiep');
-    assert.ok(html.includes('icon-back2.png'), 'Back button must use authentic icon-back2.png image style');
+    assert.ok(html.includes('id="btnVideoHome"'), 'Missing #btnVideoHome in doanh-nghiep');
+    assert.ok(html.includes('btn-round-action'), 'Video controls must have round action buttons');
+    assert.ok(html.includes('id="navDockLeft"') && html.includes('id="navDockRight"'), 'Missing side navigation docks in doanh-nghiep');
+    assert.ok(html.includes('data-nav="home"'), 'Missing data-nav="home" button in doanh-nghiep');
+    assert.ok(html.includes('data-nav="back"'), 'Missing data-nav="back" button in doanh-nghiep');
 
     // 7 screens in doanh-nghiep must have data-demo-video pointing to their files
     assert.ok(html.includes('data-demo-video="video/quan-tri-dich-vu.webm"'), 'Missing data-demo-video for quan-tri-dich-vu.webm');

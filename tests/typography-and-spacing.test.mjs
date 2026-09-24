@@ -125,5 +125,23 @@ test('Typography & Spacing Quality Test Suite (Preserving Stage Aspect Ratio)', 
     assert.ok(caNhanCss.includes('--font-family: "Inter"'), 'ca-nhan CSS must define Inter as primary font');
     assert.ok(caNhanCss.includes('button,') && caNhanCss.includes('font-family: inherit;'), 'ca-nhan CSS must set font-family: inherit for buttons/inputs');
   });
+
+  await t.test('13. Colored Logo, Top Home Button & Round Video Controls', () => {
+    // Logo có màu đồng nhất (không dùng âm bản)
+    const caNhanLogoStats = fs.statSync('ca-nhan/images/LOGO_CA NHAN.png');
+    const doanhNghiepLogoStats = fs.statSync('doanh-nghiep/images/LOGO_DOANH_NGHIEP.png');
+    assert.strictEqual(caNhanLogoStats.size, doanhNghiepLogoStats.size, 'ca-nhan logo must use same colored logo asset as doanh-nghiep');
+
+    // Nút Home góc trên: định nghĩa trong cả 2 CSS
+    assert.ok(caNhanCss.includes('.btn-top-home'), 'ca-nhan CSS must include .btn-top-home');
+    assert.ok(doanhNghiepCss.includes('.btn-top-home'), 'doanh-nghiep CSS must include .btn-top-home');
+    assert.ok(caNhanCss.includes('.btn-top-home') && caNhanCss.includes('border-radius: 50%'), 'ca-nhan top home must be round');
+    assert.ok(doanhNghiepCss.includes('.btn-top-home') && doanhNghiepCss.includes('border-radius: 50%'), 'doanh-nghiep top home must be round');
+
+    // Nút Round Action trong video controls
+    assert.ok(caNhanCss.includes('.btn-round-action'), 'ca-nhan CSS must include .btn-round-action');
+    assert.ok(doanhNghiepCss.includes('.btn-round-action'), 'doanh-nghiep CSS must include .btn-round-action');
+  });
 });
+
 

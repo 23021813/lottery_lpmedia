@@ -43,6 +43,7 @@ class AppMotionController {
       demoBackdrop: document.getElementById('demoBackdrop'),
       demoPhoneContainer: document.getElementById('demoPhoneContainer'),
       btnBack: document.getElementById('btnGlobalBack'),
+      btnHome: document.getElementById('btnGlobalHome'),
 
       // Video Presentation Modal Elements
       demoVideoModal: document.getElementById('screenDemoVideo'),
@@ -57,6 +58,7 @@ class AppMotionController {
       videoScrubBuffer: document.getElementById('videoScrubBuffer'),
       videoScrubThumb: document.getElementById('videoScrubThumb'),
       btnVideoBack: document.getElementById('btnVideoBack'),
+      btnVideoHome: document.getElementById('btnVideoHome'),
 
       screens: new Map()
     };
@@ -73,6 +75,16 @@ class AppMotionController {
     this.setupEventListeners();
     this.setupVideoControls();
     this.applyInitialState();
+    this.updateBackButtonVisibility();
+
+    // Hỗ trợ mở trực tiếp màn hình qua URL hash hoặc query param ?screen=...
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetScreen = urlParams.get('screen') || window.location.hash.replace('#', '');
+    if (targetScreen && this.dom.screens.has(targetScreen)) {
+      setTimeout(() => {
+        this.navigateTo(targetScreen);
+      }, 150);
+    }
   }
 
   applyInitialState() {
@@ -117,7 +129,12 @@ class AppMotionController {
   }
 
   updateBackButtonVisibility() {
-    if (!this.dom.btnBack) return;
+    this.updateNavigationDocks();
+
+    if (!this.dom.btnBack) {
+      return;
+    }
+
     const config = typeof this.state.getBackConfig === 'function'
       ? this.state.getBackConfig(this.state.currentScreen, this.isDemoOpen)
       : null;
@@ -125,24 +142,62 @@ class AppMotionController {
     if (config) {
       this.dom.btnBack.classList.add('is-visible');
       const imgBack = this.dom.btnBack.querySelector('.img-back') || this.dom.btnBack.querySelector('img');
-      if (config.position === 'left') {
-        this.dom.btnBack.classList.remove('pos-right', 'right');
-        this.dom.btnBack.classList.add('pos-left', 'left');
-        if (imgBack && !imgBack.src.endsWith('icon-back2.png')) {
+      if (imgBack) {
+        if (config.direction === 'right') {
+          this.dom.btnBack.classList.remove('pos-left', 'left');
+          this.dom.btnBack.classList.add('pos-right', 'right');
           imgBack.src = 'images/icon-back2.png';
-        }
-      } else {
-        this.dom.btnBack.classList.remove('pos-left', 'left');
-        this.dom.btnBack.classList.add('pos-right', 'right');
-        if (imgBack && !imgBack.src.endsWith('icon-back.png')) {
+        } else {
+          this.dom.btnBack.classList.remove('pos-right', 'right');
+          this.dom.btnBack.classList.add('pos-left', 'left');
           imgBack.src = 'images/icon-back.png';
         }
       }
       this.dom.btnBack.setAttribute('aria-label', config.label);
       this.dom.btnBack.setAttribute('title', config.label);
     } else {
-      this.dom.btnBack.classList.remove('is-visible', 'pos-left', 'pos-right', 'left', 'right');
+      if (this.dom.btnBack) {
+        this.dom.btnBack.classList.remove('is-visible', 'pos-left', 'pos-right', 'left', 'right');
+      }
     }
+
+    this.updateHomeButtonVisibility();
+  }
+
+  updateNavigationDocks() {
+    const currentScreen = this.state.currentScreen;
+    // Side Navigation Docks chỉ hiển thị ở các trang chi tiết con (Level 2, Level 3) và khi video/demo mở
+    // Không hiện button này ở Trang chủ (screen-main) và màn hình chờ (screen-idle)
+    const shouldShow = (currentScreen !== 'screen-idle' && currentScreen !== 'screen-main') || Boolean(this.isDemoOpen);
+
+    const docks = document.querySelectorAll('.nav-dock-side');
+    docks.forEach(dock => {
+      dock.classList.toggle('is-visible', Boolean(shouldShow));
+    });
+  }
+
+  updateHomeButtonVisibility() {
+    if (!this.dom.btnHome) return;
+    const isLevel3 = typeof this.state.isLevel3Screen === 'function'
+      ? this.state.isLevel3Screen(this.state.currentScreen)
+      : (this.state.currentScreen && this.state.currentScreen.split('-').length >= 4);
+
+    if (isLevel3 && !this.isDemoOpen) {
+      this.dom.btnHome.classList.add('is-visible');
+    } else {
+      this.dom.btnHome.classList.remove('is-visible');
+    }
+  }
+
+  handleHomeAction() {
+    if (this.isAnimating) return;
+    if (this.isDemoOpen) {
+      this.closeDemo();
+    }
+    if (this.state.currentScreen === 'screen-main') {
+      return;
+    }
+    this.navigateTo('screen-main');
   }
 
   handleBackAction() {
@@ -178,9 +233,16 @@ class AppMotionController {
           }
         }
       }
-    } else {
-      this.goBack();
+      return;
     }
+
+    // Nếu đang ở Trang chủ mà bấm Back -> Quay về Màn hình chờ Kiosk
+    if (this.state.currentScreen === 'screen-main') {
+      this.forceNavigateToIdle();
+      return;
+    }
+
+    this.goBack();
   }
 
   setupEventListeners() {
@@ -196,12 +258,38 @@ class AppMotionController {
       return false;
     });
 
-    // 0. Nút Back toàn cục (Universal Back Button)
+    // 0. Hệ thống Điều hướng kép 2 bên (Side Navigation Docks: Home & Back)
+    document.querySelectorAll('.nav-btn[data-nav="home"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.handleHomeAction();
+      });
+    });
+
+    document.querySelectorAll('.nav-btn[data-nav="back"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.handleBackAction();
+      });
+    });
+
+    // Nút Back toàn cục cũ (nếu có trong DOM)
     if (this.dom.btnBack) {
       this.dom.btnBack.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         this.handleBackAction();
+      });
+    }
+
+    // Nút Home toàn cục góc trên cũ (nếu có trong DOM)
+    if (this.dom.btnHome) {
+      this.dom.btnHome.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.handleHomeAction();
       });
     }
 
@@ -998,6 +1086,15 @@ class AppMotionController {
       btnVideoBack.addEventListener('click', (e) => {
         e.stopPropagation();
         this.closeDemo();
+      });
+    }
+
+    // Nút Home trong player: Đóng video và quay về Trang chủ
+    if (this.dom.btnVideoHome) {
+      this.dom.btnVideoHome.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.closeDemo();
+        this.handleHomeAction();
       });
     }
 

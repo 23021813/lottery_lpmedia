@@ -111,6 +111,15 @@ export class DoanhNghiepStateManager {
     return this.history.length > 0 || this.getParentScreen(this.currentScreen) !== null;
   }
 
+  isLevel3Screen(screenId = this.currentScreen) {
+    if (!screenId || screenId === 'screen-idle' || screenId === 'screen-main') {
+      return false;
+    }
+    const parts = screenId.split('-');
+    return parts.length >= 4;
+  }
+
+
   getBackConfig(screenId = this.currentScreen, isDemoOpen = false) {
     if (!screenId || screenId === 'screen-idle' || screenId === 'screen-main') {
       return null;

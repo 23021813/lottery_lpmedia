@@ -168,5 +168,24 @@ describe('AppStateManager - SPA Navigation & History Stack', () => {
       });
     });
   });
+
+  test('should identify Level 3 screens correctly for top Home button visibility', () => {
+    const state = new AppStateManager();
+    // Level 1 & 2 screens must return false
+    assert.strictEqual(state.isLevel3Screen('screen-idle'), false);
+    assert.strictEqual(state.isLevel3Screen('screen-main'), false);
+    assert.strictEqual(state.isLevel3Screen('screen-1-1'), false);
+    assert.strictEqual(state.isLevel3Screen('screen-1-2'), false);
+    assert.strictEqual(state.isLevel3Screen('screen-1-3'), false);
+    assert.strictEqual(state.isLevel3Screen('screen-1-4'), false);
+
+    // Level 3 screens must return true
+    assert.strictEqual(state.isLevel3Screen('screen-1-3-1'), true);
+    assert.strictEqual(state.isLevel3Screen('screen-1-3-2'), true);
+    assert.strictEqual(state.isLevel3Screen('screen-1-4-1'), true);
+    assert.strictEqual(state.isLevel3Screen('screen-1-4-2'), true);
+    assert.strictEqual(state.isLevel3Screen('screen-demo'), true);
+  });
 });
+
 

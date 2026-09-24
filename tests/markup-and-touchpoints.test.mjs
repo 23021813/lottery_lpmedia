@@ -28,9 +28,11 @@ describe('MSB Interactive LED Touchpoints & Markup Integrity', () => {
     assert.ok(htmlContent.includes('data-target="screen-1-4-2"'), 'Action button should point to 1-4-2');
   });
 
-  test('SPA has universal Back Button (btn-back #btnGlobalBack)', () => {
-    assert.ok(htmlContent.includes('id="btnGlobalBack"'), 'Must have #btnGlobalBack element');
-    assert.ok(htmlContent.includes('class="btn-back"'), 'Must have .btn-back class');
-    assert.ok(htmlContent.includes('images/icon-back2.png'), 'Must use icon-back2.png');
+  test('SPA has Side Navigation Docks on both sides (nav-dock-side #navDockLeft & #navDockRight)', () => {
+    assert.ok(htmlContent.includes('id="navDockLeft"'), 'Must have #navDockLeft element');
+    assert.ok(htmlContent.includes('id="navDockRight"'), 'Must have #navDockRight element');
+    assert.ok(htmlContent.includes('class="nav-dock-side'), 'Must have .nav-dock-side class');
+    assert.ok(htmlContent.includes('data-nav="home"'), 'Must have home navigation button');
+    assert.ok(htmlContent.includes('data-nav="back"'), 'Must have back navigation button');
   });
 });

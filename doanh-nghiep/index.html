@@ -17,10 +17,37 @@
       <div class="bg-layer bg-detail" id="bgLayerDetail"></div>
       <div class="bg-layer bg-detail-2" id="bgLayerDetail2"></div>
 
-      <!-- Nút quay lại toàn cục chuẩn Kiosk MSB (Ảnh gốc icon-back2.png đặt ở góc dưới) -->
-      <a href="javascript:;" class="btn-back" id="btnGlobalBack" role="button" aria-label="Quay lại">
-        <img src="images/icon-back2.png" alt="Quay lại" class="img-back" draggable="false">
-      </a>
+      <!-- ====================================================================
+           ĐIỀU HƯỚNG KÉP 2 BÊN (SIDE NAVIGATION DOCKS: HOME & BACK)
+           Chuẩn Kiosk LED 1536x576: Đặt 2 bên mép giữa màn hình
+           ==================================================================== -->
+      <!-- Dock bên trái -->
+      <nav class="nav-dock-side nav-dock-left" id="navDockLeft" aria-label="Điều hướng bên trái">
+        <button type="button" class="nav-btn nav-btn-home" data-nav="home" title="Về trang chủ" aria-label="Về trang chủ">
+          <svg class="nav-icon" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+            <path d="M12 3L2 12h3v8a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-5h2v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-8h3L12 3z"/>
+          </svg>
+        </button>
+        <button type="button" class="nav-btn nav-btn-back" data-nav="back" title="Quay lại" aria-label="Quay lại">
+          <svg class="nav-icon" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+          </svg>
+        </button>
+      </nav>
+
+      <!-- Dock bên phải -->
+      <nav class="nav-dock-side nav-dock-right" id="navDockRight" aria-label="Điều hướng bên phải">
+        <button type="button" class="nav-btn nav-btn-home" data-nav="home" title="Về trang chủ" aria-label="Về trang chủ">
+          <svg class="nav-icon" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+            <path d="M12 3L2 12h3v8a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-5h2v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-8h3L12 3z"/>
+          </svg>
+        </button>
+        <button type="button" class="nav-btn nav-btn-back" data-nav="back" title="Quay lại" aria-label="Quay lại">
+          <svg class="nav-icon" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+          </svg>
+        </button>
+      </nav>
 
       <!-- ==============================================
            SCREEN 0: SCREEN-IDLE (Màn hình chờ Kiosk / Cover Screen)
@@ -742,22 +769,30 @@
             <!-- Hàng phím chức năng phẳng -->
             <div class="controls-row">
               <div class="controls-left">
-                <!-- Nút Phát / Dừng dạng phẳng -->
+                <!-- Nút Phát / Dừng dạng phẳng hình tròn -->
                 <button type="button" class="btn-ctrl btn-play-toggle" id="btnPlayToggle" aria-label="Phát hoặc dừng video">
-                  <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" width="26" height="26">
+                  <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
                     <polygon points="6,3 20,12 6,21" />
                   </svg>
-                  <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" width="26" height="26" style="display:none;">
+                  <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" width="24" height="24" style="display:none;">
                     <rect x="5" y="3" width="5" height="18" rx="1" />
                     <rect x="14" y="3" width="5" height="18" rx="1" />
                   </svg>
                 </button>
-              </div>
 
-              <div class="controls-right">
-                <!-- Nút Quay lại chuẩn style MSB icon-back2.png -->
-                <button type="button" class="btn-ctrl-back" id="btnVideoBack" aria-label="Quay lại">
-                  <img src="images/icon-back2.png" alt="Quay lại" class="img-back" draggable="false">
+                <!-- Nút Quay lại dạng hình tròn đặt sát Play/Pause -->
+                <button type="button" class="btn-ctrl btn-round-action" id="btnVideoBack" aria-label="Quay lại">
+                  <svg class="icon-ctrl-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                  </svg>
+                </button>
+
+                <!-- Nút Home dạng hình tròn đặt cạnh nút Back để quay về Trang chủ -->
+                <button type="button" class="btn-ctrl btn-round-action" id="btnVideoHome" aria-label="Quay về màn hình chính">
+                  <svg class="icon-ctrl-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                  </svg>
                 </button>
               </div>
             </div>

@@ -106,6 +106,21 @@ export class AppStateManager {
     return this.history.length > 0 || this.getParentScreen(this.currentScreen) !== null;
   }
 
+  isLevel3Screen(screenId = this.currentScreen) {
+    if (!screenId || screenId === 'screen-idle' || screenId === 'screen-main') {
+      return false;
+    }
+    const level3Screens = [
+      'screen-1-3-1',
+      'screen-1-3-2',
+      'screen-1-4-1',
+      'screen-1-4-2',
+      'screen-demo'
+    ];
+    return level3Screens.includes(screenId);
+  }
+
+
   getBackConfig(screenId = this.currentScreen, isDemoOpen = false) {
     if (!screenId || screenId === 'screen-idle' || screenId === 'screen-main') {
       return null;

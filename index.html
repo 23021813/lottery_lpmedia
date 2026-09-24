@@ -175,6 +175,16 @@
       box-shadow: 0 24px 50px rgba(0, 119, 255, 0.28), 0 0 30px rgba(0, 119, 255, 0.2);
     }
 
+    /* Thẻ Quay Số (Sắc Đỏ - Cam May Mắn) */
+    .card-quay-so {
+      border-top: 3px solid #ef4123;
+    }
+    .card-quay-so:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(239, 65, 35, 0.65);
+      box-shadow: 0 24px 50px rgba(239, 65, 35, 0.28), 0 0 30px rgba(239, 65, 35, 0.2);
+    }
+
     .card-top {
       margin-bottom: 24px;
     }
@@ -204,6 +214,12 @@
       border: 1px solid rgba(0, 119, 255, 0.35);
     }
 
+    .card-quay-so .card-badge {
+      background: rgba(239, 65, 35, 0.15);
+      color: #ff8e75;
+      border: 1px solid rgba(239, 65, 35, 0.35);
+    }
+
     .card-badge .dot {
       width: 7px;
       height: 7px;
@@ -218,6 +234,11 @@
     .card-doanh-nghiep .card-badge .dot {
       background: var(--blue-primary);
       box-shadow: 0 0 8px var(--blue-primary);
+    }
+
+    .card-quay-so .card-badge .dot {
+      background: #ef4123;
+      box-shadow: 0 0 8px #ef4123;
     }
 
     .card-title {
@@ -279,6 +300,12 @@
       background: linear-gradient(135deg, #0088ff 0%, #0055cc 100%);
       color: #ffffff;
       box-shadow: 0 4px 18px rgba(0, 119, 255, 0.4);
+    }
+
+    .card-quay-so .card-btn {
+      background: linear-gradient(135deg, #ef4123 0%, #b8141b 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 18px rgba(239, 65, 35, 0.4);
     }
 
     .card-btn svg {
@@ -403,6 +430,42 @@
         </div>
         <div class="card-btn">
           <span>Khám phá Doanh Nghiệp</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+      </a>
+
+      <!-- Thẻ Quay Số -->
+      <a href="quay-so/index.html" class="portal-card card-quay-so" id="btnGoQuaySo">
+        <div class="card-top">
+          <div class="card-badge">
+            <span class="dot"></span>
+            <span>Sự Kiện Đặc Biệt</span>
+          </div>
+          <h2 class="card-title">Quay Số<br>Trúng Thưởng</h2>
+          <p class="card-desc">
+            Chương trình quay số may mắn MSB Lucky Draw với hiệu ứng slot machine 3D chân thực, vinh danh giải thưởng lớn.
+          </p>
+          <ul class="feature-list">
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4123" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Vòng quay số ngẫu nhiên minh bạch</span>
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4123" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Tự động quay lại khi vắng mặt (Respin)</span>
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4123" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Hiệu ứng pháo hoa & hạt sáng sân khấu</span>
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4123" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Bảng vàng vinh danh người trúng giải</span>
+            </li>
+          </ul>
+        </div>
+        <div class="card-btn">
+          <span>Vào Phòng Quay Số</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </div>
       </a>

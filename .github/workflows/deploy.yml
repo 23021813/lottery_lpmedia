@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - MSB-interactive
+      - quay-so
       - main
       - master
   workflow_dispatch:

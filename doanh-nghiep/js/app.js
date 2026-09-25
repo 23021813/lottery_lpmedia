@@ -358,64 +358,6 @@ class DoanhNghiepMotionController {
       }
     });
 
-    // Cử chỉ vuốt cảm ứng (Swipe Back)
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchStartTime = 0;
-
-    const onSwipeStart = (x, y) => {
-      touchStartX = x;
-      touchStartY = y;
-      touchStartTime = Date.now();
-    };
-
-    const onSwipeEnd = (x, y) => {
-      const deltaX = x - touchStartX;
-      const deltaY = y - touchStartY;
-      const elapsed = Date.now() - touchStartTime;
-
-      if (elapsed > 700) return;
-
-      // Đang mở demo modal: vuốt xuống hoặc vuốt phải -> đóng demo
-      if (this.isDemoOpen) {
-        if (deltaY > 60 || deltaX > 80) {
-          this.closeDemo();
-        }
-        return;
-      }
-
-      // Đang ở màn hình con: vuốt từ trái sang phải (> 70px) -> Back
-      if (deltaX > 70 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
-        this.goBack();
-      }
-    };
-
-    this.dom.stage.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 1) {
-        onSwipeStart(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    }, { passive: true });
-
-    this.dom.stage.addEventListener('touchend', (e) => {
-      if (e.changedTouches.length === 1) {
-        onSwipeEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-      }
-    }, { passive: true });
-
-    // Hỗ trợ chuột kéo swipe khi test trên Desktop
-    let isMouseDown = false;
-    this.dom.stage.addEventListener('mousedown', (e) => {
-      if (e.target.closest('[data-screen], [data-demo-target], button, a')) return;
-      isMouseDown = true;
-      onSwipeStart(e.clientX, e.clientY);
-    });
-
-    window.addEventListener('mouseup', (e) => {
-      if (isMouseDown) {
-        isMouseDown = false;
-        onSwipeEnd(e.clientX, e.clientY);
-      }
-    });
   }
 
   /* ========================================================================

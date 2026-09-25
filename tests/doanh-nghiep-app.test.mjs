@@ -41,9 +41,9 @@ test('Doanh Nghiệp Motion & Controller Test Suite', async (t) => {
     assert.match(code, /modalPhone/);
   });
 
-  await t.test('should support gestures (swipe) and kiosk shortcuts (ESC, prevent contextmenu)', () => {
-    assert.match(code, /touchstart/);
-    assert.match(code, /touchend/);
+  await t.test('should maintain kiosk shortcuts (ESC, prevent contextmenu) and ensure swipe back is removed', () => {
+    assert.doesNotMatch(code, /onSwipeEnd/, 'Swipe back gesture must be removed to avoid accidental back on Kiosk LED');
+    assert.doesNotMatch(code, /onSwipeStart/, 'onSwipeStart must be removed');
     assert.match(code, /contextmenu/);
     assert.match(code, /dragstart/);
     assert.match(code, /Escape/);

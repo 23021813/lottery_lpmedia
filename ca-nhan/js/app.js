@@ -342,69 +342,6 @@ class AppMotionController {
       }
     });
 
-    // 5. Cử chỉ vuốt ngược trên màn hình cảm ứng & chuột (Touch / Drag Swipe Back)
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchStartTime = 0;
-
-    const handleSwipeStart = (x, y) => {
-      touchStartX = x;
-      touchStartY = y;
-      touchStartTime = Date.now();
-    };
-
-    const handleSwipeEnd = (x, y) => {
-      const deltaX = x - touchStartX;
-      const deltaY = y - touchStartY;
-      const elapsedTime = Date.now() - touchStartTime;
-
-      // Giới hạn thời gian cử chỉ vuốt hợp lệ (< 800ms)
-      if (elapsedTime > 800) return;
-
-      // Nếu đang mở Demo Phone: Vuốt xuống (deltaY > 60) hoặc vuốt sang phải (deltaX > 80) -> Đóng Demo
-      if (this.isDemoOpen) {
-        if (deltaY > 60 || deltaX > 80) {
-          this.closeDemo();
-        }
-        return;
-      }
-
-      // Vuốt ngược từ trái sang phải (Swipe Right > 70px) -> Quay lại trang trước (Back)
-      if (deltaX > 70 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
-        this.goBack();
-      }
-    };
-
-    // Touch events cho màn hình LED cảm ứng
-    this.dom.stage.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 1) {
-        handleSwipeStart(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    }, { passive: true });
-
-    this.dom.stage.addEventListener('touchend', (e) => {
-      if (e.changedTouches.length === 1) {
-        handleSwipeEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-      }
-    }, { passive: true });
-
-    // Hỗ trợ chuột kéo lướt (Mouse Drag Swipe) để tiện kiểm thử trên máy tính
-    let isMouseDown = false;
-    this.dom.stage.addEventListener('mousedown', (e) => {
-      // Chỉ nhận mousedown nếu không phải là click trực tiếp vào nút CTA hoặc demo
-      if (e.target.closest('[data-demo="true"], [data-target]')) {
-        return;
-      }
-      isMouseDown = true;
-      handleSwipeStart(e.clientX, e.clientY);
-    });
-
-    window.addEventListener('mouseup', (e) => {
-      if (isMouseDown) {
-        isMouseDown = false;
-        handleSwipeEnd(e.clientX, e.clientY);
-      }
-    });
   }
 
   /* ========================================================================

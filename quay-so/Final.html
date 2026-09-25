@@ -120,7 +120,7 @@
         align-items: center;
         justify-content: center;
         padding: 24px;
-        gap: 36px;
+        gap: 20px;
       }
 
       /* ============================================================
@@ -345,11 +345,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 36px 48px;
+        padding: 20px 36px;
         background: var(--liquid-glass-bg);
         backdrop-filter: var(--liquid-glass-blur);
         -webkit-backdrop-filter: var(--liquid-glass-blur);
-        border-radius: 40px;
+        border-radius: 36px;
         border: 1px solid transparent;
         background-clip: padding-box;
         box-shadow: var(--water-drop-shadow);
@@ -438,18 +438,18 @@
       /* Lưới 4 ô số */
       .slot-grid {
         display: flex;
-        gap: 22px;
+        gap: 28px;
         align-items: center;
       }
 
       /* Từng ô số: THẤU KÍNH 3D RIÊNG BIỆT (KHÔNG CÓ GẠCH NGANG CHIA CẮT SỐ) */
       .slot-cell {
         position: relative;
-        width: 140px;
-        height: 180px;
+        width: 230px;
+        height: 290px;
         background: rgba(10, 4, 16, 0.65);
         border: 1px solid rgba(255, 255, 255, 0.16);
-        border-radius: 24px;
+        border-radius: 28px;
         overflow: hidden;
         box-shadow: 
           inset 0 4px 15px rgba(0, 0, 0, 0.85),
@@ -476,8 +476,8 @@
           rgba(255, 255, 255, 0.01) 100%
         );
         pointer-events: none;
-        border-top-left-radius: 23px;
-        border-top-right-radius: 23px;
+        border-top-left-radius: 27px;
+        border-top-right-radius: 27px;
         z-index: 6;
       }
 
@@ -495,12 +495,12 @@
       /* Từng con số: THỦY TINH LỎNG SIÊU SẮC NÉT (KHÔNG BLUR, CHỈ DÙNG CAM - ĐỎ MSB) */
       .digit-item {
         width: 100%;
-        height: 180px;
-        line-height: 180px;
+        height: 290px;
+        line-height: 290px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 110px;
+        font-size: 175px;
         font-weight: 800;
         font-feature-settings: "tnum";
         font-variant-numeric: tabular-nums;
@@ -713,12 +713,12 @@
       .modal-card {
         position: relative;
         width: 100%;
-        max-width: 480px;
+        max-width: 680px;
         background: rgba(255, 255, 255, 0.04); /* Kính siêu trong lộ nền */
         backdrop-filter: blur(45px) saturate(220%) contrast(110%);
         -webkit-backdrop-filter: blur(45px) saturate(220%) contrast(110%);
-        border-radius: 26px;
-        padding: 18px 24px 18px;
+        border-radius: 28px;
+        padding: 20px 32px 20px;
         border: 1px solid rgba(255, 255, 255, 0.28);
         box-shadow: 
           inset 2.5px 2.5px 6px rgba(255, 255, 255, 0.75),
@@ -823,10 +823,10 @@
       /* Banner Giải Thưởng Vũ Trụ / Ngân Hà / Tinh Tú */
       .modal-prize-banner-wrapper {
         width: 100%;
-        max-width: 360px;
-        border-radius: 12px;
+        max-width: 500px;
+        border-radius: 14px;
         overflow: hidden;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         box-shadow: 
           0 10px 30px rgba(0, 0, 0, 0.7),
           0 0 25px rgba(243, 112, 33, 0.4);
@@ -854,7 +854,7 @@
       /* Số trúng giải (Số vòng tay): Dạng Text lớn sắc nét, ánh kim cam đỏ MSB siêu thực */
       .modal-code-badge {
         display: block;
-        font-size: 50px;
+        font-size: 72px;
         font-weight: 900;
         letter-spacing: 0.14em;
         line-height: 1.1;
@@ -877,9 +877,9 @@
       /* Tên người trúng giải: Dạng Text thanh thoát, hào quang phát sáng nổi bật */
       .modal-winner-name {
         display: block;
-        max-width: 440px;
+        max-width: 600px;
         margin: 0 auto 18px;
-        font-size: 25px;
+        font-size: 34px;
         font-weight: 800;
         letter-spacing: 0.05em;
         text-transform: uppercase;
@@ -926,18 +926,18 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 14px;
+        gap: 16px;
         width: 100%;
-        max-width: 360px;
+        max-width: 440px;
       }
 
       .btn-modal {
         position: relative;
         flex: 1;
-        padding: 10px 18px;
-        border-radius: 14px;
+        padding: 12px 24px;
+        border-radius: 16px;
         font-family: inherit;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 700;
         letter-spacing: 0.06em;
         text-transform: uppercase;
@@ -1348,7 +1348,7 @@
         >
           <div class="prize-badge-indicator"></div>
           <div class="prize-title-display" id="currentPrizeTitle">
-            GIẢI TINH TÚ
+            GIẢI VŨ TRỤ
           </div>
           <!-- Badge số lượng giải: Chỉ hiện khi có >= 1 giải -->
           <div
@@ -1362,11 +1362,11 @@
         <div class="prize-dropdown-menu" id="prizeDropdownMenu">
           <button
             class="prize-option-item is-selected"
-            data-tier="Tinh Tú"
-            onclick="selectPrizeTier('Tinh Tú')"
+            data-tier="Vũ Trụ"
+            onclick="selectPrizeTier('Vũ Trụ')"
           >
-            <span>GIẢI TINH TÚ</span>
-            <span class="prize-option-count" id="count-tier-tinh-tu"></span>
+            <span>GIẢI VŨ TRỤ</span>
+            <span class="prize-option-count" id="count-tier-vu-tru"></span>
           </button>
           <button
             class="prize-option-item"
@@ -1378,11 +1378,11 @@
           </button>
           <button
             class="prize-option-item"
-            data-tier="Vũ Trụ"
-            onclick="selectPrizeTier('Vũ Trụ')"
+            data-tier="Tinh Tú"
+            onclick="selectPrizeTier('Tinh Tú')"
           >
-            <span>GIẢI VŨ TRỤ</span>
-            <span class="prize-option-count" id="count-tier-vu-tru"></span>
+            <span>GIẢI TINH TÚ</span>
+            <span class="prize-option-count" id="count-tier-tinh-tu"></span>
           </button>
         </div>
       </div>
@@ -1473,12 +1473,12 @@
          QUẢN LÝ DỮ LIỆU & TRẠNG THÁI ỨNG DỤNG
          ============================================================ */
       const PRIZE_CONFIG = {
-        "Tinh Tú": {
-          name: "GIẢI TINH TÚ",
-          subName: "TAI NGHE AIRPODS",
-          code: "tinh-tu",
-          banner: "images/prize-tinh-tu.png",
-          rank: 3,
+        "Vũ Trụ": {
+          name: "GIẢI VŨ TRỤ",
+          subName: "IPHONE DUO 256GB",
+          code: "vu-tru",
+          banner: "images/prize-vu-tru.png",
+          rank: 1,
         },
         "Ngân Hà": {
           name: "GIẢI NGÂN HÀ",
@@ -1487,16 +1487,16 @@
           banner: "images/prize-ngan-ha.png",
           rank: 2,
         },
-        "Vũ Trụ": {
-          name: "GIẢI VŨ TRỤ",
-          subName: "IPHONE DUO 256GB",
-          code: "vu-tru",
-          banner: "images/prize-vu-tru.png",
-          rank: 1,
+        "Tinh Tú": {
+          name: "GIẢI TINH TÚ",
+          subName: "TAI NGHE AIRPODS",
+          code: "tinh-tu",
+          banner: "images/prize-tinh-tu.png",
+          rank: 3,
         },
       };
 
-      let currentSelectedTier = "Tinh Tú";
+      let currentSelectedTier = "Vũ Trụ";
       let participants = []; // Danh sách khách hàng ĐÃ CHECK-IN (có số vòng tay)
       let usedNumbers = []; // Danh sách số vòng tay đã trúng
       let absentWinners = []; // Danh sách số vòng tay vắng mặt
@@ -1508,10 +1508,11 @@
 
       // Cấu hình lồng quay 4 số
       const DIGIT_COUNT = 4;
-      const STRIP_REPEAT = 16; // Lặp 16 chu kỳ số 0-9
+      const STRIP_REPEAT = 40; // Lặp 40 chu kỳ số 0-9 (400 số) đảm bảo dải số siêu dài, không bao giờ cạn
       let stripPositions = [0, 0, 0, 0];
       let stripVelocities = [0, 0, 0, 0];
       let stripAnimFrameIds = [null, null, null, null];
+      let stripFallbackTimers = [null, null, null, null];
       let isStripSpinning = [false, false, false, false];
 
       // Biến điều khiển dao động 3D không đồng trục
@@ -1695,7 +1696,7 @@
          CẬP NHẬT GIAO DIỆN SỐ LƯỢNG GIẢI (0 GIẢI THÌ ẨN, >=1 MỚI HIỆN)
          ============================================================ */
       function updatePrizeCountsUI() {
-        const counts = { "Tinh Tú": 0, "Ngân Hà": 0, "Vũ Trụ": 0 };
+        const counts = { "Vũ Trụ": 0, "Ngân Hà": 0, "Tinh Tú": 0 };
         sessionWinners.forEach((w) => {
           if (counts[w.tier] !== undefined) {
             counts[w.tier]++;
@@ -1717,9 +1718,9 @@
 
         // 2. Cập nhật từng mục trong dropdown list
         const tierMapping = [
-          { tier: "Tinh Tú", elId: "count-tier-tinh-tu" },
-          { tier: "Ngân Hà", elId: "count-tier-ngan-ha" },
           { tier: "Vũ Trụ", elId: "count-tier-vu-tru" },
+          { tier: "Ngân Hà", elId: "count-tier-ngan-ha" },
+          { tier: "Tinh Tú", elId: "count-tier-tinh-tu" },
         ];
 
         tierMapping.forEach((item) => {
@@ -1939,6 +1940,10 @@
 
         // Khởi động 4 cột quay với vận tốc khác nhau rõ rệt (KHÔNG CÙNG CHU KỲ)
         for (let i = 0; i < DIGIT_COUNT; i++) {
+          if (stripFallbackTimers[i]) {
+            clearTimeout(stripFallbackTimers[i]);
+            stripFallbackTimers[i] = null;
+          }
           const cell = document.getElementById(`slot-cell-${i}`);
           if (cell) {
             cell.classList.add("is-spinning");
@@ -1954,7 +1959,8 @@
 
       function startStripContinuousSpin(col) {
         const h = getCellHeight();
-        const maxScroll = h * 10 * (STRIP_REPEAT - 3);
+        const cycleHeight = h * 10;
+        const maxScroll = cycleHeight * (STRIP_REPEAT - 10);
 
         // Vận tốc cuộn vừa phải, các số chạy chậm rõ nét, mượt mà và hồi hộp
         const baseSpeed = [24, 18, 26, 20];
@@ -1964,7 +1970,7 @@
           if (!isStripSpinning[col]) return;
           stripPositions[col] += stripVelocities[col];
           if (stripPositions[col] >= maxScroll) {
-            stripPositions[col] -= h * 10 * 5;
+            stripPositions[col] -= cycleHeight * 10;
           }
           setStripTransform(col, stripPositions[col]);
           stripAnimFrameIds[col] = requestAnimationFrame(step);
@@ -2010,17 +2016,22 @@
           cancelAnimationFrame(stripAnimFrameIds[col]);
           stripAnimFrameIds[col] = null;
         }
+        if (stripFallbackTimers[col]) {
+          clearTimeout(stripFallbackTimers[col]);
+          stripFallbackTimers[col] = null;
+        }
 
         stopNonCoaxialForColumn(col);
 
         const h = getCellHeight();
         const currentY = stripPositions[col];
 
-        // Tìm vị trí chữ số mục tiêu tiếp theo trên dải số
+        // Tìm vị trí chữ số mục tiêu tiếp theo trên dải số an toàn theo modulo
         const currentIndex = Math.ceil(currentY / h);
-        const currentMod = currentIndex % 10;
+        const currentMod = ((currentIndex % 10) + 10) % 10;
         let diff = (targetDigit - currentMod + 10) % 10;
         if (diff < 4) diff += 10;
+        diff += 10; // Đảm bảo luôn trượt thêm ít nhất 1 vòng đầy đủ để giảm tốc êm ái
 
         const targetIndex = currentIndex + diff;
         const targetY = targetIndex * h;
@@ -2032,7 +2043,31 @@
           return --t * t * t + 1;
         }
 
+        let isStopped = false;
+        function finalizeStop() {
+          if (isStopped) return;
+          isStopped = true;
+          if (stripAnimFrameIds[col]) {
+            cancelAnimationFrame(stripAnimFrameIds[col]);
+            stripAnimFrameIds[col] = null;
+          }
+          if (stripFallbackTimers[col]) {
+            clearTimeout(stripFallbackTimers[col]);
+            stripFallbackTimers[col] = null;
+          }
+          // KHÓA CHÍNH TÂM 100% TUYỆT ĐỐI THEO PIXEL TARGET
+          stripPositions[col] = targetY;
+          setStripTransform(col, targetY);
+
+          const cell = document.getElementById(`slot-cell-${col}`);
+          if (cell) {
+            cell.classList.remove("is-spinning");
+            cell.classList.add("is-locked");
+          }
+        }
+
         function animateStop(now) {
+          if (isStopped) return;
           const elapsed = now - startTime;
           const progress = Math.min(elapsed / duration, 1);
           const easeProgress = easeOutCubic(progress);
@@ -2041,21 +2076,18 @@
           setStripTransform(col, currentDecelY);
 
           if (progress < 1) {
-            requestAnimationFrame(animateStop);
+            stripAnimFrameIds[col] = requestAnimationFrame(animateStop);
           } else {
-            // KHÓA CHÍNH TÂM 100% TUYỆT ĐỐI THEO PIXEL TARGET
-            stripPositions[col] = targetY;
-            setStripTransform(col, targetY);
-
-            const cell = document.getElementById(`slot-cell-${col}`);
-            if (cell) {
-              cell.classList.remove("is-spinning");
-              cell.classList.add("is-locked");
-            }
+            finalizeStop();
           }
         }
 
-        requestAnimationFrame(animateStop);
+        stripAnimFrameIds[col] = requestAnimationFrame(animateStop);
+
+        // Watchdog Fallback Timer: Bảo hiểm 100% không bao giờ bị lơ lửng nếu rAF bị drop frame
+        stripFallbackTimers[col] = setTimeout(() => {
+          finalizeStop();
+        }, duration + 40);
       }
 
       function onAllDigitsLocked() {

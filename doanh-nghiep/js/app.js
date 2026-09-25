@@ -226,8 +226,8 @@ class DoanhNghiepMotionController {
   }
 
   setupEventListeners() {
-    // [DEBUG MODE] Tạm thời cho phép chuột phải và F12 Inspect theo yêu cầu (sẽ đóng lại sau)
-    // window.addEventListener('contextmenu', (e) => e.preventDefault());
+    // Kiosk Protection: Chặn chuột phải (contextmenu), vẫn cho phép inspect qua F12 / DevTools
+    window.addEventListener('contextmenu', (e) => e.preventDefault());
     window.addEventListener('dragstart', (e) => e.preventDefault());
 
     // 0. Hệ thống Điều hướng kép 2 bên (Side Navigation Docks: Home & Back)

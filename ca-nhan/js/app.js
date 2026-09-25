@@ -217,11 +217,11 @@ class AppMotionController {
   }
 
   setupEventListeners() {
-    // [DEBUG MODE] Tạm thời cho phép chuột phải và F12 Inspect theo yêu cầu (sẽ đóng lại sau)
-    // window.addEventListener('contextmenu', (e) => {
-    //   e.preventDefault();
-    //   return false;
-    // });
+    // Kiosk Protection: Chặn chuột phải (contextmenu), vẫn cho phép inspect qua F12 / DevTools
+    window.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      return false;
+    });
 
     // Kiosk Protection: Chặn kéo ảnh / phần tử mặc định của trình duyệt
     window.addEventListener('dragstart', (e) => {

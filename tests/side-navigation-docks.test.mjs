@@ -75,4 +75,28 @@ test('Side Navigation Docks (Dual Left & Right Home/Back Controls) - EB & RB', a
       assert.ok(js.includes('handleBackAction()'), `${name} JS must trigger handleBackAction() on back click`);
     }
   });
+
+  await t.test('6. Side Navigation Docks Collision Prevention: snug edge positioning, compact button size and strictly contained hit target (inset: 0)', () => {
+    for (const [name, css] of [['ca-nhan', caNhanCss], ['doanh-nghiep', doanhNghiepCss]]) {
+      // 1. Snug edge positioning: left and right clamp to 10px - 16px
+      const leftMatch = css.match(/\.nav-dock-left\s*\{([^}]+)\}/);
+      assert.ok(leftMatch, `${name} missing .nav-dock-left`);
+      assert.match(leftMatch[1], /left:\s*clamp\(\s*10px,\s*1vw,\s*1[56]px\s*\)/, `${name} .nav-dock-left must be clamped close to edge (10px - 15px/16px)`);
+
+      const rightMatch = css.match(/\.nav-dock-right\s*\{([^}]+)\}/);
+      assert.ok(rightMatch, `${name} missing .nav-dock-right`);
+      assert.match(rightMatch[1], /right:\s*clamp\(\s*10px,\s*1vw,\s*1[56]px\s*\)/, `${name} .nav-dock-right must be clamped close to edge (10px - 15px/16px)`);
+
+      // 2. Compact button size: <= 40px (e.g. clamp(34px, 2.6vw, 40px))
+      const btnMatch = css.match(/(?:^|\n)\.nav-btn\s*\{([^}]+)\}/);
+      assert.ok(btnMatch, `${name} missing .nav-btn block`);
+      assert.match(btnMatch[1], /width:\s*clamp\(\s*3[2-6]px,\s*2\.[4-8]vw,\s*4[02]px\s*\)/, `${name} .nav-btn width must be compacted`);
+      assert.match(btnMatch[1], /height:\s*clamp\(\s*3[2-6]px,\s*2\.[4-8]vw,\s*4[02]px\s*\)/, `${name} .nav-btn height must be compacted`);
+
+      // 3. Strictly contained hit target: inset must be 0 (no outer overflow)
+      const beforeMatch = css.match(/\.nav-btn::before\s*\{([^}]+)\}/);
+      assert.ok(beforeMatch, `${name} missing .nav-btn::before`);
+      assert.match(beforeMatch[1], /inset:\s*0(?:px)?/, `${name} .nav-btn::before inset must be 0 to avoid overlapping cards`);
+    }
+  });
 });

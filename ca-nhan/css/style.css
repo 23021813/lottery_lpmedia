@@ -1609,7 +1609,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(10px, 1vw, 14px);
+  gap: clamp(8px, 0.8vw, 12px);
   z-index: 170; /* Luôn nổi trên video presentation (z-index: 150) và video controls (z-index: 160) */
   pointer-events: none;
   opacity: 0;
@@ -1626,16 +1626,16 @@ body {
 }
 
 .nav-dock-left {
-  left: clamp(18px, 2vw, 36px);
+  left: clamp(10px, 1vw, 15px);
 }
 
 .nav-dock-right {
-  right: clamp(18px, 2vw, 36px);
+  right: clamp(10px, 1vw, 15px);
 }
 
 .nav-btn {
-  width: clamp(42px, 3.4vw, 50px);
-  height: clamp(42px, 3.4vw, 50px);
+  width: clamp(34px, 2.6vw, 40px);
+  height: clamp(34px, 2.6vw, 40px);
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.25);
   outline: none;
@@ -1658,11 +1658,11 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Vùng bấm mở rộng vô hình tối ưu cho cảm ứng Kiosk */
+/* Vùng bấm chuẩn khít trong nút cho cảm ứng Kiosk (không tràn ra ngoài gây đè các Card lân cận) */
 .nav-btn::before {
   content: "";
   position: absolute;
-  inset: -10px;
+  inset: 0;
   border-radius: 50%;
   pointer-events: auto;
 }
@@ -1682,8 +1682,8 @@ body {
 }
 
 .nav-btn .nav-icon {
-  width: clamp(20px, 1.8vw, 25px);
-  height: clamp(20px, 1.8vw, 25px);
+  width: clamp(18px, 1.4vw, 22px);
+  height: clamp(18px, 1.4vw, 22px);
   fill: #FFFFFF; /* Màu trắng sáng thanh lịch trên nền trong suốt */
   pointer-events: none;
   transition: transform 0.18s ease;

@@ -713,12 +713,12 @@
       .modal-card {
         position: relative;
         width: 100%;
-        max-width: 580px;
+        max-width: 480px;
         background: rgba(255, 255, 255, 0.04); /* Kính siêu trong lộ nền */
         backdrop-filter: blur(45px) saturate(220%) contrast(110%);
         -webkit-backdrop-filter: blur(45px) saturate(220%) contrast(110%);
-        border-radius: 36px;
-        padding: 48px 42px 42px;
+        border-radius: 26px;
+        padding: 18px 24px 18px;
         border: 1px solid rgba(255, 255, 255, 0.28);
         box-shadow: 
           inset 2.5px 2.5px 6px rgba(255, 255, 255, 0.75),
@@ -762,7 +762,7 @@
         left: 15%;
         right: 15%;
         height: 35%;
-        border-radius: 36px 36px 0 0;
+        border-radius: 26px 26px 0 0;
         background: radial-gradient(
           ellipse at 50% 0%,
           rgba(255, 255, 255, 0.45) 0%,
@@ -779,16 +779,16 @@
       /* Nút đóng hình tròn Liquid Glass Orb ở góc trên modal */
       .modal-close-btn {
         position: absolute;
-        top: 18px;
-        right: 18px;
-        width: 38px;
-        height: 38px;
+        top: 12px;
+        right: 12px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.08);
         border: 1px solid rgba(255, 255, 255, 0.28);
         color: rgba(255, 255, 255, 0.85);
         font-family: inherit;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 700;
         display: flex;
         align-items: center;
@@ -820,149 +820,105 @@
         transform: scale(0.95);
       }
 
-      /* Tiêu đề Giải Thưởng (ĐÃ BỎ CHỮ CHÚC MỪNG) */
-      .modal-prize-title {
-        font-size: 26px;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: #ffffff;
-        margin-bottom: 22px;
-        text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8), 0 0 22px rgba(243, 112, 33, 0.65);
+      /* Banner Giải Thưởng Vũ Trụ / Ngân Hà / Tinh Tú */
+      .modal-prize-banner-wrapper {
+        width: 100%;
+        max-width: 360px;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 10px;
+        box-shadow: 
+          0 10px 30px rgba(0, 0, 0, 0.7),
+          0 0 25px rgba(243, 112, 33, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        background: rgba(0, 0, 0, 0.5);
       }
 
-      /* Huy hiệu mã số: Khối Thủy Tinh Giọt Nước Siêu Trong (BỎ KÝ TỰ #) */
+      .modal-prize-banner-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: cover;
+      }
+
+      /* Bỏ tiêu đề giải trên modal vì đã có trên banner */
+      .modal-prize-title {
+        display: none !important;
+      }
+
+      /* Bỏ nhãn số vòng tay thừa trên modal */
+      .modal-code-label {
+        display: none !important;
+      }
+
+      /* Số trúng giải (Số vòng tay): Dạng Text lớn sắc nét, ánh kim cam đỏ MSB siêu thực */
       .modal-code-badge {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 14px 46px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.32);
-        border-radius: 26px;
-        font-size: 54px;
+        display: block;
+        font-size: 50px;
         font-weight: 900;
-        letter-spacing: 0.12em;
-        color: #ffffff;
-        text-shadow: 
-          0 0 35px rgba(243, 112, 33, 0.95),
-          0 0 18px #ffffff,
-          0 4px 12px rgba(0, 0, 0, 0.9);
+        letter-spacing: 0.14em;
+        line-height: 1.1;
+        margin-bottom: 6px;
         font-feature-settings: "tnum";
         font-variant-numeric: tabular-nums;
-        margin-bottom: 22px;
-        backdrop-filter: blur(35px) saturate(220%);
-        -webkit-backdrop-filter: blur(35px) saturate(220%);
-        box-shadow: 
-          inset 2.5px 2.5px 5px 0 rgba(255, 255, 255, 0.85),
-          inset -2.5px -2.5px 5px 0 rgba(0, 0, 0, 0.6),
-          inset 0 16px 32px rgba(255, 255, 255, 0.14),
-          0 16px 42px rgba(0, 0, 0, 0.5),
-          0 0 55px rgba(243, 112, 33, 0.45);
-        overflow: hidden;
-      }
-
-      /* Đốm sáng thấu kính lồi đỉnh khối số */
-      .modal-code-badge::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 12%;
-        right: 12%;
-        height: 48%;
-        border-radius: 26px 26px 0 0;
         background: linear-gradient(
           180deg,
-          rgba(255, 255, 255, 0.4) 0%,
-          transparent 100%
+          #ffffff 0%,
+          #fff1ea 35%,
+          #f37021 75%,
+          #ef4123 100%
         );
-        pointer-events: none;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.95))
+                drop-shadow(0 0 24px rgba(243, 112, 33, 0.7));
       }
 
+      /* Tên người trúng giải: Dạng Text thanh thoát, hào quang phát sáng nổi bật */
       .modal-winner-name {
-        font-size: 32px;
-        font-weight: 800;
-        letter-spacing: 0.02em;
-        color: #ffffff;
-        margin-bottom: 8px;
-        line-height: 1.2;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
-      }
-
-      .modal-winner-agency {
-        font-size: 15px;
-        font-weight: 500;
-        color: rgba(255, 255, 255, 0.8);
-        margin-bottom: 22px;
-        padding: 5px 18px;
-        background: rgba(255, 255, 255, 0.035);
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        border-radius: 9999px;
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
-        display: inline-block;
-        box-shadow: 
-          inset 1px 1px 2px rgba(255, 255, 255, 0.35),
-          inset -1px -1px 2px rgba(0, 0, 0, 0.35);
-      }
-
-      /* Thông tin phụ: 2 HÀNG THẺ LIQUID GLASS RIÊNG BIỆT (CCCD & SĐT) */
-      .modal-meta-list {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
+        display: block;
         max-width: 440px;
-        margin-bottom: 28px;
+        margin: 0 auto 18px;
+        font-size: 25px;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #ffffff;
+        text-align: center;
+        line-height: 1.3;
+        word-break: break-word;
+        text-shadow: 
+          0 2px 10px rgba(0, 0, 0, 0.95),
+          0 0 20px rgba(243, 112, 33, 0.85),
+          0 0 40px rgba(239, 65, 35, 0.6);
+        animation: winnerNameGlow 2.5s ease-in-out infinite alternate;
+      }
+
+      @keyframes winnerNameGlow {
+        0% {
+          text-shadow: 
+            0 2px 10px rgba(0, 0, 0, 0.95),
+            0 0 16px rgba(243, 112, 33, 0.75),
+            0 0 30px rgba(239, 65, 35, 0.5);
+          transform: scale(1);
+        }
+        100% {
+          text-shadow: 
+            0 2px 12px rgba(0, 0, 0, 0.95),
+            0 0 22px #ffffff,
+            0 0 38px rgba(243, 112, 33, 0.95),
+            0 0 55px rgba(239, 65, 35, 0.75);
+          transform: scale(1.02);
+        }
+      }
+
+      .modal-winner-agency,
+      .modal-meta-list {
+        display: none !important;
       }
 
       .modal-meta-card {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 12px 24px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 16px;
-        font-size: 14px;
-        font-weight: 600;
-        letter-spacing: 0.04em;
-        color: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        box-shadow: 
-          inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.45),
-          inset -1.5px -1.5px 3px rgba(0, 0, 0, 0.4),
-          0 6px 18px rgba(0, 0, 0, 0.25);
-        overflow: hidden;
-        transition: all 0.25s ease;
-      }
-
-      /* Viền khúc xạ giọt nước lồi trên thẻ meta */
-      .modal-meta-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 15%;
-        right: 15%;
-        height: 40%;
-        border-radius: 16px 16px 0 0;
-        background: linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.25) 0%,
-          transparent 100%
-        );
-        pointer-events: none;
-      }
-
-      .modal-meta-card:hover {
-        background: rgba(255, 255, 255, 0.07);
-        border-color: rgba(243, 112, 33, 0.45);
-        box-shadow: 
-          inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.65),
-          0 8px 22px rgba(243, 112, 33, 0.25);
+        display: none !important;
       }
 
       /* Modal Action Buttons: 100% LIQUID GLASS BUTTONS */
@@ -970,20 +926,20 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 18px;
+        gap: 14px;
         width: 100%;
-        max-width: 440px;
+        max-width: 360px;
       }
 
       .btn-modal {
         position: relative;
         flex: 1;
-        padding: 16px 24px;
-        border-radius: 18px;
+        padding: 10px 18px;
+        border-radius: 14px;
         font-family: inherit;
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 700;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.06em;
         text-transform: uppercase;
         cursor: pointer;
         transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1116,13 +1072,13 @@
       .winner-list-card {
         position: relative;
         width: 100%;
-        max-width: 680px;
-        max-height: 80vh;
+        max-width: 520px;
+        max-height: calc(100vh - 40px);
         background: rgba(255, 255, 255, 0.04);
         backdrop-filter: blur(40px) saturate(220%) contrast(110%);
         -webkit-backdrop-filter: blur(40px) saturate(220%) contrast(110%);
-        border-radius: 36px;
-        padding: 36px 32px;
+        border-radius: 24px;
+        padding: 20px 24px;
         border: 1px solid rgba(255, 255, 255, 0.28);
         box-shadow: 
           inset 2px 2px 5px rgba(255, 255, 255, 0.65),
@@ -1143,13 +1099,13 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 24px;
-        padding-bottom: 16px;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.12);
       }
 
       .winner-list-title {
-        font-size: 22px;
+        font-size: 18px;
         font-weight: 800;
         letter-spacing: 0.06em;
         text-transform: uppercase;
@@ -1159,14 +1115,14 @@
 
       /* Nút đóng tròn dạng Liquid Glass cho Modal Danh sách */
       .winner-list-close-btn {
-        width: 38px;
-        height: 38px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.08);
         border: 1px solid rgba(255, 255, 255, 0.28);
         color: rgba(255, 255, 255, 0.85);
         font-family: inherit;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 700;
         display: flex;
         align-items: center;
@@ -1201,20 +1157,20 @@
         overflow-y: auto;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
         padding-right: 6px;
-        max-height: calc(80vh - 160px);
+        max-height: calc(100vh - 120px);
       }
 
       /* Từng hàng người trúng giải */
       .winner-list-row {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        padding: 14px 18px;
+        justify-content: flex-start;
+        padding: 10px 16px;
         background: rgba(255, 255, 255, 0.035);
         border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 18px;
+        border-radius: 14px;
         transition: all 0.2s ease;
       }
 
@@ -1227,19 +1183,22 @@
         display: flex;
         align-items: center;
         gap: 14px;
+        width: 100%;
       }
 
       .winner-list-code {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 800;
         color: #ffffff;
         text-shadow: 0 0 12px rgba(243, 112, 33, 0.8);
         font-feature-settings: "tnum";
         font-variant-numeric: tabular-nums;
+        min-width: 58px;
       }
 
       .winner-list-info {
         text-align: left;
+        flex: 1;
       }
 
       .winner-list-name {
@@ -1248,19 +1207,13 @@
         color: #ffffff;
       }
 
-      .winner-list-agency {
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.65);
-      }
-
+      .winner-list-agency,
       .winner-list-right {
-        text-align: right;
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.65);
+        display: none !important;
       }
 
       .winner-list-empty {
-        padding: 40px 20px;
+        padding: 30px 20px;
         text-align: center;
         color: rgba(255, 255, 255, 0.5);
         font-size: 14px;
@@ -1395,7 +1348,7 @@
         >
           <div class="prize-badge-indicator"></div>
           <div class="prize-title-display" id="currentPrizeTitle">
-            GIẢI ĐẶC BIỆT
+            GIẢI TINH TÚ
           </div>
           <!-- Badge số lượng giải: Chỉ hiện khi có >= 1 giải -->
           <div
@@ -1409,35 +1362,27 @@
         <div class="prize-dropdown-menu" id="prizeDropdownMenu">
           <button
             class="prize-option-item is-selected"
-            data-tier="Đặc biệt"
-            onclick="selectPrizeTier('Đặc biệt')"
+            data-tier="Tinh Tú"
+            onclick="selectPrizeTier('Tinh Tú')"
           >
-            <span>GIẢI ĐẶC BIỆT</span>
-            <span class="prize-option-count" id="count-tier-dac-biet"></span>
+            <span>GIẢI TINH TÚ</span>
+            <span class="prize-option-count" id="count-tier-tinh-tu"></span>
           </button>
           <button
             class="prize-option-item"
-            data-tier="Nhất"
-            onclick="selectPrizeTier('Nhất')"
+            data-tier="Ngân Hà"
+            onclick="selectPrizeTier('Ngân Hà')"
           >
-            <span>GIẢI NHẤT</span>
-            <span class="prize-option-count" id="count-tier-nhat"></span>
+            <span>GIẢI NGÂN HÀ</span>
+            <span class="prize-option-count" id="count-tier-ngan-ha"></span>
           </button>
           <button
             class="prize-option-item"
-            data-tier="Nhì"
-            onclick="selectPrizeTier('Nhì')"
+            data-tier="Vũ Trụ"
+            onclick="selectPrizeTier('Vũ Trụ')"
           >
-            <span>GIẢI NHÌ</span>
-            <span class="prize-option-count" id="count-tier-nhi"></span>
-          </button>
-          <button
-            class="prize-option-item"
-            data-tier="Ba"
-            onclick="selectPrizeTier('Ba')"
-          >
-            <span>GIẢI BA</span>
-            <span class="prize-option-count" id="count-tier-ba"></span>
+            <span>GIẢI VŨ TRỤ</span>
+            <span class="prize-option-count" id="count-tier-vu-tru"></span>
           </button>
         </div>
       </div>
@@ -1477,26 +1422,25 @@
       </button>
     </div>
 
-    <!-- Modal Vinh Danh Người Trúng Thưởng (Liquid Glass Siêu Trong Suốt, Bỏ "Chúc Mừng") -->
+    <!-- Modal Vinh Danh Người Trúng Thưởng (Liquid Glass Siêu Trong Suốt) -->
     <div class="modal-overlay" id="winnerModalOverlay">
       <div class="modal-card">
         <button class="modal-close-btn" onclick="hideWinnerModal()" aria-label="Đóng">✕</button>
-        <div class="modal-prize-title" id="modalPrizeTitle">GIẢI ĐẶC BIỆT</div>
+        
+        <!-- Banner Đồ Họa Giải Thưởng MSB (Đã có tên giải và quà tặng) -->
+        <div class="modal-prize-banner-wrapper" id="modalPrizeBannerWrapper">
+          <img src="" id="modalPrizeBannerImg" class="modal-prize-banner-img" alt="Banner Giải Thưởng" />
+        </div>
+
         <div class="modal-code-badge" id="modalWinnerCode">0000</div>
         <div class="modal-winner-name" id="modalWinnerName">NGUYỄN VĂN A</div>
-        <div class="modal-winner-agency" id="modalWinnerAgency">
-          Đơn vị / Chi nhánh
-        </div>
-        <div class="modal-meta-list">
-          <div class="modal-meta-card" id="modalWinnerCccd">CCCD: ****0000</div>
-          <div class="modal-meta-card" id="modalWinnerPhone">SĐT: ****0000</div>
-        </div>
+
         <div class="modal-actions">
           <button class="btn-modal btn-absent" onclick="handleWinnerAbsent()">
             VẮNG MẶT
           </button>
           <button class="btn-modal btn-continue" onclick="handleWinnerConfirm()">
-            TIẾP TỤC
+            TRÚNG GIẢI
           </button>
         </div>
       </div>
@@ -1529,16 +1473,33 @@
          QUẢN LÝ DỮ LIỆU & TRẠNG THÁI ỨNG DỤNG
          ============================================================ */
       const PRIZE_CONFIG = {
-        "Đặc biệt": { name: "GIẢI ĐẶC BIỆT", code: "dac-biet" },
-        Nhất: { name: "GIẢI NHẤT", code: "nhat" },
-        Nhì: { name: "GIẢI NHÌ", code: "nhi" },
-        Ba: { name: "GIẢI BA", code: "ba" },
+        "Tinh Tú": {
+          name: "GIẢI TINH TÚ",
+          subName: "TAI NGHE AIRPODS",
+          code: "tinh-tu",
+          banner: "images/prize-tinh-tu.png",
+          rank: 3,
+        },
+        "Ngân Hà": {
+          name: "GIẢI NGÂN HÀ",
+          subName: "APPLE WATCH SERIES 12",
+          code: "ngan-ha",
+          banner: "images/prize-ngan-ha.png",
+          rank: 2,
+        },
+        "Vũ Trụ": {
+          name: "GIẢI VŨ TRỤ",
+          subName: "IPHONE DUO 256GB",
+          code: "vu-tru",
+          banner: "images/prize-vu-tru.png",
+          rank: 1,
+        },
       };
 
-      let currentSelectedTier = "Đặc biệt";
-      let participants = []; // Danh sách chọn đáp án C
-      let usedNumbers = []; // Danh sách ID đã trúng
-      let absentWinners = []; // Danh sách ID vắng mặt
+      let currentSelectedTier = "Tinh Tú";
+      let participants = []; // Danh sách khách hàng ĐÃ CHECK-IN (có số vòng tay)
+      let usedNumbers = []; // Danh sách số vòng tay đã trúng
+      let absentWinners = []; // Danh sách số vòng tay vắng mặt
       let sessionWinners = []; // Danh sách kết quả phiên quay
 
       let isSpinning = false;
@@ -1640,62 +1601,48 @@
       }
 
       /* ============================================================
-         ĐỌC FILE DATA/DATA.CSV (CHỈ LẤY ĐÁP ÁN C)
+         ĐỌC FILE DATA/EXPORT.CSV (CHỈ LẤY KHÁCH HÀNG CÓ SỐ VÒNG TAY)
          ============================================================ */
       async function loadParticipantsData() {
         try {
-          const response = await fetch("data/data.csv");
-          const csvText = await response.text();
-          const lines = csvText.split("\n");
-          if (lines.length <= 1) return;
+          const response = await fetch("data/export.csv");
+          let csvText = await response.text();
+          // Loại bỏ ký tự BOM (Byte Order Mark) nếu file xuất từ Excel
+          if (csvText.charCodeAt(0) === 0xfeff) {
+            csvText = csvText.slice(1);
+          }
 
-          const header = lines[0].toLowerCase();
-          const hasAnswerCol = header.includes("answer");
+          const lines = csvText.split(/\r?\n/);
+          if (lines.length <= 0) return;
 
           participants = [];
-          for (let i = 1; i < lines.length; i++) {
+          for (let i = 0; i < lines.length; i++) {
             const line = lines[i].trim();
             if (!line) continue;
             const cols = parseCSVLine(line);
-            if (cols.length >= 5) {
-              const id = parseInt(cols[0], 10);
-              const name = (cols[1] || "").replace(/"/g, "").trim();
-              const phone = (cols[2] || "").replace(/"/g, "").trim();
-              const nationalId = (cols[3] || "").replace(/"/g, "").trim();
-              const agency = (cols[4] || "").replace(/"/g, "").trim();
-              let answer = "";
-              let prizeWon = "";
-
-              if (cols.length >= 7 || hasAnswerCol) {
-                answer = (cols[5] || "").replace(/"/g, "").trim();
-                prizeWon = (cols[6] || "").replace(/"/g, "").trim();
-              } else {
-                answer = "C";
-                prizeWon = (cols[5] || "").replace(/"/g, "").trim();
-              }
-
-              // Điều kiện bắt buộc: chỉ chọn thí sinh trả lời C
-              if (answer.toUpperCase() === "C") {
+            if (cols.length >= 1) {
+              const rawId = (cols[0] || "").replace(/["']/g, "").trim().replace(/^\ufeff/, "");
+              const id = parseInt(rawId, 10);
+              // ĐIỀU KIỆN TIÊN QUYẾT: Chỉ lấy khách hàng ĐÃ CHECK-IN (có số vòng tay hợp lệ > 0)
+              if (!isNaN(id) && id > 0) {
+                const name = (cols[1] || "").replace(/["']/g, "").trim();
                 participants.push({
                   id,
-                  name,
-                  phone,
-                  nationalId,
-                  agency,
-                  answer,
-                  prizeWon,
+                  name: name || `Khách hàng #${id}`,
                 });
               }
             }
           }
 
+          console.log(`Đã nạp thành công ${participants.length} khách hàng có số vòng tay hợp lệ.`);
           restoreSessionState();
         } catch (err) {
-          console.error("Lỗi khi tải dữ liệu từ data/data.csv:", err);
+          console.error("Lỗi khi tải dữ liệu từ data/export.csv:", err);
         }
       }
 
       function parseCSVLine(line) {
+        const delimiter = line.includes(";") ? ";" : ",";
         const result = [];
         let current = "";
         let inQuotes = false;
@@ -1703,7 +1650,7 @@
           const char = line[i];
           if (char === '"') {
             inQuotes = !inQuotes;
-          } else if (char === "," && !inQuotes) {
+          } else if (char === delimiter && !inQuotes) {
             result.push(current);
             current = "";
           } else {
@@ -1748,7 +1695,7 @@
          CẬP NHẬT GIAO DIỆN SỐ LƯỢNG GIẢI (0 GIẢI THÌ ẨN, >=1 MỚI HIỆN)
          ============================================================ */
       function updatePrizeCountsUI() {
-        const counts = { "Đặc biệt": 0, Nhất: 0, Nhì: 0, Ba: 0 };
+        const counts = { "Tinh Tú": 0, "Ngân Hà": 0, "Vũ Trụ": 0 };
         sessionWinners.forEach((w) => {
           if (counts[w.tier] !== undefined) {
             counts[w.tier]++;
@@ -1770,10 +1717,9 @@
 
         // 2. Cập nhật từng mục trong dropdown list
         const tierMapping = [
-          { tier: "Đặc biệt", elId: "count-tier-dac-biet" },
-          { tier: "Nhất", elId: "count-tier-nhat" },
-          { tier: "Nhì", elId: "count-tier-nhi" },
-          { tier: "Ba", elId: "count-tier-ba" },
+          { tier: "Tinh Tú", elId: "count-tier-tinh-tu" },
+          { tier: "Ngân Hà", elId: "count-tier-ngan-ha" },
+          { tier: "Vũ Trụ", elId: "count-tier-vu-tru" },
         ];
 
         tierMapping.forEach((item) => {
@@ -1809,11 +1755,11 @@
         const container = document.getElementById("winnerListScrollContainer");
         if (!modal || !container) return;
 
-        const tierName = PRIZE_CONFIG[tier] ? PRIZE_CONFIG[tier].name : tier;
+        const tierInfo = PRIZE_CONFIG[tier] || { name: tier, subName: "" };
         const filtered = sessionWinners.filter((w) => w.tier === tier);
 
         if (titleEl) {
-          titleEl.textContent = `DANH SÁCH TRÚNG ${tierName} (${filtered.length} GIẢI)`;
+          titleEl.textContent = `DANH SÁCH TRÚNG ${tierInfo.name}`;
         }
 
         container.innerHTML = "";
@@ -1825,27 +1771,15 @@
             </div>
           `;
         } else {
-          filtered.forEach((winner, idx) => {
+          filtered.forEach((winner) => {
             const row = document.createElement("div");
             row.className = "winner-list-row";
-            const timeStr = winner.timestamp
-              ? new Date(winner.timestamp).toLocaleTimeString("vi-VN", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
-                })
-              : "";
             row.innerHTML = `
               <div class="winner-list-left">
-                <div class="winner-list-code">#${winner.id.toString().padStart(4, "0")}</div>
+                <div class="winner-list-code">#${winner.id.toString().padStart(DIGIT_COUNT, "0")}</div>
                 <div class="winner-list-info">
                   <div class="winner-list-name">${winner.name}</div>
-                  <div class="winner-list-agency">${winner.agency || "Không xác định"}</div>
                 </div>
-              </div>
-              <div class="winner-list-right">
-                <div>CCCD: ****${(winner.nationalId || "").slice(-4)} | SĐT: ****${(winner.phone || "").slice(-4)}</div>
-                <div style="opacity: 0.6; margin-top: 2px;">${timeStr}</div>
               </div>
             `;
             container.appendChild(row);
@@ -1881,7 +1815,7 @@
         currentSelectedTier = tier;
         const titleEl = document.getElementById("currentPrizeTitle");
         if (titleEl) {
-          titleEl.textContent = PRIZE_CONFIG[tier].name;
+          titleEl.textContent = PRIZE_CONFIG[tier] ? PRIZE_CONFIG[tier].name : tier;
         }
 
         document.querySelectorAll(".prize-option-item").forEach((item) => {
@@ -1971,12 +1905,11 @@
         const available = participants.filter(
           (p) =>
             !usedNumbers.includes(p.id) &&
-            !absentWinners.includes(p.id) &&
-            !p.prizeWon
+            !absentWinners.includes(p.id)
         );
 
         if (available.length === 0) {
-          alert("Đã hết người tham gia hợp lệ (Đáp án C) chưa trúng giải!");
+          alert("Đã hết khách hàng có số vòng tay hợp lệ chưa trúng giải!");
           return;
         }
 
@@ -2025,7 +1958,7 @@
 
         // Vận tốc cuộn vừa phải, các số chạy chậm rõ nét, mượt mà và hồi hộp
         const baseSpeed = [24, 18, 26, 20];
-        stripVelocities[col] = baseSpeed[col] + Math.random() * 2;
+        stripVelocities[col] = (baseSpeed[col] || 20) + Math.random() * 2;
 
         function step() {
           if (!isStripSpinning[col]) return;
@@ -2152,24 +2085,25 @@
          ============================================================ */
       function showWinnerModal(winner, tier) {
         const modal = document.getElementById("winnerModalOverlay");
-        const prizeTitle = document.getElementById("modalPrizeTitle");
+        const bannerImg = document.getElementById("modalPrizeBannerImg");
         const codeEl = document.getElementById("modalWinnerCode");
         const nameEl = document.getElementById("modalWinnerName");
-        const agencyEl = document.getElementById("modalWinnerAgency");
-        const cccdEl = document.getElementById("modalWinnerCccd");
-        const phoneEl = document.getElementById("modalWinnerPhone");
 
-        if (prizeTitle) prizeTitle.textContent = PRIZE_CONFIG[tier].name;
+        const tierInfo = PRIZE_CONFIG[tier] || { name: tier, banner: "" };
+
+        if (bannerImg) {
+          if (tierInfo.banner) {
+            bannerImg.src = tierInfo.banner;
+            bannerImg.parentElement.style.display = "block";
+          } else {
+            bannerImg.parentElement.style.display = "none";
+          }
+        }
         if (codeEl)
           codeEl.textContent = winner.id
             .toString()
             .padStart(DIGIT_COUNT, "0");
         if (nameEl) nameEl.textContent = (winner.name || "").toUpperCase();
-        if (agencyEl) agencyEl.textContent = winner.agency || "Không xác định";
-        if (cccdEl)
-          cccdEl.textContent = `CCCD: ****${(winner.nationalId || "").slice(-4)}`;
-        if (phoneEl)
-          phoneEl.textContent = `SĐT: ****${(winner.phone || "").slice(-4)}`;
 
         if (modal) modal.classList.add("is-visible");
       }

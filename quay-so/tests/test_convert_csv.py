@@ -55,6 +55,24 @@ class TestCSVConversion(unittest.TestCase):
         self.assertEqual(len(result["duplicate_id_rows"]), 1)
         self.assertEqual(result["duplicate_id_rows"][0]["id"], 36)
 
+    def test_validate_input_xlsx(self):
+        import openpyxl
+        sample_xlsx = self.test_dir_path / "sample_input.xlsx"
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.append(["Số thứ tự", "Tên khách mời"])
+        ws.append([27, "NGUYỄN TIẾN DŨNG"])
+        ws.append([28, "PHẠM THU THẢO"])
+        ws.append([None, "VÔ DANH"])
+        ws.append([27, "NGUYỄN TIẾN DŨNG TRÙNG"])
+        wb.save(sample_xlsx)
+
+        result = validate_input(sample_xlsx)
+        self.assertTrue(result["is_valid_file"])
+        self.assertEqual(len(result["valid_rows"]), 2)
+        self.assertEqual(len(result["missing_id_rows"]), 1)
+        self.assertEqual(len(result["duplicate_id_rows"]), 1)
+
     def test_convert_and_export_format(self):
         valid_rows = [
             (40, "NGUYỄN THÀNH TRUNG"),

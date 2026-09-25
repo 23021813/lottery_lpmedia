@@ -1606,7 +1606,7 @@
          ============================================================ */
       async function loadParticipantsData() {
         try {
-          const response = await fetch("data/export_20260925_170752.csv?t=" + Date.now());
+          const response = await fetch("data/export_20260925_175056.csv?t=" + Date.now());
           let csvText = await response.text();
           // Loại bỏ ký tự BOM (Byte Order Mark) nếu file xuất từ Excel
           if (csvText.charCodeAt(0) === 0xfeff) {
@@ -1638,7 +1638,7 @@
           console.log(`Đã nạp thành công ${participants.length} khách hàng có số vòng tay hợp lệ.`);
           restoreSessionState();
         } catch (err) {
-          console.error("Lỗi khi tải dữ liệu từ data/export_20260925_170752.csv:", err);
+          console.error("Lỗi khi tải dữ liệu từ data/export_20260925_175056.csv:", err);
         }
       }
 

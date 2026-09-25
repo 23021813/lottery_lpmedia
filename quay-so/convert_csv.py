@@ -49,56 +49,85 @@ def validate_input(input_path: Path) -> dict:
     duplicate_id_rows = []
     seen_ids = {}
 
-    with open(input_path, mode="r", encoding="utf-8-sig") as f:
-        # Tự động nhận diện delimiter (',' hoặc ';')
-        sample = f.read(2048)
-        f.seek(0)
-        delimiter = ";" if ";" in sample else ","
-        reader = csv.reader(f, delimiter=delimiter)
+    raw_rows = []
+    if input_path.suffix.lower() == ".xlsx":
+        try:
+            import openpyxl
+            wb = openpyxl.load_workbook(input_path, data_only=True)
+            sheet = wb.active
+            for row in sheet.iter_rows(values_only=True):
+                if not row or not any(c is not None and str(c).strip() for c in row):
+                    continue
+                r_id = str(row[0]).strip() if len(row) > 0 and row[0] is not None else ""
+                try:
+                    if r_id and float(r_id).is_integer():
+                        r_id = str(int(float(r_id)))
+                except ValueError:
+                    pass
+                r_name = str(row[1]).strip() if len(row) > 1 and row[1] is not None else ""
+                raw_rows.append([r_id, r_name])
+        except Exception as e:
+            return {
+                "is_valid_file": False,
+                "error": f"Lỗi khi đọc file Excel: {e}",
+                "total_raw_rows": 0,
+                "valid_rows": [],
+                "missing_id_rows": [],
+                "duplicate_id_rows": [],
+            }
+    else:
+        with open(input_path, mode="r", encoding="utf-8-sig") as f:
+            # Tự động nhận diện delimiter (',' hoặc ';')
+            sample = f.read(2048)
+            f.seek(0)
+            delimiter = ";" if ";" in sample else ","
+            reader = csv.reader(f, delimiter=delimiter)
+            for row in reader:
+                raw_rows.append(row)
 
-        line_num = 0
-        for row in reader:
-            line_num += 1
-            if not row or not any(field.strip() for field in row):
-                continue
+    line_num = 0
+    for row in raw_rows:
+        line_num += 1
+        if not row or not any(field and str(field).strip() for field in row):
+            continue
 
-            raw_id = row[0].strip() if len(row) > 0 else ""
-            name = row[1].strip() if len(row) > 1 else ""
+        raw_id = str(row[0]).strip() if len(row) > 0 and row[0] is not None else ""
+        name = str(row[1]).strip() if len(row) > 1 and row[1] is not None else ""
 
-            # Bỏ qua dòng Header nếu cột 1 không phải là số
-            if line_num == 1 and not raw_id.isdigit():
-                continue
+        # Bỏ qua dòng Header nếu cột 1 không phải là số
+        if line_num == 1 and not raw_id.isdigit():
+            continue
 
-            # Kiểm tra trường hợp KHÔNG CÓ SỐ THỨ TỰ (STT rỗng hoặc không phải số)
-            if not raw_id or not raw_id.isdigit():
-                missing_id_rows.append({
-                    "line": line_num,
-                    "raw_id": raw_id,
-                    "name": name or f"Dòng {line_num} (Không tên)"
-                })
-                continue
+        # Kiểm tra trường hợp KHÔNG CÓ SỐ THỨ TỰ (STT rỗng hoặc không phải số)
+        if not raw_id or not raw_id.isdigit():
+            missing_id_rows.append({
+                "line": line_num,
+                "raw_id": raw_id,
+                "name": name or f"Dòng {line_num} (Không tên)"
+            })
+            continue
 
-            val_id = int(raw_id)
-            if val_id <= 0:
-                missing_id_rows.append({
-                    "line": line_num,
-                    "raw_id": raw_id,
-                    "name": name or f"Dòng {line_num} (STT <= 0)"
-                })
-                continue
+        val_id = int(raw_id)
+        if val_id <= 0:
+            missing_id_rows.append({
+                "line": line_num,
+                "raw_id": raw_id,
+                "name": name or f"Dòng {line_num} (STT <= 0)"
+            })
+            continue
 
-            # Kiểm tra trường hợp TRÙNG LẶP SỐ THỨ TỰ
-            if val_id in seen_ids:
-                duplicate_id_rows.append({
-                    "line": line_num,
-                    "id": val_id,
-                    "name": name,
-                    "first_seen_line": seen_ids[val_id]["line"],
-                    "first_name": seen_ids[val_id]["name"]
-                })
-            else:
-                seen_ids[val_id] = {"line": line_num, "name": name}
-                valid_rows.append((val_id, name))
+        # Kiểm tra trường hợp TRÙNG LẶP SỐ THỨ TỰ
+        if val_id in seen_ids:
+            duplicate_id_rows.append({
+                "line": line_num,
+                "id": val_id,
+                "name": name,
+                "first_seen_line": seen_ids[val_id]["line"],
+                "first_name": seen_ids[val_id]["name"]
+            })
+        else:
+            seen_ids[val_id] = {"line": line_num, "name": name}
+            valid_rows.append((val_id, name))
 
     total_data_rows = len(valid_rows) + len(missing_id_rows) + len(duplicate_id_rows)
 
